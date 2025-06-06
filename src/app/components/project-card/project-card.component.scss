@@ -21,7 +21,7 @@
 
     .date {
       font-size: 0.8rem;
-      color: #888;
+      color: var(--second-text-color);
       display: block;
       margin-bottom: 0.4rem;
     }
@@ -29,7 +29,7 @@
     h3 {
       font-size: 1.2rem;
       font-weight: 600;
-      color: #2e4d2d;
+      color: var(--second-text-color);
       margin-bottom: 0.5rem;
     }
 

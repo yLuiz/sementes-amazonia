@@ -18,21 +18,35 @@
     text-align: center;
 
     .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       background-color: white;
       padding: 1.5rem;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
+
+      .circle-icon {
+        width: min-content;
+        background-color: var(--primary-bg-color);
+        border-radius: 50%;
+        padding: 20px;
+      }
+
       strong {
         display: block;
-        font-size: 1.5rem;
+        font-size: 2.5rem;
         margin: 0.5rem 0;
         color: #014421;
+        font-family: Playfair Display, serif;
+
       }
 
       p {
-        font-size: 0.9rem;
-        color: #555;
+        font-size: 1rem;
+        color: var(--second-text-color);
+
       }
     }
   }

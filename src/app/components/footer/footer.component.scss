@@ -1,15 +1,22 @@
 footer {
-  background-color: #014421;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+
+  background-color: var(--third-bg-color);
   color: white;
   padding: 4rem 2rem;
 
   h3 {
-    font-size: 1.5rem;
+    font-family: Playfair display, serif;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
   }
 
   p {
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin-bottom: 2rem;
   }
 
@@ -34,7 +41,26 @@ footer {
 
         li {
           margin-bottom: 0.5rem;
+          font-weight: 300;
+
+          a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 300;
+
+            &:hover {
+              color: var(--primary-text-color);
+            }
+          }
         }
+      }
+    }
+
+    .links {
+      strong {
+        font-family: Playfair Display, serif;
+        font-size: 1.4rem;
       }
     }
   }
