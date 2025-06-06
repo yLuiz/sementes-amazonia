@@ -1,0 +1,11 @@
+<!-- projects.component.html -->
+<section class="projects">
+    <h2>Projetos</h2>
+    <div class="cards">
+        <ng-container *ngFor="let project of projects">
+            <app-project-card [title]="project.title" [description]="project.description"
+                [image]="project.image"></app-project-card>
+        </ng-container>
+    </div>
+    <button>Ver todos os projetos</button>
+</section>

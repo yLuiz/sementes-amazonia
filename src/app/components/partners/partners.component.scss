@@ -1,0 +1,37 @@
+.partners {
+  background-color: #f9faef; // tom claro como na imagem
+  padding: 2rem;
+
+  h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #2e4d2d;
+    font-weight: 600;
+  }
+
+  .partners-list {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .partner-card {
+    background-color: #fdfdf8;
+    border: 1px solid #d6d2bd;
+    border-radius: 1.5rem;
+    padding: 2rem 3rem;
+    font-weight: 600;
+    color: #2e4d2d;
+    text-align: center;
+    font-size: 1.2rem;
+    min-width: 150px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+  }
+}

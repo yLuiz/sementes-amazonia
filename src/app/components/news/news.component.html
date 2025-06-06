@@ -1,0 +1,10 @@
+<!-- news.component.html -->
+<section class="news">
+    <h2>Últimas notícias</h2>
+    <div class="cards">
+        <ng-container *ngFor="let news of newsList">
+            <app-news-card [title]="news.title" [description]="news.description" [image]="news.image"></app-news-card>
+        </ng-container>
+    </div>
+    <button>Ver todas as notícias</button>
+</section>
