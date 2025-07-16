@@ -1,0 +1,38 @@
+<div class="login-wrapper">
+  <header class="header">
+    <h1>Sementes da Amazônia</h1>
+  </header>
+
+  <div class="login-card">
+    <h2>Acesse a sua conta</h2>
+    <p>Insira as credenciais para acessar o painel de administrador do site</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <label>
+        Usuário
+        <input type="text" formControlName="username" placeholder="Digite seu usuário" />
+      </label>
+
+      <label>
+        Senha
+        <div class="password-field">
+          <input [type]="inputType" formControlName="password" placeholder="Digite sua senha" />
+          <button *ngIf="inputType === 'password'" (click)="changePasswordInput()" class="eye-icon">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="visibility"></mat-icon>
+          </button>
+
+          <button *ngIf="inputType === 'text'" (click)="changePasswordInput()" class="eye-icon">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="visibility_off"></mat-icon>
+          </button>
+        </div>
+      </label>
+
+      <button class="submit-btn" type="submit" [disabled]="form.invalid">Entrar no painel</button>
+    </form>
+
+    <div class="forgot-password">
+      <small>Esqueceu sua senha?</small>
+      <a href="#">Clique aqui para recuperar o acesso</a>
+    </div>
+  </div>
+</div>

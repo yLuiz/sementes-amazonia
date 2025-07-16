@@ -1,0 +1,41 @@
+<div class="form-container">
+  <h2>Novo projeto</h2>
+  <p>Preencha os dados abaixo para cadastrar um novo projeto.</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="column">
+        <label>
+          Nome do projeto
+          <input type="text" formControlName="title" placeholder="Digite um título claro e direto" />
+        </label>
+
+        <label>
+          Resumo
+          <textarea formControlName="summary"
+            placeholder="Escreva um breve resumo para destacar os principais pontos da notícia"></textarea>
+        </label>
+
+        <label>
+          Imagem da capa
+          <input type="file" (change)="onFileChange($event)" />
+        </label>
+      </div>
+
+      <div class="column">
+        <label>
+          Descrição completa
+          <textarea formControlName="description" rows="13"
+            placeholder="Conte em detalhes sobre o projeto, objetivos, processo e resultados."></textarea>
+        </label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid" class="gray">Publicar projeto</button>
+      <button type="button" class="gray">Salvar rascunho</button>
+      <button type="button" class="preview">Ver prévia</button>
+      <button type="button" class="clear" (click)="clearForm()">Limpar tudo</button>
+    </div>
+  </form>
+</div>

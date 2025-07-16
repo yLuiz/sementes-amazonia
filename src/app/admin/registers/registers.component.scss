@@ -1,0 +1,201 @@
+:host {
+  display: block;
+  background-color: #f6f4f0;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+}
+
+/* Estrutura principal */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabeçalho */
+.header {
+  background-color: #f4f7ec;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #3c3c2e;
+  }
+
+  .user-icon {
+    background: #e9ecd8;
+    padding: 0.4rem 0.6rem;
+    border-radius: 50%;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+  }
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Navegação com abas */
+.tab-switch {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0 2.5rem;
+
+  button {
+    background-color: #e9ecd8;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: #3c3c2e;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+
+    &.active {
+      background-color: #dfe9c9;
+      border: 1px solid #c5d6ab;
+    }
+
+    &:hover {
+      background-color: #d5e2bc;
+    }
+  }
+}
+
+/* Formulários dentro dos componentes */
+.form-container {
+  h2 {
+    font-size: 1.75rem;
+    color: #3c602e;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin-bottom: 2rem;
+    color: #555;
+    font-size: 1rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .row {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .column {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: #333;
+
+      input,
+      textarea {
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        background-color: #fff;
+        transition: border-color 0.2s ease;
+      }
+
+      input[type="date"] {
+        color: #555;
+      }
+
+      input[type="file"] {
+        padding: 0.3rem 0;
+        border: none;
+        font-size: 0.9rem;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #91b36a;
+      }
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.2s;
+
+        &.gray {
+          background: #e2e2e2;
+          color: #555;
+        }
+
+        &.preview {
+          background: #dfe9c9;
+          color: #3c3c2e;
+        }
+
+        &.clear {
+          background: transparent;
+          color: #888;
+          text-decoration: underline;
+        }
+
+        &:disabled {
+          background-color: #e2e2e2;
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tab-switch {
+    flex-direction: column;
+  }
+}
