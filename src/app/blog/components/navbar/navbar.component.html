@@ -2,21 +2,54 @@
   <div class="navbar-container">
     <div class="navbar-title">Sementes da Amazônia</div>
 
-    <ul class="navbar-links">
+    <!-- Menu Desktop -->
+    <ul class="navbar-links desktop-menu">
       <li class="dropdown">
         <a href="#about" class="link">
-          <span class="arrow">&#9662;</span>
           Sobre nós
+          <span class="material-icons-outlined">keyboard_arrow_down</span>
         </a>
         <!-- Submenu opcional -->
-        <!-- <ul class="dropdown-menu">
-          <li><a href="#">Missão</a></li>
-          <li><a href="#">Equipe</a></li>
-        </ul> -->
+        <ul class="dropdown-menu">
+          <li><a href="#">Nossa história</a></li>
+          <li><a href="#">Áreas de atuação</a></li>
+        </ul>
       </li>
       <li><a href="#news">Notícias</a></li>
       <li><a href="#projects">Projetos</a></li>
       <li><a href="#footer">Contato</a></li>
     </ul>
+
+    <!-- Menu Hambúrguer -->
+    <div class="hamburger-menu">
+      <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="isMenuOpen">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="menu-nav" [class.active]="isMenuOpen">
+        <div class="menu-header">
+          <button class="close-btn" (click)="closeMenu()">
+            <span>&times;</span>
+          </button>
+        </div>
+        <ul>
+          <li><a href="#home" (click)="closeMenu()">Início</a></li>
+          <li class="mobile-dropdown" [class.active]="isMobileDropdownOpen">
+            <a href="#about" class="mobile-dropdown-toggle" (click)="toggleMobileDropdown($event)">
+              Sobre nós
+            <span class="material-icons-outlined">keyboard_arrow_down</span>  
+            </a>
+            <ul class="mobile-dropdown-menu" [class.active]="isMobileDropdownOpen">
+              <li><a href="#historia" (click)="closeMenu()">Nossa história</a></li>
+              <li><a href="#areas" (click)="closeMenu()">Áreas de atuação</a></li>
+            </ul>
+          </li>
+          <li><a href="#news" (click)="closeMenu()">Notícias</a></li>
+          <li><a href="#projects" (click)="closeMenu()">Projetos</a></li>
+          <li><a href="#footer" (click)="closeMenu()">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </nav>

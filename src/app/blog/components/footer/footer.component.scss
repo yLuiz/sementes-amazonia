@@ -19,7 +19,19 @@ footer {
     font-size: 0.9rem;
     margin-bottom: 2rem;
   }
+  .footer-header {
+    h3 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
 
+    p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+  }
   .footer-sections {
     display: flex;
     flex-wrap: wrap;
@@ -28,7 +40,7 @@ footer {
 
     div {
       flex: 1;
-      min-width: 200px;
+      min-width: 280px;
 
       strong {
         display: block;
@@ -42,15 +54,25 @@ footer {
         li {
           margin-bottom: 0.5rem;
           font-weight: 300;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 1.1rem;
+
+          .material-icons-outlined {
+            font-size: 1.5rem;
+            vertical-align: middle;
+          }
 
           a {
             color: white;
             text-decoration: none;
             transition: color 0.3s;
             font-weight: 300;
+            font-size: 1.1rem;
 
             &:hover {
-              color: var(--primary-text-color);
+              color:#819b47;
             }
           }
         }
@@ -61,14 +83,53 @@ footer {
       strong {
         font-family: Playfair Display, serif;
         font-size: 1.4rem;
+        margin-bottom: 2.5vh;
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+        font-weight: 300;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .material-icons-outlined {
+          font-size: 1.2rem;
+          vertical-align: middle;
+        }
+
+        a {
+          color: white;
+          text-decoration: none;
+          transition: color 0.3s;
+          font-weight: 300;
+        }
+      }
+
+      p {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+
+        .material-icons-outlined {
+          font-size: 1.5rem;
+          vertical-align: middle;
+        }
       }
     }
   }
 
   .copyright {
     text-align: center;
-    font-size: 0.85rem;
+    width: 60vw;
+    font-size: 1rem;
     border-top: 1px solid #ffffff33;
     padding-top: 1rem;
+
+    @media (max-width: 768px) {
+      width: 90vw;
+    }
   }
 }

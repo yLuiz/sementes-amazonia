@@ -1,19 +1,55 @@
 .about {
     display: flex;
     flex-wrap: wrap;
-    gap: 2rem;
     padding: 4rem 2rem;
     align-items: center;
     background-color: var(--primary-bg-color);
+    justify-content: center;
+    
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        gap: 0 2rem;
+        
+        @media (max-width: 768px) {
+            max-width: 75vw;
+            flex-direction: column;
+        }
+
+        @media (max-width: 480px) {
+            max-width: 1200px;
+            flex-direction: column;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        padding: 2rem 1rem;
+    }
     
     .text {
         flex: 1;
         min-width: 300px;
+        @media (max-width: 768px) {
+            min-width: 100%;
+        }
         
         h2 {
+            font-family: Playfair Display, serif;
             color: var(--primary-text-color);
             font-size: 2.5rem;
             margin-bottom: 1rem;
+            
+            @media (max-width: 768px) {
+                font-size: 2rem;
+            }
+            
+            @media (max-width: 480px) {
+                font-size: 1.8rem;
+            }
         }
 
         p {
@@ -21,11 +57,34 @@
             font-size: 1.1rem;
             font-weight: 500;
             margin-bottom: 2rem;
+            
+            @media (max-width: 768px) {
+                font-size: 1rem;
+            }
         }
 
         .buttons {
             display: flex;
             gap: 1rem;
+            .aboutButton{
+                background-color: #819B47;
+                &:hover {
+                    background-color: #026440;
+                }
+            }
+            .projectsButton{
+                background: none;
+                border: 2px solid #4D5F2C;
+                color: #4D5F2C;
+                &:hover {
+                    background-color: #b9cb8b;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                justify-content: center;
+                gap: 0.5rem;
+            }
 
             button {
                 padding: 0.75rem 1.5rem;
@@ -36,10 +95,12 @@
                 border-radius: 12px;
                 cursor: pointer;
                 transition: 0.3s;
+                font-size: 0.8rem;
 
-                &:hover {
-                    background-color: #026440;
-                }
+            @media (max-width: 480px) {
+                gap: 0.5rem;
+                font-size: 0.7rem;
+            }   
             }
         }
     }
@@ -47,11 +108,22 @@
     .image {
         flex: 1;
         min-width: 300px;
+        
+        @media (max-width: 768px) {
+            min-width: 100%;
+            order: 1;
+            margin-top: 25px;
+            margin-bottom: 2rem;
+        }
 
         img {
             max-width: 500px;
             width: 100%;
             border-radius: 8px;
+            
+            @media (max-width: 768px) {
+                max-width: 100%;
+            }
         }
     }
 }

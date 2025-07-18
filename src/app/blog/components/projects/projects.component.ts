@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProjectCardComponent } from '../project-card/project-card.component';
 import { CommonModule } from '@angular/common';
+import { ProjectsService, Project } from '../../../services/projects.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -13,32 +15,43 @@ import { CommonModule } from '@angular/common';
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
-export class ProjectsComponent {
+export class ProjectsComponent implements OnInit, OnDestroy {
 
-  projects: {
-    image: string,
-    title: string,
-    date: string,
-    description: string,
-  }[] = [
-      {
-        image: '../../../assets/Image 1.png',
-        title: 'Projeto 1',
-        date: '31 de Maio de 2025',
-        description: 'Descrição do Projeto 1. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
+  projects: Project[] = [];
+  private subscription: Subscription = new Subscription();
+
+  constructor(private projectsService: ProjectsService) { }
+
+  ngOnInit(): void {
+    this.loadProjects();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  /**
+   * Carrega os projetos
+  */
+  private loadProjects(): void {
+    const projectsSub = this.projectsService.getProjects().subscribe({
+      next: (projects) => {
+        this.projects = projects;
       },
-      {
-        image: '../../../assets/Image 2.png',
-        title: 'Projeto 2',
-        date: '31 de Maio de 2025',
-        description: 'Descrição do Projeto 2. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
-      },
-      {
-        image: '../../../assets/Image 3.png',
-        title: 'Projeto 3',
-        date: '31 de Maio de 2025',
-        description: 'Descrição do Projeto 3. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
+      error: (error) => {
+        console.error('Erro ao carregar projetos:', error);
       }
-    ]
+    });
+    
+    this.subscription.add(projectsSub);
+  }
+
+  /**
+   * Navega para a página dos projetos
+   */
+  onViewAllProjects(): void {
+    // TODO: Implementar navegação para página
+    console.log('Navegar para todos os projetos');
+  }
 
 }

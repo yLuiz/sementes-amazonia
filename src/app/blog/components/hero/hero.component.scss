@@ -1,13 +1,21 @@
 .hero {
-
     background: linear-gradient(to left, #014421, #026440);
     color: white;
     padding: 0;
     height: 60vh;
-
     background: url('../../../../assets/amazon_forest.png') no-repeat;
     background-size: cover;
     background-position: center;
+
+    @media (max-width: 768px) {
+        height: 65vh;
+    }
+
+
+    @media (max-width: 480px) {
+        height: 45vh;
+        min-height: 450px;
+    }
 
     .overlay {
         background-color: rgba(25, 34, 0, 0.65); // Escurece a imagem
@@ -16,61 +24,127 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 2rem;
+
+        @media (max-width: 768px) {
+        }
+
+        @media (max-width: 480px) {
+            padding: 1rem;
+        }
     }
 
     .content {
-
         width: 65vw;
+        @media (max-width: 768px) {
+            width: 100vw;
+        }
+
+        @media (max-width: 480px) {
+            width: 95vw;
+            text-align: center;
+        }
 
         .tag {
             background: #ffffff22;
             color: #fff;
+            font-weight: bold;            
             padding: 0.25rem 0.75rem;
             border-radius: 999px;
-            font-size: 0.8rem;
+            font-size: 1rem;
             display: inline-block;
+            margin-bottom: 0.5rem;
+
+            @media (max-width: 480px) {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.6rem;
+            }
         }
 
         h1 {
             font-family: Playfair Display, serif;
-            font-size: 3.5rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
+            line-height: 1.1;
+
+            @media (max-width: 480px) {
+                font-size: 2.2rem;
+                margin-bottom: 1.5rem;
+            }
         }
 
         p {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             margin-bottom: 2rem;
+            line-height: 1.6;
+
+            @media (max-width: 768px) {
+                width: 100%;
+                font-size: 1.1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            @media (max-width: 480px) {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
         }
 
         .buttons {
             display: flex;
             gap: 1rem;
             justify-content: start;
+            margin-bottom: 2vh;
+
+            @media (max-width: 480px) {
+                justify-content: center;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+            }
 
             button {
-
                 border-radius: 12px;
-
-                &.read-more {
-                    background: var(--fourth-bg-color);
-                    color: #fff;
-                }
-
-                &.see-news {
-                    background: var(--fifth-bg-color);
-                    color: var(--primary-text-color);
-
-                }
-
                 color: #014421;
                 border: none;
                 padding: 0.75rem 1.5rem;
                 cursor: pointer;
                 font-weight: bold;
                 transition: background 0.3s ease;
+                font-size: 1rem;
 
-                &:hover {
-                    background: #e6e6e6;
+                @media (max-width: 480px) {
+                    margin-top: 10px;
+                    padding: 0.7rem 0.8rem;
+                    width: auto;
+                    min-width: 0;
+                    font-size: 0.5rem;
+                    flex: 1;
+                    max-width: 140px;
+                }
+
+                &.read-more {
+                    background: var(--fourth-bg-color);
+                    color: #fff;
+                    max-width: 110px;
+                    font-size: 0.9rem;
+                    padding: 0.7rem 0.8rem;
+
+ 
+                    &:hover {
+                        background: #026440;
+                    }
+                }
+
+                &.see-news {
+                    background: var(--fifth-bg-color);
+                    color: var(--primary-text-color);
+                    max-width: 180px;
+                    font-size: 0.9rem;
+                    padding: 0.7rem 0.8rem;
+
+                    &:hover {
+                        background: #e6e6e6;
+                    }
                 }
             }
         }
