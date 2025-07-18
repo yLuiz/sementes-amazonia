@@ -1,21 +1,31 @@
 .partners {
-  
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  background-color: #f9faef; // tom claro como na imagem
-  padding: 2rem;
-  height: 50vh;
+  background-color: #f9faef;
+  padding: 6rem;
+  
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
 
   h2 {
     font-family: 'Playfair Display', serif;
     text-align: center;
     font-size: 3rem;
     margin-bottom: 2rem;
-    color: #2e4d2d;
+    color: var(--primary-text-color);
     font-weight: 600;
+    
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 2rem;
+    }
   }
 
   .partners-list {
@@ -23,20 +33,36 @@
     justify-content: center;
     gap: 2rem;
     flex-wrap: wrap;
+    
+    @media (max-width: 768px) {
+      gap: 1rem;
+    }
   }
 
   .partner-card {
+    font-family: 'Playfair Display', serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #fdfdf8;
     border: 1px solid #d6d2bd;
     border-radius: 1.5rem;
-    padding: 2rem 3rem;
+    padding: 3rem 3rem;
     font-weight: 600;
     color: #2e4d2d;
     text-align: center;
     font-size: 1.2rem;
     min-width: 150px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-
+    
+    @media (max-width: 768px) and (min-width: 481px) {
+      flex: 0 1 calc(50% - 0.5rem);
+      padding: 3rem 3rem;
+      max-width: 40%;
+    }
+    @media (max-width: 480px) {
+      padding: 4rem 8rem;
+    }
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
