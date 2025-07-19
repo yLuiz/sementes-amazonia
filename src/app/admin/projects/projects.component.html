@@ -16,16 +16,18 @@
             placeholder="Escreva um breve resumo para destacar os principais pontos da notícia"></textarea>
         </label>
 
-        <label>
-          Imagem da capa
-          <input type="file" (change)="onFileChange($event)" />
-        </label>
+      <label class="custom-file-label">
+        Imagem da capa
+        <p>Escolha uma imagem que represente o projeto.</p>
+        <input type="file" (change)="onFileChange($event)" />
+        <span>Escolher arquivo</span>
+      </label>
       </div>
 
       <div class="column">
         <label>
           Descrição completa
-          <textarea formControlName="description" rows="13"
+          <textarea formControlName="description" rows="14"
             placeholder="Conte em detalhes sobre o projeto, objetivos, processo e resultados."></textarea>
         </label>
       </div>

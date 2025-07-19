@@ -26,10 +26,12 @@
           <input type="text" formControlName="tags" placeholder="Ex: floresta, impacto, comunidade e etc." />
         </label>
 
-        <label>
-          Imagem da capa
-          <input type="file" (change)="onFileChange($event)" />
-        </label>
+      <label class="custom-file-label">
+        Imagem da capa
+        <p>Escolha uma imagem que represente a notícia.</p>
+        <input type="file" (change)="onFileChange($event)" />
+        <span>Escolher arquivo</span>
+      </label>
       </div>
 
       <div class="column">
