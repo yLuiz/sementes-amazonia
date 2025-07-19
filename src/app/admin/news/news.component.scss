@@ -169,7 +169,13 @@
   }
 
   .form-container form .actions {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: stretch;
+
+    button {
+      width: calc(50% - 0.5rem);
+      margin-bottom: 1rem;
+    }
   }
 }
