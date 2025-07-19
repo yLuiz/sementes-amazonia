@@ -11,6 +11,7 @@
 .login-wrapper {
   display: flex;
   flex-direction: column;
+  padding: 2rem;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
@@ -26,10 +27,11 @@
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
 
   h1 {
+    font-family: Playfair display, serif;
     margin: 0;
-    color: #3c3c2e;
+    color: #3c602e;
     font-weight: 600;
-    font-size: 1.25rem;
+    font-size: 1.7rem;
   }
 }
 
@@ -45,13 +47,14 @@
 
   h2 {
     color: #3c602e;
-    font-size: 1.5rem;
+    font-family: Playfair display, serif;
+    font-size: 2rem;
     margin-bottom: 0.5rem;
   }
 
   p {
     color: #555;
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin-bottom: 1.5rem;
   }
 
@@ -63,7 +66,7 @@
     label {
       text-align: left;
       font-size: 0.875rem;
-      color: #444;
+      font-weight: 500;
 
       input {
         width: 100%;
@@ -109,7 +112,7 @@
       cursor: not-allowed;
 
       &:not(:disabled) {
-        background-color: #3c602e;
+        background-color: #819B47;
         color: white;
         cursor: pointer;
       }
@@ -123,7 +126,9 @@
     small {
       display: block;
       color: #666;
-      margin-bottom: 0.25rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
     }
 
     a {
