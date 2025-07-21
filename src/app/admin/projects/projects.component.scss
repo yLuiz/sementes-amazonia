@@ -1,24 +1,24 @@
 :host {
   display: block;
-  font-family: "Segoe UI", sans-serif;
   background-color: #f6f4f0;
-  min-height: 100vh;
   color: #333;
 }
 
 .form-container {
-  max-width: 1000px;
-
+  
   h2 {
+    font-family: Playfair display, serif;
+    margin: 0 auto;
     color: #3c602e;
-    font-size: 1.5rem;
+    font-size: 2.8rem;
     margin-bottom: 0.5rem;
   }
 
   p {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     color: #555;
-    font-size: 1rem;
+    font-size: 1.1rem;
+
   }
 
   form {
@@ -41,12 +41,17 @@
     }
 
     label {
-      font-size: 0.9rem;
+      font-size: 1rem;
       font-weight: 500;
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
       color: #333;
+
+      p {
+        margin-bottom: 0;
+        font-size: 1rem;
+      }
 
       input,
       textarea {
@@ -65,20 +70,55 @@
       }
 
       input[type="file"] {
-        padding: 0.3rem 0;
-        border: none;
-        font-size: 0.9rem;
-        background: transparent;
+        display: none;
+      }
+    }
+
+    .custom-file-label {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #333;
+
+      p {
+        margin-bottom: 0;
+        font-size: 1rem;
+      }
+
+      span {
+        margin-top: 0.3rem;
+        display: inline-block;
+        background: white;
+        color: #3c3c2e;
+        padding: 0.75rem 1.2rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: background 0.2s;
+        border: 1px solid #ccc;
+        width: 100%t;
+      }
+
+      &:hover span {
+        background: #e9ecd8;
       }
     }
 
     .actions {
+
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       margin-top: 2rem;
 
       button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20%;
         padding: 0.75rem 1.5rem;
         border-radius: 0.5rem;
         font-weight: 500;
@@ -131,7 +171,13 @@
   }
 
   .form-container form .actions {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: stretch;
+
+    button {
+      width: calc(50% - 0.5rem);
+      margin-bottom: 1rem;
+    }
   }
 }
