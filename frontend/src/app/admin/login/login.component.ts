@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: true,
@@ -23,7 +24,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private _router: Router,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private _toastr: ToastrService
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -44,6 +46,22 @@ export class LoginComponent {
           },
           error: (err) => {
             console.error(err)
+            if (err.status === 401) {
+
+              this._toastr.error('Credências inválidas', 'Não autorizado.', {
+                closeButton: true,
+                tapToDismiss: true,
+                progressBar: true
+              });
+
+              return;
+            }
+
+            this._toastr.error('Houve um erro ao fazer login.', 'Falha de login.', {
+              closeButton: true,
+              tapToDismiss: true,
+              progressBar: true
+            });
           }
         });
     }

@@ -6,18 +6,26 @@
     <div class="row">
       <div class="column">
         <label>
-          Nome do projeto
+          Nome do projeto *(Obrigatório)
           <input type="text" formControlName="nome" placeholder="Digite um título claro e direto" />
         </label>
 
         <label>
-          Resumo
+          Resumo *(Obrigatório)
           <textarea formControlName="resumo"
             placeholder="Escreva um breve resumo para destacar os principais pontos do projeto"></textarea>
         </label>
 
         <label class="custom-file-label">
-          Imagem da capa
+          Imagem da capa *(Obrigatório)
+          <!-- Preview da imagem -->
+          <div *ngIf="imagePreviewUrl" class="image-preview">
+            <p>Prévia da imagem:</p>
+            <img [src]="imagePreviewUrl" alt="Prévia da imagem"
+              style="max-width: 100%; max-height: 200px; border-radius: 8px;" />
+            <br>
+            <small>{{ imagemThumb.name }}</small>
+          </div>
           <p>Escolha uma imagem que represente o projeto.</p>
           <input type="file" (change)="onFileChange($event)" />
           <span>Escolher arquivo</span>
@@ -26,7 +34,7 @@
 
       <div class="column">
         <label>
-          Descrição completa
+          Descrição completa *(Obrigatório)
           <textarea formControlName="descricaoCompleta" rows="14"
             placeholder="Conte em detalhes sobre o projeto, objetivos, processo e resultados."></textarea>
         </label>
@@ -35,8 +43,8 @@
 
     <div class="actions">
       <button type="submit" [disabled]="form.invalid" class="gray">Publicar projeto</button>
-      <button type="button" class="gray">Salvar rascunho</button>
-      <button type="button" class="preview">Ver prévia</button>
+      <!-- <button type="button" class="gray">Salvar rascunho</button>
+      <button type="button" class="preview">Ver prévia</button> -->
       <button type="button" class="clear" (click)="clearForm()">Limpar tudo</button>
     </div>
   </form>

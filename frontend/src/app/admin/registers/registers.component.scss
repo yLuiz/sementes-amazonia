@@ -26,10 +26,9 @@
     font-size: 1.5rem;
     font-weight: 600;
     font-family: Playfair display, serif;
-    margin: 0 auto;
+    
     color: #3c602e;
     text-align: center;
-    flex: 1;
   }
 
   .options-container {
@@ -38,7 +37,7 @@
     align-items: center;
     gap: 12px;
 
-    .logout-container {
+    .redirect-container, .logout-container {
 
       button {
         outline: none;
@@ -94,6 +93,7 @@ section {
   margin: 2rem auto 2.5rem;
   background-color: #e9ecd8;
   padding: 0.5rem;
+  gap: 6px;
   border-radius: 1rem;
   width: fit-content;
 

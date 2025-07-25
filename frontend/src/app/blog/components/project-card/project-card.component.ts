@@ -10,19 +10,22 @@ import { apiConfig } from '../../../config/api.config';
 })
 export class ProjectCardComponent {
 
-  imageUrl: string = '';
+  defaultImage = '../../../../assets/no-image.jpg';
+  imageUrl: string = '../';
 
   @Input() image!: string;
   @Input() title!: string;
   @Input() date!: string;
   @Input() description!: string;
 
+  labelDate = '-';
+
   ngOnInit() {
+
+    this.labelDate = new Date(this.date).toLocaleString('pt-BR').split(',')[0];
+
     if (this.image) {
       this.imageUrl = `${apiConfig.media.base}/${this.image}`;
-
-      console.log('Image URL set to:', this.imageUrl);
-
     } else {
       console.warn('Image input is not provided for project card');
     }

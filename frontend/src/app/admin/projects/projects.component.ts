@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectsService } from '../../services/projects/projects.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: true,
@@ -17,10 +18,12 @@ import { ProjectsService } from '../../services/projects/projects.service';
 })
 export class ProjectsComponent {
   form: FormGroup;
+  imagePreviewUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private _projectsService: ProjectsService
+    private _projectsService: ProjectsService,
+    private _toastr: ToastrService
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -35,6 +38,16 @@ export class ProjectsComponent {
     const file = input.files?.[0];
     if (file) {
       this.form.patchValue({ imagemThumb: file });
+      // Gera o preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    else {
+      this.imagePreviewUrl = null;
     }
   }
 
@@ -54,30 +67,31 @@ export class ProjectsComponent {
 
       this._projectsService.createProject(formData).subscribe({
         next: (res) => {
-          console.log(res)
-          console.log('Project - Criado com sucesso.')
+          this._toastr.success('Projeto criado com sucesso.', 'Sucesso.', {
+            closeButton: true,
+            tapToDismiss: true,
+            progressBar: true
+          });
           this.clearForm();
         },
         error: (err) => {
           console.error('Project: ', err)
+          this._toastr.error('Houve um erro ao criar o projeto.', 'Falha.', {
+            closeButton: true,
+            tapToDismiss: true,
+            progressBar: true
+          });
         }
-      })
-
-      let obj = {}
-      formData.forEach((v, k) => {
-        obj = {
-          ...obj,
-          [k as any]: v
-        }
-      })
-
-      console.log(obj);
-
-
+      });
     }
+  }
+
+  get imagemThumb() {
+    return this.form.get('imagemThumb')?.value;
   }
 
   clearForm() {
     this.form.reset();
+    this.imagePreviewUrl = null;
   }
 }

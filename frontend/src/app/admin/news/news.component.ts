@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { NewsService } from '../../services/news/news.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: true,
@@ -15,10 +16,12 @@ import { NewsService } from '../../services/news/news.service';
 })
 export class NewsComponent {
   form: FormGroup;
+  imagePreviewUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private _newsService: NewsService,
+    private _toastr: ToastrService
   ) {
     this.form = this.fb.group({
       titulo: ['', Validators.required],
@@ -35,6 +38,17 @@ export class NewsComponent {
     const file = input.files?.[0];
     if (file) {
       this.form.patchValue({ imagemThumb: file });
+
+      // Gera o preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    else {
+      this.imagePreviewUrl = null;
     }
   }
 
@@ -55,31 +69,35 @@ export class NewsComponent {
 
       this._newsService.createNews(formData).subscribe({
         next: (res) => {
-          console.log(res)
-          console.log('News - Criado com sucesso.')
+          this._toastr.success('Notícia criada com sucesso.', 'Sucesso.', {
+            closeButton: true,
+            tapToDismiss: true,
+            progressBar: true
+          });
+
           this.clearForm();
         },
         error: (err) => {
           console.error('News: ', err)
+
+          this._toastr.error('Houve um erro ao criar a notícia.', 'Falha.', {
+            closeButton: true,
+            tapToDismiss: true,
+            progressBar: true
+          });
         }
       });
-
-      let obj = {}
-      formData.forEach((v, k) => {
-        obj = {
-          ...obj,
-          [k as any]: v
-        }
-      })
-
-      console.log(obj);
-
     }
 
 
   }
 
+  get imagemThumb() {
+    return this.form.get('imagemThumb')?.value;
+  }
+
   clearForm() {
     this.form.reset();
+    this.imagePreviewUrl = null;
   }
 }

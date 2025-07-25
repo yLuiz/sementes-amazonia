@@ -31,6 +31,10 @@ export class RegistersComponent {
     this.tab = tab;
   }
 
+  goToWebSite() {
+    this.router.navigate(['']);
+  }
+
   logout() {
     this._authService.logout();
     this.router.navigate(['/admin/login'])

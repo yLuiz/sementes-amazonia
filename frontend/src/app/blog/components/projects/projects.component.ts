@@ -36,12 +36,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   */
   private loadProjects(): void {
 
-    console.log('Carregando projetos...');
     const projectsSub = this.projectsService.getProjects().subscribe({
       next: (projects) => {
-
-        console.log('Projetos carregados:', projects);
-        // this.projects = projects;
         this.projectsInPortuguese = (projects as unknown as any).data as IProjectPortugueseResponse[];
       },
       error: (error) => {

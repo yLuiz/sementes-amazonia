@@ -4,8 +4,8 @@
     <ng-container *ngFor="let news of newsInPortuguese">
       <app-news-card
         [date]="news.createdAt"
-        [title]="news.titulo"
-        [description]="news.conteudoCompleto"
+        [title]="news.titulo || '-'"
+        [description]="news.conteudoCompleto || '-'"
         [image]="news.imagemThumb">
       </app-news-card>
     </ng-container>

@@ -39,7 +39,7 @@ footer {
     margin-bottom: 2rem;
 
     div {
-      flex: 1;
+      // flex: 1;
       min-width: 280px;
 
       strong {
@@ -112,6 +112,8 @@ footer {
         gap: 0.5rem;
         margin-bottom: 0.8rem;
         font-size: 1.1rem;
+        text-wrap: wrap;
+        text-overflow: ellipsis;
 
         .material-icons-outlined {
           font-size: 1.5rem;

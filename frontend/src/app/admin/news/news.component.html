@@ -6,28 +6,36 @@
     <div class="row">
       <div class="column">
         <label>
-          Título da notícia
+          Título da notícia *(Obrigatório)
           <input type="text" formControlName="titulo" placeholder="Digite um título claro e direto" />
         </label>
 
         <label>
-          Resumo
+          Resumo *(Obrigatório)
           <textarea formControlName="resumo"
             placeholder="Escreva um breve resumo para destacar os principais pontos da notícia"></textarea>
         </label>
 
         <label>
-          Data de publicação
+          Data de publicação *(Obrigatório)
           <input type="date" formControlName="dataPublicacao" />
         </label>
 
         <label>
-          Tags
+          Tags *(Obrigatório)
           <input type="text" formControlName="tags" placeholder="Ex: floresta, impacto, comunidade e etc." />
         </label>
 
         <label class="custom-file-label">
-          Imagem da capa
+          Imagem da capa *(Obrigatório)
+          <!-- Preview da imagem -->
+          <div *ngIf="imagePreviewUrl" class="image-preview">
+            <p>Prévia da imagem:</p>
+            <img [src]="imagePreviewUrl" alt="Prévia da imagem"
+              style="max-width: 100%; max-height: 200px; border-radius: 8px;" />
+            <br>
+            <small>{{ imagemThumb.name }}</small>
+          </div>
           <p>Escolha uma imagem que represente a notícia.</p>
           <input type="file" (change)="onFileChange($event)" />
           <span>Escolher arquivo</span>
@@ -36,17 +44,18 @@
 
       <div class="column">
         <label>
-          Conteúdo completo
+          Conteúdo completo *(Obrigatório)
           <textarea formControlName="conteudoCompleto" placeholder="Digite aqui o texto principal da notícia"
             rows="12"></textarea>
         </label>
+
       </div>
     </div>
 
     <div class="actions">
       <button type="submit" [disabled]="form.invalid" class="gray">Publicar notícia</button>
-      <button type="button" class="gray">Salvar rascunho</button>
-      <button type="button" class="preview">Ver prévia</button>
+      <!-- <button type="button" class="gray">Salvar rascunho</button>
+      <button type="button" class="preview">Ver prévia</button> -->
       <button type="button" class="clear" (click)="clearForm()">Limpar tudo</button>
     </div>
   </form>

@@ -33,14 +33,9 @@ export class NewsComponent implements OnInit, OnDestroy {
    * Carrega as notícias
    */
   private loadNews(): void {
-    console.log('Carregando notícias...');
     const newsSub = this.newsService.getNews().subscribe({
       next: (news) => {
-        console.log('Notícias carregadas:', news);
-        // Se sua API retorna { data: [...] }
         this.newsInPortuguese = (news as any).data as INewsPortugueseResponse[] || [];
-        // Se quiser usar o mock ou News padrão:
-        // this.newsList = news as News[];
       },
       error: (error) => {
         console.error('Erro ao carregar notícias:', error);
