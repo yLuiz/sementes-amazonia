@@ -1,0 +1,53 @@
+<div class="form-container">
+  <h2>Nova notícia</h2>
+  <p>Preencha as informações abaixo para criar uma nova publicação.</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="column">
+        <label>
+          Título da notícia
+          <input type="text" formControlName="titulo" placeholder="Digite um título claro e direto" />
+        </label>
+
+        <label>
+          Resumo
+          <textarea formControlName="resumo"
+            placeholder="Escreva um breve resumo para destacar os principais pontos da notícia"></textarea>
+        </label>
+
+        <label>
+          Data de publicação
+          <input type="date" formControlName="dataPublicacao" />
+        </label>
+
+        <label>
+          Tags
+          <input type="text" formControlName="tags" placeholder="Ex: floresta, impacto, comunidade e etc." />
+        </label>
+
+        <label class="custom-file-label">
+          Imagem da capa
+          <p>Escolha uma imagem que represente a notícia.</p>
+          <input type="file" (change)="onFileChange($event)" />
+          <span>Escolher arquivo</span>
+        </label>
+      </div>
+
+      <div class="column">
+        <label>
+          Conteúdo completo
+          <textarea formControlName="conteudoCompleto" placeholder="Digite aqui o texto principal da notícia"
+            rows="12"></textarea>
+        </label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid" class="gray">Publicar notícia</button>
+      <button type="button" class="gray">Salvar rascunho</button>
+      <button type="button" class="preview">Ver prévia</button>
+      <button type="button" class="clear" (click)="clearForm()">Limpar tudo</button>
+    </div>
+  </form>
+</div>

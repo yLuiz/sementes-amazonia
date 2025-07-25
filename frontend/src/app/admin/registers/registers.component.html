@@ -1,0 +1,37 @@
+<div class="page-wrapper">
+    <header class="header">
+        <h1>Sementes da Amazônia</h1>
+        <div class="options-container">
+            <div class="user-icon">
+                <span class="material-icons-outlined">person</span>
+            </div>
+            <div class="logout-container">
+                <button (click)="logout()">Sair</button>
+            </div>
+        </div>
+
+
+    </header>
+
+    <section>
+        <nav class="tab-switch">
+            <button (click)="changeTab('news')" [ngClass]="{
+                'active': tab === 'news'
+            }">
+                Adicionar notícia
+            </button>
+            <button (click)="changeTab('projects')" [ngClass]="{
+                    'active': tab === 'projects'
+                }">
+                Adicionar projeto
+            </button>
+        </nav>
+
+        <main>
+            <ng-container [ngSwitch]="tab">
+                <app-news *ngSwitchCase="'news'"></app-news>
+                <app-projects *ngSwitchCase="'projects'"></app-projects>
+            </ng-container>
+        </main>
+    </section>
+</div>

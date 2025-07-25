@@ -1,0 +1,14 @@
+<section id="news" class="news">
+  <h2>Últimas notícias</h2>
+  <div class="cards">
+    <ng-container *ngFor="let news of newsInPortuguese">
+      <app-news-card
+        [date]="news.createdAt"
+        [title]="news.titulo"
+        [description]="news.conteudoCompleto"
+        [image]="news.imagemThumb">
+      </app-news-card>
+    </ng-container>
+  </div>
+  <button (click)="onViewAllNews()">Ver todas as notícias</button>
+</section>
