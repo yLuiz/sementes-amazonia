@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   useMockData: false,
-  apiUrl: 'http://localhost:3000',
+  apiUrl: 'https://sementes-amazonia-production.up.railway.app',
   apiVersion: 'v1'
 };
 
