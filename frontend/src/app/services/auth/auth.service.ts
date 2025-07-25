@@ -1,8 +1,7 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { apiConfig } from "../../config/api.config";
+import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { isPlatformBrowser } from "@angular/common";
+import { apiConfig } from "../../config/api.config";
 
 export interface ILoginRequest {
     username: string,
@@ -22,7 +21,6 @@ export interface ILoginResponse {
 })
 export class AuthService {
     private http = inject(HttpClient);
-    private platformId = inject(PLATFORM_ID);
 
     private readonly apiUrl = apiConfig.auth.base;
 
@@ -31,22 +29,17 @@ export class AuthService {
     }
 
     authInApplication(payload: ILoginResponse) {
-        if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('token', payload.access_token);
-        }
+        localStorage.setItem('token', payload.access_token);
+
     }
 
     getToken() {
-        if (isPlatformBrowser(this.platformId)) {
-            return localStorage.getItem('token');
-        }
-        return null;
+        return localStorage.getItem('token');
+
     }
 
     logout() {
-        if (isPlatformBrowser(this.platformId)) {
-            localStorage.removeItem('token');
-        }
+        localStorage.removeItem('token');
     }
 
     validateToken(token: string) {
