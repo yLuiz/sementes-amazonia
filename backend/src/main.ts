@@ -5,6 +5,13 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import * as crypto from 'crypto';
+
+// 🔑 Polyfill para garantir que crypto.randomUUID exista
+if (!(global as any).crypto) {
+  (global as any).crypto = crypto;
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
