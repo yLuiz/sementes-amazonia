@@ -37,13 +37,14 @@ $sementes-amazonia-theme: mat.define-light-theme((
 
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
 // PrimeIcons
 @import 'primeicons/primeicons.css';
 
 * {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
+    font-family: 'Montserrat', sans-serif;margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
@@ -55,14 +56,15 @@ html {
 :root {
 
     --primary-bg-color: #F6F8ED;
-    --second-bg-color: #F6F4F0;
-    --third-bg-color: #4D5F2C;
+    --second-bg-color: #EBF2EB;
+    --third-bg-color: #1C4B1F;
     --fourth-bg-color: #37B03B;
     --fifth-bg-color: #E9EFD8;
     --primary-light-color: #E0F8E0;
+    --hover-button-bg-color: #237225;
 
     --primary-text-color: #237225;
-    --second-text-color: #58443B;
+    --second-text-color: #8B3515;
     --third-text-color: #656565;
 }
 html, body { height: 100%; }

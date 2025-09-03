@@ -63,7 +63,7 @@
         &.nav-button-left {
             left: 20px;
 
-            @media (max-width: 480px) {
+            @media (max-width: 768px){
                 display: none;
             }
         }
@@ -71,7 +71,7 @@
         &.nav-button-right {
             right: 20px;
 
-            @media (max-width: 480px) {
+            @media (max-width: 768px){
                 display: none;
             }
         }
@@ -182,7 +182,7 @@
         }
 
         h1 {
-            font-family: Playfair Display, serif;
+            font-family: 'Cormorant', serif;
             font-size: 3rem;
             margin-bottom: 1rem;
             line-height: 1.1;
@@ -197,6 +197,8 @@
             font-size: 1.4rem;
             margin-bottom: 2rem;
             line-height: 1.6;
+            font-family: "Montserrat", sans-serif;
+
 
             @media (max-width: 768px) {
                 width: 100%;
@@ -249,9 +251,12 @@
                     font-size: 1rem;
                     padding: 0.8rem;
 
+                    @media (max-width: 480px) {
+                        font-size: 0.7rem;
+                    }
  
                     &:hover {
-                        background: #237225;
+                        background: var(--hover-button-bg-color);
                     }
                 }
 
@@ -261,6 +266,10 @@
                     max-width: 180px;
                     font-size: 1rem;
                     padding: 0.8rem;
+                    
+                    @media (max-width: 480px) {
+                        font-size: 0.7rem;
+                    }
 
                     &:hover {
                         background: var(--primary-light-color);
