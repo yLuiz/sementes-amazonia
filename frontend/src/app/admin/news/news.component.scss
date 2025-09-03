@@ -1,6 +1,5 @@
 :host {
   display: block;
-  background-color: #f6f4f0;
   color: #333;
 }
 
@@ -9,7 +8,7 @@
   h2 {
     font-family: 'Cormorant', serif;
     margin: 0 auto;
-    color: #3c602e;
+    color: var(--primary-text-color);
     font-size: 2.8rem;
     margin-bottom: 0.5rem;
   }

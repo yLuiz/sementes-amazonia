@@ -26,10 +26,8 @@
   h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    font-family: 'Cormorant', serif;
-
-    
-    color: #3c602e;
+    font-family: 'Cormorant', serif; 
+    color: var(--primary-text-color);
     text-align: center;
   }
 
@@ -105,13 +103,13 @@ section {
     padding: 0.8rem 1.8rem;
     cursor: pointer;
     font-weight: 600;
-    color: #4D5F2C;
+    color: #656565;
     font-size: 1rem;
     transition: all 0.3s ease;
 
     &.active {
       background-color: #ffffff;
-      color: #656565;
+      color: var(--primary-text-color);
       font-weight: 600;
       border-radius: 0.8rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
