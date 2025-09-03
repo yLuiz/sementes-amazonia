@@ -1,6 +1,6 @@
 :host {
   display: block;
-  background-color: #f6f4f0;
+  background-color: #F7F1E5;
   min-height: 100vh;
   font-family: "Montserrat", sans-serif;
 
@@ -15,7 +15,7 @@
 
 /* Cabeçalho */
 .header {
-  background-color: #f4f7ec;
+  background-color: var(--second-bg-color);
   padding: 1rem 2rem;
   display: flex;
   align-items: center;

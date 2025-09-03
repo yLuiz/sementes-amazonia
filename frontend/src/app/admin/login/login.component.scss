@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: start;
   min-height: 100vh;
-  background-color: #f6f4f0;
+  background-color: #F7F1E5;
   font-family: "Montserrat", sans-serif;
 }
 
@@ -21,7 +21,8 @@
 
 .header {
   width: 100%;
-  background-color: #f4f7ec;
+  background-color: var(--second-bg-color);
+  border-bottom: 1px solid #B8EEB8;
   text-align: center;
   padding: 1rem 0;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
@@ -47,7 +48,7 @@
   text-align: center;
 
   h2 {
-    color: #3c602e;
+    color: #237225;
     font-family: 'Cormorant', serif;
     font-size: 2rem;
     margin-bottom: 0.5rem;
@@ -73,7 +74,7 @@
         width: 100%;
         padding: 0.75rem;
         margin-top: 0.25rem;
-        border: 1px solid #e0e0e0;
+        border: 1px solid #205B22;
         border-radius: 0.5rem;
         background-color: #fff;
         font-size: 0.95rem;
@@ -113,9 +114,25 @@
       cursor: not-allowed;
 
       &:not(:disabled) {
-        background-color: #819B47;
+        background-color: var(--fourth-bg-color);
         color: white;
         cursor: pointer;
+      }
+
+      .loading-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      ::ng-deep .login-spinner .p-progress-spinner-circle {
+        stroke: white;
+      }
+
+      ::ng-deep .login-spinner .p-progress-spinner-svg {
+        width: 20px;
+        height: 20px;
       }
     }
   }
@@ -133,7 +150,7 @@
     }
 
     a {
-      color: #3c602e;
+      color: #28912C;
       text-decoration: none;
       font-weight: 600;
     }
