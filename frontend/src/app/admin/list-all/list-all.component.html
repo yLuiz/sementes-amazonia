@@ -1,0 +1,133 @@
+<div class="page-wrapper">
+  <header class="header">
+    <h1>Sementes da Amazônia</h1>
+    <div class="options-container">
+      <div class="redirect-container">
+        <button (click)="goToWebSite()">Ir para o site</button>
+      </div>
+      <div class="logout-container">
+        <button (click)="logout()">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="content">
+    <div class="section-header">
+      <h2>Todas as Notícias e Projetos</h2>
+      <p>Visualize todos os conteúdos cadastrados no sistema</p>
+    </div>
+
+    <!-- Barra de controles -->
+    <div class="controls-bar">
+      <!-- Barra de pesquisa -->
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input 
+            type="text" 
+            placeholder="Pesquisar por título ou descrição..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()"
+            class="search-input">
+          <button 
+            *ngIf="searchTerm" 
+            class="clear-button"
+            (click)="clearSearch()"
+            type="button">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtros por tag -->
+      <div class="filter-container">
+        <span class="filter-label">Filtrar por:</span>
+        <div class="filter-buttons">
+          <button 
+            class="filter-btn"
+            [class.active]="selectedFilter === 'all'"
+            (click)="onFilterChange('all')">
+            Todos
+          </button>
+          <button 
+            class="filter-btn news"
+            [class.active]="selectedFilter === 'news'"
+            (click)="onFilterChange('news')">
+            Notícias
+          </button>
+          <button 
+            class="filter-btn project"
+            [class.active]="selectedFilter === 'project'"
+            (click)="onFilterChange('project')">
+            Projetos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultado da busca/filtro -->
+    <div class="results-info" *ngIf="searchTerm || selectedFilter !== 'all'">
+      <span>{{ filteredItems.length }} resultado(s) encontrado(s)</span>
+      <button class="clear-filters" (click)="searchTerm = ''; selectedFilter = 'all'">
+        Limpar filtros
+      </button>
+    </div>
+
+    <!-- Grid unificada de todos os cards -->
+    <div class="cards-grid">
+      <div *ngFor="let item of filteredItems" class="card-wrapper">
+        <app-news-card 
+          *ngIf="item.type === 'news'"
+          [title]="item.title"
+          [description]="item.description"
+          [date]="item.date"
+          [image]="item.image || ''">
+        </app-news-card>
+        
+        <app-project-card 
+          *ngIf="item.type === 'project'"
+          [title]="item.title"
+          [description]="item.description"
+          [date]="item.date"
+          [image]="item.image || ''">
+        </app-project-card>
+        
+        <!-- Tag de tipo -->
+        <div class="type-tag" [ngClass]="item.type">
+          {{ item.type === 'news' ? 'Notícia' : 'Projeto' }}
+        </div>
+
+        <!-- Botões de ação -->
+        <div class="action-buttons">
+          <p-button 
+            icon="pi pi-pencil" 
+            [rounded]="true" 
+            [text]="true"
+            severity="secondary"
+            (click)="editItem(item)"
+            class="edit-btn"
+            pTooltip="Editar">
+          </p-button>
+          
+          <p-button 
+            icon="pi pi-trash" 
+            [rounded]="true" 
+            [text]="true"
+            severity="danger"
+            size="small"
+            (click)="deleteItem(item)"
+            class="delete-btn"
+            pTooltip="Deletar">
+          </p-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensagem quando não há resultados -->
+    <div class="no-results" *ngIf="filteredItems.length === 0">
+      <mat-icon>search_off</mat-icon>
+      <h3>Nenhum resultado encontrado</h3>
+      <p>Tente ajustar os filtros ou termos de busca.</p>
+    </div>
+  </section>
+</div>

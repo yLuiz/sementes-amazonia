@@ -30,6 +30,13 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
       {
+        path: 'list-all',
+        loadComponent: () =>
+          import('./admin/list-all/list-all.component').then((m) => m.ListAllComponent),
+        canActivate: [authGuard],
+        pathMatch: 'full',
+      },
+      {
         path: '**',
         redirectTo: 'login',
       }
