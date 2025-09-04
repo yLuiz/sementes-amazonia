@@ -1,5 +1,6 @@
 <div class="page-wrapper">
-  <header class="header">
+  <!-- Header para Admin -->
+  <header class="header" *ngIf="isAdminContext">
     <h1>Sementes da Amazônia</h1>
     <div class="options-container">
       <div class="redirect-container">
@@ -11,7 +12,10 @@
     </div>
   </header>
 
-  <section class="content">
+  <!-- Navbar para usuários não admin -->
+  <app-navbar *ngIf="!isAdminContext"></app-navbar>
+
+  <section class="content" [class.with-navbar]="!isAdminContext">
     <div class="section-header">
       <h2>Todas as Notícias e Projetos</h2>
       <p>Visualize todos os conteúdos cadastrados no sistema</p>
@@ -67,15 +71,15 @@
 
     <!-- Resultado da busca/filtro -->
     <div class="results-info" *ngIf="searchTerm || selectedFilter !== 'all'">
-      <span>{{ filteredItems.length }} resultado(s) encontrado(s)</span>
-      <button class="clear-filters" (click)="searchTerm = ''; selectedFilter = 'all'">
+      <span>{{ totalItems }} resultado(s) encontrado(s)</span>
+      <button class="clear-filters" (click)="searchTerm = ''; selectedFilter = 'all'; currentPage = 0">
         Limpar filtros
       </button>
     </div>
 
     <!-- Grid unificada de todos os cards -->
     <div class="cards-grid">
-      <div *ngFor="let item of filteredItems" class="card-wrapper">
+      <div *ngFor="let item of paginatedItems" class="card-wrapper">
         <app-news-card 
           *ngIf="item.type === 'news'"
           [title]="item.title"
@@ -97,8 +101,8 @@
           {{ item.type === 'news' ? 'Notícia' : 'Projeto' }}
         </div>
 
-        <!-- Botões de ação -->
-        <div class="action-buttons">
+        <!-- Botões de ação (só para admin) -->
+        <div class="action-buttons" *ngIf="isAdminContext">
           <p-button 
             icon="pi pi-pencil" 
             [rounded]="true" 
@@ -106,7 +110,7 @@
             severity="secondary"
             (click)="editItem(item)"
             class="edit-btn"
-            pTooltip="Editar">
+            >
           </p-button>
           
           <p-button 
@@ -117,17 +121,60 @@
             size="small"
             (click)="deleteItem(item)"
             class="delete-btn"
-            pTooltip="Deletar">
+            >
           </p-button>
         </div>
       </div>
     </div>
 
     <!-- Mensagem quando não há resultados -->
-    <div class="no-results" *ngIf="filteredItems.length === 0">
+    <div class="no-results" *ngIf="totalItems === 0">
       <mat-icon>search_off</mat-icon>
       <h3>Nenhum resultado encontrado</h3>
       <p>Tente ajustar os filtros ou termos de busca.</p>
     </div>
+
+    <!-- Paginação -->
+    <div class="pagination-container" *ngIf="totalItems > 0">
+      <mat-paginator
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage"
+        (page)="onPageChange($event)"
+        showFirstLastButtons="true"
+        aria-label="Navegação de páginas"
+        class="custom-paginator">
+      </mat-paginator>
+    </div>
   </section>
+</div>
+
+<!-- Modal de confirmação de delete -->
+<div class="delete-modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
+  <div class="delete-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <mat-icon class="delete-icon">delete</mat-icon>
+    </div>
+    
+    <div class="modal-content">
+      <h3>Confirmar exclusão</h3>
+      <p>
+        Tem certeza que deseja deletar 
+        <span class="item-type">{{ itemToDelete?.type === 'news' ? 'esta notícia' : 'este projeto' }}</span>?
+      </p>
+      <p class="item-title">"{{ itemToDelete?.title }}"</p>
+      <p class="warning-text">Esta ação não pode ser desfeita.</p>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="cancel-btn" (click)="cancelDelete()">
+        Cancelar
+      </button>
+      <button class="confirm-btn" (click)="confirmDelete()">
+        <mat-icon>delete</mat-icon>
+        Deletar
+      </button>
+    </div>
+  </div>
 </div>

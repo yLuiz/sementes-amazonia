@@ -9,6 +9,11 @@ export const routes: Routes = [
       import('./blog/blog.component').then((m) => m.BlogComponent),
   },
   {
+    path: 'list-all',
+    loadComponent: () =>
+      import('./blog/components/list-all/list-all.component').then((m) => m.ListAllComponent),
+  },
+  {
     path: 'article/:id',
     loadComponent: () =>
       import('./blog/components/article/article.component').then((m) => m.ArticleComponent),
@@ -31,13 +36,6 @@ export const routes: Routes = [
         path: 'registers',
         loadComponent: () =>
           import('./admin/registers/registers.component').then((m) => m.RegistersComponent),
-        canActivate: [authGuard],
-        pathMatch: 'full',
-      },
-      {
-        path: 'list-all',
-        loadComponent: () =>
-          import('./admin/list-all/list-all.component').then((m) => m.ListAllComponent),
         canActivate: [authGuard],
         pathMatch: 'full',
       },
