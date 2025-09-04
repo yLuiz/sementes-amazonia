@@ -71,8 +71,8 @@ export class ListAllComponent {
   isAdminContext: boolean = false;
 
   currentPage: number = 0;
-  pageSize: number = 8;
-  pageSizeOptions: number[] = [4, 8, 16, 32];
+  pageSize: number = 10;
+  pageSizeOptions: number[] = [10, 20, 30, 40];
 
   // Propriedades do modal de delete
   showDeleteModal: boolean = false;
@@ -276,6 +276,7 @@ export class ListAllComponent {
   }
 
   editItem(item: MockItem) {
+      // Vai ter que integrar o role do edit aq
     console.log('Editando item:', item);
 
   }
@@ -292,20 +293,10 @@ export class ListAllComponent {
 
   confirmDelete(): void {
     if (this.itemToDelete) {
-      // Aqui você implementará a lógica real de delete
-      // Por enquanto, vamos apenas remover do array local
-      const index = this.allItems.findIndex(item => 
-        item.id === this.itemToDelete!.id && item.type === this.itemToDelete!.type
-      );
-      
-      if (index > -1) {
-        this.allItems.splice(index, 1);
-        console.log(`${this.itemToDelete.type === 'news' ? 'Notícia' : 'Projeto'} deletado:`, this.itemToDelete.title);
-        
-        // Atualiza a paginação se necessário
+      // Vai ter que integrar o role do delete aq
+      console.log(`${this.itemToDelete.type === 'news' ? 'Notícia' : 'Projeto'} deletado:`, this.itemToDelete.title);
         if (this.paginatedItems.length === 1 && this.currentPage > 0) {
           this.currentPage--;
-        }
       }
     }
     
