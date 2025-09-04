@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+
+<div class="article-container">
+  <!-- Cabeçalho do artigo -->
+  <header class="article-header">
+    <h1 class="article-title">{{ articleData.title }}</h1>
+    <div class="article-meta">
+      <span>Por {{ articleData.author }} - {{ formattedDate }}</span>
+    </div>
+  </header>
+
+  <!-- Conteúdo do artigo -->
+  <main class="article-content">
+    <p *ngFor="let paragraph of articleData.content" class="article-paragraph">
+      {{ paragraph }}
+    </p>
+  </main>
+
+  <!-- Barra inferior -->
+  <footer class="article-footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <!-- Espaço reservado para conteúdo futuro -->
+      </div>
+      <div class="footer-right">
+        <button class="share-button" (click)="shareArticle()" title="Compartilhar artigo">
+          <mat-icon>share</mat-icon>
+          <span>Compartilhar</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+</div>
