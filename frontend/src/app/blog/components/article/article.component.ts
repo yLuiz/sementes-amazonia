@@ -1,17 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { CarouselModule } from 'primeng/carousel';
+import { Carousel } from 'primeng/carousel';
 
 @Component({
   selector: 'app-article',
   standalone: true,
-  imports: [CommonModule, MatIconModule, NavbarComponent],
+  imports: [CommonModule, MatIconModule, NavbarComponent, CarouselModule],
   templateUrl: './article.component.html',
   styleUrl: './article.component.scss'
 })
 export class ArticleComponent implements OnInit {
+  
+  @ViewChild('imageCarousel') imageCarousel!: Carousel;
+  
+  currentImageIndex: number = 0;
+  
+  images = [
+    {
+      src: 'assets/amazon_forest.png',
+      alt: 'Floresta Amazônica'
+    },
+    {
+      src: 'assets/amazon_forest_2.png', 
+      alt: 'Biodiversidade da Amazônia'
+    },
+    {
+      src: 'assets/Image 1.png',
+      alt: 'Pesquisa na Amazônia'
+    }
+  ];
   
   articleData = {
     id: '1',
@@ -77,5 +98,41 @@ export class ArticleComponent implements OnInit {
     }
     
     document.body.removeChild(textArea);
+  }
+
+  // Métodos para navegação do carousel de imagens
+  nextImage() {
+    if (this.imageCarousel) {
+      this.imageCarousel.navForward(new MouseEvent('click'));
+    }
+  }
+
+  previousImage() {
+    if (this.imageCarousel) {
+      this.imageCarousel.navBackward(new MouseEvent('click'));
+    }
+  }
+
+  onPageChange(event: any) {
+    this.currentImageIndex = event.page;
+  }
+
+  goToSlide(index: number) {
+    if (this.imageCarousel) {
+      this.currentImageIndex = index;
+      // Navegar para o slide específico
+      const currentPage = this.imageCarousel.page || 0;
+      const diff = index - currentPage;
+      
+      if (diff > 0) {
+        for (let i = 0; i < diff; i++) {
+          this.imageCarousel.navForward(new MouseEvent('click'));
+        }
+      } else if (diff < 0) {
+        for (let i = 0; i < Math.abs(diff); i++) {
+          this.imageCarousel.navBackward(new MouseEvent('click'));
+        }
+      }
+    }
   }
 }
