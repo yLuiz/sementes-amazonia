@@ -1,24 +1,27 @@
 <div class="page-wrapper">
+  <!-- Sidebar para Admin -->
+  <app-sidebar *ngIf="isAdminContext"></app-sidebar>
+
   <!-- Header para Admin -->
   <header class="header" *ngIf="isAdminContext">
     <h1>Sementes da Amazônia</h1>
-    <div class="options-container">
+    <!-- <div class="options-container">
       <div class="redirect-container">
         <button (click)="goToWebSite()">Ir para o site</button>
       </div>
       <div class="logout-container">
         <button (click)="logout()">Sair</button>
       </div>
-    </div>
+    </div> -->
   </header>
 
   <!-- Navbar para usuários não admin -->
   <app-navbar *ngIf="!isAdminContext"></app-navbar>
 
-  <section class="content" [class.with-navbar]="!isAdminContext">
+  <section class="content" [class.with-navbar]="!isAdminContext" [class.with-sidebar]="isAdminContext">
     <div class="section-header">
-      <h2>Todas as Notícias e Projetos</h2>
-      <p>Visualize todos os conteúdos cadastrados no site</p>
+      <h2>{{ getPageTitle() }}</h2>
+      <p>{{ getPageDescription() }}</p>
     </div>
 
     <!-- Barra de controles -->

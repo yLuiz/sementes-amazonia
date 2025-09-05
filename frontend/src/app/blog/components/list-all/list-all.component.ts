@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
@@ -8,10 +8,11 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { AuthService } from '../../../services/auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NewsCardComponent } from '../news-card/news-card.component';
 import { ProjectCardComponent } from '../project-card/project-card.component';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { SidebarComponent } from '../../../admin/shared/sidebar/sidebar.component';
 
 class CustomMatPaginatorIntl extends MatPaginatorIntl {
   override itemsPerPageLabel = 'Itens por página:';
@@ -56,7 +57,8 @@ interface MockItem {
     TooltipModule,
     NewsCardComponent,
     ProjectCardComponent,
-    NavbarComponent
+    NavbarComponent,
+    SidebarComponent
   ],
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
@@ -64,7 +66,7 @@ interface MockItem {
   templateUrl: './list-all.component.html',
   styleUrl: './list-all.component.scss'
 })
-export class ListAllComponent {
+export class ListAllComponent implements OnInit {
 
   searchTerm: string = '';
   selectedFilter: 'all' | 'news' | 'project' = 'all';
@@ -210,19 +212,36 @@ export class ListAllComponent {
 
   constructor(
     private _authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { 
     // Verifica se o usuário está autenticado como admin
     const token = this._authService.getToken();
     this.isAdminContext = token ? this._authService.validateToken(token) : false;
   }
 
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['type']) {
+        const type = params['type'];
+        if (type === 'news' || type === 'project') {
+          this.selectedFilter = type;
+          this.currentPage = 0;
+        }
+      }
+    });
+  }
+
   get filteredItems(): MockItem[] {
     let filtered = this.allItems;
+    console.log('Total de itens antes do filtro:', filtered.length);
+    console.log('Filtro atual:', this.selectedFilter);
 
     // Filtro por tipo
     if (this.selectedFilter !== 'all') {
       filtered = filtered.filter(item => item.type === this.selectedFilter);
+      console.log(`Itens após filtro por tipo '${this.selectedFilter}':`, filtered.length);
+      console.log('Primeiros 3 itens filtrados:', filtered.slice(0, 3).map(item => ({title: item.title, type: item.type})));
     }
 
     // Filtro por busca
@@ -232,6 +251,7 @@ export class ListAllComponent {
         item.title.toLowerCase().includes(searchLower) ||
         item.description.toLowerCase().includes(searchLower)
       );
+      console.log(`Itens após filtro de busca '${this.searchTerm}':`, filtered.length);
     }
 
     return filtered;
@@ -266,13 +286,26 @@ export class ListAllComponent {
     this.pageSize = event.pageSize;
   }
 
-  goToWebSite() {
-    this.router.navigate(['']);
+  getPageTitle(): string {
+    switch (this.selectedFilter) {
+      case 'news':
+        return 'Todas as Notícias';
+      case 'project':
+        return 'Todos os Projetos';
+      default:
+        return 'Todas as Notícias e Projetos';
+    }
   }
 
-  logout() {
-    this._authService.logout();
-    this.router.navigate(['/admin/login'])
+  getPageDescription(): string {
+    switch (this.selectedFilter) {
+      case 'news':
+        return 'Visualize todas as notícias cadastradas no site';
+      case 'project':
+        return 'Visualize todos os projetos cadastrados no site';
+      default:
+        return 'Visualize todos os conteúdos cadastrados no site';
+    }
   }
 
   editItem(item: MockItem) {
