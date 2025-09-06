@@ -8,18 +8,20 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AuthService } from '../../services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [MatIconModule, CommonModule, ReactiveFormsModule],
+  imports: [MatIconModule, CommonModule, ReactiveFormsModule, ProgressSpinnerModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   form: FormGroup;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -34,17 +36,21 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.form.valid) {
+    if (this.form.valid && !this.isLoading) {
+      this.isLoading = true;
+      
       this._authService.login({
         username: this.username,
         password: this.password,
       })
         .subscribe({
           next: (res) => {
+            this.isLoading = false;
             this._authService.authInApplication(res);
             this._router.navigate(['/admin/registers']);
           },
           error: (err) => {
+            this.isLoading = false;
             console.error(err)
             if (err.status === 401) {
 

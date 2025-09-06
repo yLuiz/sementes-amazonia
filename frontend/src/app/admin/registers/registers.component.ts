@@ -5,7 +5,7 @@ import { ProjectsComponent } from '../projects/projects.component';
 import { NewsComponent } from '../news/news.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
-
+import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 @Component({
   selector: 'app-registers',
   standalone: true,
@@ -13,7 +13,8 @@ import { Router } from '@angular/router';
     MatIconModule,
     CommonModule,
     ProjectsComponent,
-    NewsComponent
+    NewsComponent,
+    SidebarComponent
   ],
   templateUrl: './registers.component.html',
   styleUrl: './registers.component.scss'
@@ -21,22 +22,8 @@ import { Router } from '@angular/router';
 export class RegistersComponent {
 
   tab: 'projects' | 'news' = 'news';
-
-  constructor(
-    private _authService: AuthService,
-    private router: Router
-  ) { }
-
   changeTab(tab: 'projects' | 'news') {
     this.tab = tab;
   }
 
-  goToWebSite() {
-    this.router.navigate(['']);
-  }
-
-  logout() {
-    this._authService.logout();
-    this.router.navigate(['/admin/login'])
-  }
 }

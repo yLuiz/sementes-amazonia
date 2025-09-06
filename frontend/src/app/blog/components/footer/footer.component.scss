@@ -10,7 +10,7 @@ footer {
   padding: 4rem 2rem;
 
   h3 {
-    font-family: Playfair display, serif;
+    font-family: 'Cormorant', serif;
     font-size: 2.5rem;
     margin-bottom: 1rem;
   }
@@ -81,7 +81,8 @@ footer {
 
     .links {
       strong {
-        font-family: Playfair Display, serif;
+        font-family: 'Cormorant', serif;
+
         font-size: 1.4rem;
         margin-bottom: 2.5vh;
       }
@@ -111,7 +112,7 @@ footer {
         align-items: center;
         gap: 0.5rem;
         margin-bottom: 0.8rem;
-        font-size: 1.1rem;
+        font-size: 1rem;
         text-wrap: wrap;
         text-overflow: ellipsis;
 

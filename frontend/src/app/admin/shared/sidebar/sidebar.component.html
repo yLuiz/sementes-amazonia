@@ -1,0 +1,70 @@
+<!-- Sidebar fixo do PrimeNG -->
+<div class="sidebar-container">
+  <p-sidebar 
+    [(visible)]="sidebarVisible" 
+    position="left" 
+    [modal]="false"
+    [showCloseIcon]="false"
+    [dismissible]="false"
+    styleClass="admin-sidebar">
+    
+    <!-- Header do Sidebar -->
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <i class="pi pi-leaf sidebar-logo-icon"></i>
+        <h3>Sementes Admin</h3>
+      </div>
+      <button 
+        pButton 
+        type="button" 
+        icon="pi pi-times" 
+        class="p-button-text p-button-rounded toggle-btn"
+        (click)="toggleSidebar()"
+        title="Fechar sidebar">
+      </button>
+    </div>
+
+    <!-- Navegação -->
+    <nav class="sidebar-nav">
+      <ul class="menu-list">
+        <li *ngFor="let item of menuItems; let i = index" class="menu-item">
+          <button 
+            class="menu-button"
+            [class.active]="item.active"
+            (click)="navigateToItem(i)">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Footer do Sidebar -->
+    <div class="sidebar-footer">
+      <button 
+        class="footer-button"
+        (click)="goToWebsite()">
+        <i class="pi pi-external-link"></i>
+        <span>Ir para o site</span>
+      </button>
+      
+      <button 
+        class="footer-button logout-btn"
+        (click)="logout()">
+        <i class="pi pi-sign-out"></i>
+        <span>Sair</span>
+      </button>
+    </div>
+  </p-sidebar>
+
+  <!-- Botão para abrir sidebar quando fechado -->
+  <button 
+    *ngIf="!sidebarVisible"
+    pButton 
+    type="button" 
+    icon="pi pi-bars" 
+    class="p-button-rounded open-sidebar-btn"
+    (click)="toggleSidebar()"
+    title="Abrir sidebar">
+  </button>
+</div>

@@ -1,24 +1,142 @@
 .hero {
-    background: linear-gradient(to left, #014421, #026440);
     color: white;
     padding: 0;
-    height: 60vh;
-    background: url('../../../../assets/amazon_forest.png') no-repeat;
-    background-size: cover;
-    background-position: center;
+    max-height: 60vh;
+    position: relative;
 
     @media (max-width: 768px) {
-        height: 65vh;
+        max-height: 65vh;
     }
 
-
     @media (max-width: 480px) {
-        height: 45vh;
+        max-height: 45vh;
         min-height: 450px;
     }
 
+    // Botões de navegação flutuantes
+    .nav-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #333;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        &:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            width: 45px;
+            height: 45px;
+        }
+
+        @media (max-width: 480px) {
+            width: 40px;
+            height: 40px;
+            
+            i {
+                font-size: 18px;
+            }
+        }
+
+        i {
+            font-size: 20px;
+        }
+
+        &.nav-button-left {
+            left: 20px;
+
+            @media (max-width: 768px){
+                display: none;
+            }
+        }
+
+        &.nav-button-right {
+            right: 20px;
+
+            @media (max-width: 768px){
+                display: none;
+            }
+        }
+    }
+
+    .carousel-indicators {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: flex;
+        gap: 12px;
+
+        @media (max-width: 480px) {
+            bottom: 15px;
+            gap: 10px;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                border-color: rgba(255, 255, 255, 1);
+                transform: scale(1.2);
+            }
+
+            &.active {
+                background: rgba(255, 255, 255, 1);
+                border-color: rgba(255, 255, 255, 1);
+                transform: scale(1.1);
+            }
+
+            @media (max-width: 480px) {
+                width: 10px;
+                height: 10px;
+            }
+        }
+    }
+
+    .hero-slide {
+        height: 60vh;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+
+        @media (max-width: 768px) {
+            height: 65vh;
+        }
+
+        @media (max-width: 480px) {
+            height: 45vh;
+            min-height: 450px;
+        }
+    }
+
     .overlay {
-        background-color: rgba(25, 34, 0, 0.65); // Escurece a imagem
+        background-color: rgba(10, 41, 13, 0.65);
         width: 100%;
         height: 100%;
         display: flex;
@@ -27,16 +145,17 @@
         padding: 2rem;
 
         @media (max-width: 768px) {
+            padding: 0rem;
         }
 
         @media (max-width: 480px) {
-            padding: 1rem;
+            padding: 0rem;
         }
     }
 
-    .content {
-        width: 65vw;
+    .content {        
         @media (max-width: 768px) {
+            padding: 2rem;
             width: 100vw;
         }
 
@@ -53,6 +172,7 @@
             border-radius: 999px;
             font-size: 1rem;
             display: inline-block;
+            margin-top: 8vh;
             margin-bottom: 0.5rem;
 
             @media (max-width: 480px) {
@@ -62,7 +182,7 @@
         }
 
         h1 {
-            font-family: Playfair Display, serif;
+            font-family: 'Cormorant', serif;
             font-size: 3rem;
             margin-bottom: 1rem;
             line-height: 1.1;
@@ -77,6 +197,8 @@
             font-size: 1.4rem;
             margin-bottom: 2rem;
             line-height: 1.6;
+            font-family: "Montserrat", sans-serif;
+
 
             @media (max-width: 768px) {
                 width: 100%;
@@ -125,13 +247,16 @@
                 &.read-more {
                     background: var(--fourth-bg-color);
                     color: #fff;
-                    max-width: 110px;
-                    font-size: 0.9rem;
-                    padding: 0.7rem 0.8rem;
+                    max-width: 180px;
+                    font-size: 1rem;
+                    padding: 0.8rem;
 
+                    @media (max-width: 480px) {
+                        font-size: 0.7rem;
+                    }
  
                     &:hover {
-                        background: #026440;
+                        background: var(--hover-button-bg-color);
                     }
                 }
 
@@ -139,11 +264,15 @@
                     background: var(--fifth-bg-color);
                     color: var(--primary-text-color);
                     max-width: 180px;
-                    font-size: 0.9rem;
-                    padding: 0.7rem 0.8rem;
+                    font-size: 1rem;
+                    padding: 0.8rem;
+                    
+                    @media (max-width: 480px) {
+                        font-size: 0.7rem;
+                    }
 
                     &:hover {
-                        background: #e6e6e6;
+                        background: var(--primary-light-color);
                     }
                 }
             }

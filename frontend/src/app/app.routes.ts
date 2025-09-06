@@ -9,6 +9,16 @@ export const routes: Routes = [
       import('./blog/blog.component').then((m) => m.BlogComponent),
   },
   {
+    path: 'list-all',
+    loadComponent: () =>
+      import('./blog/components/list-all/list-all.component').then((m) => m.ListAllComponent),
+  },
+  {
+    path: 'article/:id',
+    loadComponent: () =>
+      import('./blog/components/article/article.component').then((m) => m.ArticleComponent),
+  },
+  {
     path: 'admin',
     children: [
       {
