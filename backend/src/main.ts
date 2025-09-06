@@ -5,6 +5,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import envConfig from './config/config';
 
+import * as crypto from 'crypto';
+
+// 🔑 Polyfill para garantir que crypto.randomUUID exista
+if (!(global as any).crypto) {
+  (global as any).crypto = crypto;
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const _logger = new Logger('Bootstrap');

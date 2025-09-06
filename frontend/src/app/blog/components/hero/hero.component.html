@@ -1,16 +1,50 @@
 <!-- hero.component.html -->
 <section class="hero">
-    <div class="overlay">
-        <div class="content">
-        <span class="tag">Novo</span>
-        <h1>Protegendo nosso meio ambiente para gerações futuras</h1>
-        <p>A Associação Sem Fins Lucrativos é uma organização dedicada à conservação ambiental, desenvolvimento
-            sustentável e educação comunitária. Desde nossa fundação em 2005, estamos na linha de frente da proteção dos
-            recursos naturais e promoção da conscientização ecológica.</p>
-        <div class="buttons">
-            <button class="read-more">Leia mais</button>
-            <button class="see-news">Veja outras notícias</button>
-        </div>
+    <!-- Botões de navegação flutuantes -->
+    <button class="nav-button nav-button-left" (click)="previous()" aria-label="Slide anterior">
+        <i class="pi pi-chevron-left"></i>
+    </button>
+    
+    <button class="nav-button nav-button-right" (click)="next()" aria-label="Próximo slide">
+        <i class="pi pi-chevron-right"></i>
+    </button>
+
+    <!-- Indicadores flutuantes -->
+    <div class="carousel-indicators">
+        <button 
+            *ngFor="let item of items; let i = index" 
+            class="indicator" 
+            [class.active]="i === currentIndex"
+            (click)="goToSlide(i)"
+            [attr.aria-label]="'Ir para slide ' + (i + 1)">
+        </button>
     </div>
-    </div>
+
+    <!-- Carrossel de Blocos PrimeNG -->
+    <p-carousel #carousel
+                [value]="items" 
+                [numVisible]="1" 
+                [numScroll]="1" 
+                [circular]="true" 
+                [showNavigators]="false" 
+                [showIndicators]="false" 
+                autoplayInterval="10000"
+                (onPage)="onPageChange($event)"
+                class="hero-carousel">
+        <ng-template pTemplate="item" let-item>
+            <div class="hero-slide" [ngStyle]="{ 'background-image': 'url(' + item.image + ')' }">
+                <div class="overlay">
+                    <div class="content">
+                        <span class="tag">{{item.tag}}</span>
+                        <h1>{{item.title}}</h1>
+                        <p>{{item.text}}</p>
+                        <div class="buttons">
+                            <button class="read-more">{{item.button1}}</button>
+                            <button class="see-news">{{item.button2}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-carousel>
 </section>

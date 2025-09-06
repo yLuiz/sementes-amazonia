@@ -1,8 +1,9 @@
 :host {
   display: block;
-  background-color: #f6f4f0;
+  background-color: #F7F1E5;
   min-height: 100vh;
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Montserrat", sans-serif;
+
   color: #333;
 }
 
@@ -14,25 +15,23 @@
 
 /* Cabeçalho */
 .header {
-  background-color: #f4f7ec;
+  background-color: var(--second-bg-color);
   padding: 1rem 2rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
   border-radius: 0.5rem;
 
   h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    font-family: Playfair display, serif;
-    
-    color: #3c602e;
+    font-family: 'Cormorant', serif; 
+    color: var(--primary-text-color);
     text-align: center;
   }
 
   .options-container {
-
     display: flex;
     align-items: center;
     gap: 12px;
@@ -103,13 +102,13 @@ section {
     padding: 0.8rem 1.8rem;
     cursor: pointer;
     font-weight: 600;
-    color: #4D5F2C;
+    color: #656565;
     font-size: 1rem;
     transition: all 0.3s ease;
 
     &.active {
       background-color: #ffffff;
-      color: #656565;
+      color: var(--primary-text-color);
       font-weight: 600;
       border-radius: 0.8rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);

@@ -17,17 +17,27 @@
         Senha
         <div class="password-field">
           <input [type]="inputType" formControlName="password" placeholder="Digite sua senha" />
-          <button *ngIf="inputType === 'password'" (click)="changePasswordInput()" class="eye-icon">
+          <button type="button" *ngIf="inputType === 'password'" (click)="changePasswordInput()" class="eye-icon">
             <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="visibility"></mat-icon>
           </button>
 
-          <button *ngIf="inputType === 'text'" (click)="changePasswordInput()" class="eye-icon">
+          <button type="button" *ngIf="inputType === 'text'" (click)="changePasswordInput()" class="eye-icon">
             <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="visibility_off"></mat-icon>
           </button>
         </div>
       </label>
 
-      <button class="submit-btn" type="submit" [disabled]="form.invalid">Entrar no painel</button>
+      <button class="submit-btn" type="submit" [disabled]="form.invalid || isLoading">
+        <span *ngIf="!isLoading">Entrar no painel</span>
+        <span *ngIf="isLoading" class="loading-content">
+          <p-progressSpinner 
+            styleClass="login-spinner" 
+            strokeWidth="4" 
+            [style]="{ width: '20px', height: '20px' }">
+          </p-progressSpinner>
+          Entrando...
+        </span>
+      </button>
     </form>
 
     <div class="forgot-password">
