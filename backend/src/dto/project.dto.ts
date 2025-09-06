@@ -1,6 +1,6 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, MaxLength, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateProjectDto {
   @ApiProperty({
@@ -11,7 +11,7 @@ export class CreateProjectDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  nome: string;
+  name: string;
 
   @ApiProperty({
     description: 'Summary of the project',
@@ -20,7 +20,7 @@ export class CreateProjectDto {
   })
   @IsString()
   @IsNotEmpty()
-  resumo: string;
+  summary: string;
 
   @ApiProperty({
     description: 'Full description of the project',
@@ -29,7 +29,7 @@ export class CreateProjectDto {
   })
   @IsString()
   @IsNotEmpty()
-  descricaoCompleta: string;
+  description: string;
 
   @ApiProperty({
     description: 'Thumbnail image URL for the project',
@@ -40,7 +40,7 @@ export class CreateProjectDto {
   })
   @IsOptional()
   @IsString()
-  imagemThumb?: string;
+  image_thumb?: string;
 }
 
 export class UpdateProjectDto {
@@ -52,7 +52,7 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  nome?: string;
+  name?: string;
 
   @ApiProperty({
     description: 'Summary of the project',
@@ -61,7 +61,7 @@ export class UpdateProjectDto {
   })
   @IsOptional()
   @IsString()
-  resumo?: string;
+  summary?: string;
 
   @ApiProperty({
     description: 'Full description of the project',
@@ -70,7 +70,7 @@ export class UpdateProjectDto {
   })
   @IsOptional()
   @IsString()
-  descricaoCompleta?: string;
+  description?: string;
 
   @ApiProperty({
     description: 'Thumbnail image URL for the project',
@@ -81,5 +81,5 @@ export class UpdateProjectDto {
   })
   @IsOptional()
   @IsString()
-  imagemThumb?: string;
+  image_thumb?: string;
 }

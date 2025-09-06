@@ -7,26 +7,26 @@ export class News {
   id: number;
 
   @Column({ length: 150 })
-  titulo: string;
+  title: string;
 
   @Column({ type: 'text' })
-  resumo: string;
+  summary: string;
 
-  @Column({ type: 'date' })
-  dataPublicacao: Date;
-
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   tags: string;
 
   @Column({ length: 255, nullable: true })
-  imagemThumb: string;
+  image_thumb: string;
 
   @Column({ type: 'text' })
-  conteudoCompleto: string;
+  content: string;
+
+  @Column({ type: 'timestamp' })
+  published_at: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

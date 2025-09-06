@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProjectsService } from './projects.service';
-import { CreateProjectDto, UpdateProjectDto } from '../dto/project.dto';
-import { PaginationDto } from '../dto/pagination.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { multerConfig } from '../config/multer.config';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { multerConfig } from 'src/config/multer.config';
+import { CreateProjectDto, UpdateProjectDto } from 'src/dto/project.dto';
+import { PaginationDto } from 'src/dto/pagination.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('Projects')
 @Controller('api/v1/projects')

@@ -9,12 +9,15 @@ export class User {
   @Column({ unique: true, length: 50 })
   username: string;
 
+  @Column({ unique: true, length: 255 })
+  email: string;
+
   @Column({ length: 255 })
   password: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

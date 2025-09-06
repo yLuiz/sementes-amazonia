@@ -11,19 +11,23 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Inject,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NewsService } from './news.service';
-import { CreateNewsDto, UpdateNewsDto } from '../dto/news.dto';
-import { PaginationDto } from '../dto/pagination.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { multerConfig } from '../config/multer.config';
+
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { multerConfig } from 'src/config/multer.config';
+import { CreateNewsDto, UpdateNewsDto } from 'src/dto/news.dto';
+import { PaginationDto } from 'src/dto/pagination.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('News')
 @Controller('api/v1/news')
 export class NewsController {
-  constructor(private readonly newsService: NewsService) {}
+
+  @Inject(NewsService)
+  private readonly _newsService: NewsService;
 
   @ApiConsumes('multipart/form-data')
   // @UseGuards(JwtAuthGuard)
@@ -38,17 +42,17 @@ export class NewsController {
     if (file) {
       createNewsDto['imagemThumb'] = file.filename;
     }
-    return this.newsService.create(createNewsDto);
+    return this._newsService.create(createNewsDto);
   }
 
   @Get()
   async findAll(@Query() paginationDto: PaginationDto) {
-    return this.newsService.findAll(paginationDto);
+    return this._newsService.findAll(paginationDto);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.newsService.findOne(+id);
+    return this._newsService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -62,13 +66,13 @@ export class NewsController {
     if (file) {
       updateNewsDto['imagemThumb'] = file.filename;
     }
-    return this.newsService.update(+id, updateNewsDto);
+    return this._newsService.update(+id, updateNewsDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    await this.newsService.remove(+id);
+    await this._newsService.remove(+id);
     return { message: 'Notícia deletada com sucesso' };
   }
 }

@@ -1,17 +1,17 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationDto } from 'src/dto/pagination.dto';
+import { CreateProjectDto, UpdateProjectDto } from 'src/dto/project.dto';
+import { Project } from 'src/entities/project.entity';
 import { Repository } from 'typeorm';
-import { Project } from '../entities/project.entity';
-import { CreateProjectDto, UpdateProjectDto } from '../dto/project.dto';
-import { PaginationDto } from '../dto/pagination.dto';
+
 
 @Injectable()
 export class ProjectsService {
-  constructor(
-    @InjectRepository(Project)
-    private projectsRepository: Repository<Project>,
-  ) {}
+
+  @InjectRepository(Project)
+  private projectsRepository: Repository<Project>;
 
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
     const project = this.projectsRepository.create(createProjectDto);
@@ -25,7 +25,7 @@ export class ProjectsService {
     const [projects, total] = await this.projectsRepository.findAndCount({
       skip,
       take: limit,
-      order: { createdAt: 'DESC' },
+      order: { created_at: 'DESC' },
     });
 
     return {

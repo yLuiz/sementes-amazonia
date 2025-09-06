@@ -7,20 +7,20 @@ export class Project {
   id: number;
 
   @Column({ length: 100 })
-  nome: string;
+  title: string;
 
   @Column({ type: 'text' })
-  resumo: string;
+  summary: string;
+
+  @Column({ type: 'text' })
+  content: string;
 
   @Column({ length: 255, nullable: true })
-  imagemThumb: string;
-
-  @Column({ type: 'text' })
-  descricaoCompleta: string;
+  image_thumb: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

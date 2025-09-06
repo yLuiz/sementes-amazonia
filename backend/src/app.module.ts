@@ -2,24 +2,30 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { getDatabaseConfig } from './config/database.config';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { ProjectsModule } from './projects/projects.module';
-import { NewsModule } from './news/news.module';
-import { MediaModule } from './media/media.module';
+import { MediaModule } from './modules/media/media.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersModule } from './modules/users/users.module';
+import { ProjectsModule } from './modules/projects/projects.module';
+import { NewsModule } from './modules/news/news.module';
+import dataSource from './db/data-source';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [dataSource]
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        getDatabaseConfig(configService),
+      useFactory: async (configService: ConfigService) => {
+        const options = configService.get('typeorm');
+        if (!options) {
+          throw new Error('TypeORM configuration is missing');
+        }
+        return options;
+      }
     }),
     AuthModule,
     UsersModule,
@@ -30,4 +36,4 @@ import { AppService } from './app.service';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
