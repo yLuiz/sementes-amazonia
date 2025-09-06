@@ -16,11 +16,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NewsService } from './news.service';
 
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { multerConfig } from 'src/config/multer.config';
 import { CreateNewsDto, UpdateNewsDto } from 'src/dto/news.dto';
-import { PaginationDto } from 'src/dto/pagination.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { NewsFilter } from 'src/dto/filters/news.filter';
 
 @ApiTags('News')
 @Controller('api/v1/news')
@@ -30,14 +30,15 @@ export class NewsController {
   private readonly _newsService: NewsService;
 
   @ApiConsumes('multipart/form-data')
-  // @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('imagemThumb', multerConfig))
   async create(
     @Body() createNewsDto: CreateNewsDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    
+
 
     if (file) {
       createNewsDto['imagemThumb'] = file.filename;
@@ -46,8 +47,8 @@ export class NewsController {
   }
 
   @Get()
-  async findAll(@Query() paginationDto: PaginationDto) {
-    return this._newsService.findAll(paginationDto);
+  async findAll(@Query() newsFilter: NewsFilter) {
+    return this._newsService.findAll(newsFilter);
   }
 
   @Get(':id')
@@ -55,6 +56,7 @@ export class NewsController {
     return this._newsService.findOne(+id);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   @UseInterceptors(FileInterceptor('image', multerConfig))
@@ -69,6 +71,7 @@ export class NewsController {
     return this._newsService.update(+id, updateNewsDto);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {

@@ -1,6 +1,7 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { getCurrentTimeString } from 'src/utils/getCurrentTimeString';
 
 export class CreateProjectDto {
   @ApiProperty({
@@ -11,7 +12,7 @@ export class CreateProjectDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  name: string;
+  title: string;
 
   @ApiProperty({
     description: 'Summary of the project',
@@ -23,13 +24,13 @@ export class CreateProjectDto {
   summary: string;
 
   @ApiProperty({
-    description: 'Full description of the project',
-    example: 'This is the full description of the project.',
+    description: 'Full content of the project',
+    example: 'This is the full content of the project.',
     required: true,
   })
   @IsString()
   @IsNotEmpty()
-  description: string;
+  content: string;
 
   @ApiProperty({
     description: 'Thumbnail image URL for the project',
@@ -41,6 +42,13 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   image_thumb?: string;
+
+  @IsOptional()
+  created_at?: string = getCurrentTimeString();
+
+  @IsOptional()
+  updated_at?: string = getCurrentTimeString();
+
 }
 
 export class UpdateProjectDto {
@@ -52,7 +60,7 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  name?: string;
+  title?: string;
 
   @ApiProperty({
     description: 'Summary of the project',
@@ -70,7 +78,7 @@ export class UpdateProjectDto {
   })
   @IsOptional()
   @IsString()
-  description?: string;
+  content?: string;
 
   @ApiProperty({
     description: 'Thumbnail image URL for the project',
@@ -82,4 +90,8 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   image_thumb?: string;
+
+  @IsOptional()
+  updated_at?: string = getCurrentTimeString();
+
 }

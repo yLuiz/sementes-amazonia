@@ -2,6 +2,7 @@ import { User } from 'src/entities/user.entity';
 import { DataSource } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import * as bcrypt from 'bcryptjs';
+import { getCurrentTimeString } from 'src/utils/getCurrentTimeString';
 
 export class PopulateUsers1757121486973 implements Seeder {
     track = false;
@@ -22,11 +23,21 @@ export class PopulateUsers1757121486973 implements Seeder {
                 username: userData.username,
                 email: userData.email,
                 password: hashedPassword,
+                created_at: getCurrentTimeString(),
+                updated_at: getCurrentTimeString(),
             });
 
-            await userRepository.save(user);
+            const existingUser = await userRepository.findOne({ where: { username: userData.username } });
+            if (!existingUser) {
+                await userRepository.save(user);
 
-            console.log(`Usuário '${user.username}' e senha '${user.password}' criado com sucesso.`);
+                console.log(`✅ Usuário '${user.username}' com senha '${userData.password}' criado com sucesso.`);
+
+            } else {
+                console.log(`ℹ️ Usuário "${userData.username}" já existe. Pulando...`);
+            }
         }
+
+        console.log('🎉 Seed de usuários concluído!');
     }
 }

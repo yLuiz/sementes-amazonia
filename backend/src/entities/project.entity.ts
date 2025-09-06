@@ -1,5 +1,5 @@
 
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('projects')
 export class Project {
@@ -18,9 +18,9 @@ export class Project {
   @Column({ length: 255, nullable: true })
   image_thumb: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @Column({ type: 'timestamp' })
+  created_at: string | Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column({ type: 'timestamp' })
+  updated_at: string | Date;
 }

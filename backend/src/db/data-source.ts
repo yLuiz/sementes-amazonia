@@ -2,7 +2,11 @@ import { registerAs } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import envConfig from '../config/config';
 import { SeederOptions } from 'typeorm-extension';
+import { types } from 'pg';
 
+// OID 1114 = timestamp sem timezone
+// Aqui configuramos para devolver string literal, sem converter para UTC
+types.setTypeParser(1114, (str) => str);
 
 const config = {
   type: 'postgres',
@@ -15,8 +19,6 @@ const config = {
   migrations: ['dist/db/migrations/*{.ts,.js}'],
   synchronize: false,
   seeds: ['dist/db/seeds/**/*{.ts,.js}'],
-
-  timezone: 'local',
 } as DataSourceOptions & SeederOptions;
 
 export default registerAs('typeorm', () => config);

@@ -1,10 +1,12 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationDto } from 'src/dto/pagination.dto';
+import { ProjectsFilter, ProjectsOrderBy } from 'src/dto/filters/projects.filter';
 import { CreateProjectDto, UpdateProjectDto } from 'src/dto/project.dto';
 import { Project } from 'src/entities/project.entity';
-import { Repository } from 'typeorm';
+import { Between, Like, Repository } from 'typeorm';
+import * as moment from 'moment';
+import { parseDateToString } from 'src/utils/parseDateToString';
 
 
 @Injectable()
@@ -18,18 +20,39 @@ export class ProjectsService {
     return this.projectsRepository.save(project);
   }
 
-  async findAll(paginationDto: PaginationDto) {
-    const { page = 1, limit = 10 } = paginationDto;
+  async findAll(projectsFilters: ProjectsFilter) {
+    const { page = 1, limit = 10 } = projectsFilters;
     const skip = (page - 1) * limit;
+
+    let orderField = 'created_at';
+    if (projectsFilters.orderBy) {
+      const validFields = Object.values(ProjectsOrderBy);
+      if (validFields.includes(projectsFilters.orderBy)) {
+        orderField = projectsFilters.orderBy;
+      }
+    }
+
+    const order = {
+      [orderField]: projectsFilters.direction ? projectsFilters.direction : 'desc',
+    };
 
     const [projects, total] = await this.projectsRepository.findAndCount({
       skip,
       take: limit,
-      order: { created_at: 'DESC' },
+      where: {
+        title: projectsFilters.title ? Like(`%${projectsFilters.title}%`) : undefined,
+        created_at: this._buildDateRange(projectsFilters.createdAt),
+        updated_at: this._buildDateRange(projectsFilters.updatedAt),
+      },
+      order
     });
 
     return {
-      data: projects,
+      data: projects.map(p => ({
+        ...p,
+        updated_at: parseDateToString(p.updated_at),
+        created_at: parseDateToString(p.created_at),
+      })),
       meta: {
         total,
         page,
@@ -56,5 +79,14 @@ export class ProjectsService {
   async remove(id: number): Promise<void> {
     const project = await this.findOne(id);
     await this.projectsRepository.remove(project);
+  }
+
+  private _buildDateRange(date?: Date | string) {
+    if (!date) return undefined;
+
+    const start = moment(date).startOf('day').toDate();
+    const end = moment(date).endOf('day').toDate();
+
+    return Between(start, end);
   }
 }

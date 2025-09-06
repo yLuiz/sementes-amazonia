@@ -1,5 +1,5 @@
 
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('news')
 export class News {
@@ -12,21 +12,21 @@ export class News {
   @Column({ type: 'text' })
   summary: string;
 
+  @Column({ type: 'text' })
+  content: string;
+
   @Column({ type: 'varchar', length: 255, nullable: true })
   tags: string;
 
   @Column({ length: 255, nullable: true })
   image_thumb: string;
 
-  @Column({ type: 'text' })
-  content: string;
+  @Column({ type: 'timestamp' })
+  published_at: string | Date;
 
   @Column({ type: 'timestamp' })
-  published_at: Date;
+  created_at: string | Date;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column({ type: 'timestamp' })
+  updated_at: string | Date;
 }

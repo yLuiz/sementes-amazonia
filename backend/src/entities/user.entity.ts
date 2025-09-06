@@ -1,5 +1,5 @@
 
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
@@ -15,9 +15,9 @@ export class User {
   @Column({ length: 255 })
   password: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @Column({ type: 'timestamp' })
+  created_at: string | Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column({ type: 'timestamp' })
+  updated_at: string | Date;
 }

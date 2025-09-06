@@ -33,7 +33,7 @@ export class CreateProjects1757121430415 implements MigrationInterface {
                 {
                     name: "image_thumb",
                     type: "varchar",
-                    length: "50",
+                    length: "255",
                     isNullable: true,
                 },
                 {
