@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProjectCardComponent } from '../project-card/project-card.component';
 import { CommonModule } from '@angular/common';
-import { ProjectsService, Project, IProjectPortugueseResponse } from '../../../services/projects/projects.service';
+import { ProjectsService, Project } from '../../../services/projects/projects.service';
 import { Subscription } from 'rxjs';
 
 
@@ -17,7 +17,6 @@ import { Subscription } from 'rxjs';
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
 
-  projectsInPortuguese: IProjectPortugueseResponse[] = [];
   projects: Project[] = [];
   private subscription: Subscription = new Subscription();
 
@@ -38,7 +37,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     const projectsSub = this.projectsService.getProjects().subscribe({
       next: (projects) => {
-        this.projectsInPortuguese = (projects as unknown as any).data as IProjectPortugueseResponse[];
+        this.projects = projects.data;
       },
       error: (error) => {
         console.error('Erro ao carregar projetos:', error);

@@ -2,13 +2,29 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { apiConfig } from '../../config/api.config';
+import { IPageResponse } from '../../shared/interfaces/IPageResponse';
+
+export interface INewsFilters {
+  page?: number;
+  limit?: number;
+  direction?: 'ASC' | 'DESC';
+  orderBy?: 'created_at' | 'updated_at' | 'published_at' | 'title' | 'id';
+  title?: string;
+  createdAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
+  updatedAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
+  publishedAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
+}
 
 export interface News {
-  id: number;
-  image: string;
-  title: string;
-  date: string;
-  description: string;
+  id: number,
+  title: string,
+  summary: string,
+  content: string,
+  tags: string,
+  image_thumb: string,
+  published_at: string,
+  created_at: string,
+  updated_at: string,
 }
 
 
@@ -29,31 +45,6 @@ export interface INewsPortugueseResponse {
 })
 export class NewsService {
 
-  // Mock de notícias
-  private mockNews: News[] = [
-    {
-      id: 1,
-      image: '../../../assets/news1.png',
-      title: 'Notícia 1',
-      date: '25 de Julho de 2025',
-      description: 'Descrição da Notícia 1. Acompanhe as novidades sobre a conservação da Amazônia e projetos em andamento.'
-    },
-    {
-      id: 2,
-      image: '../../../assets/news2.png',
-      title: 'Notícia 2',
-      date: '24 de Julho de 2025',
-      description: 'Descrição da Notícia 2. Novas parcerias fortalecem a proteção ambiental na região amazônica.'
-    },
-    {
-      id: 3,
-      image: '../../../assets/news3.png',
-      title: 'Notícia 3',
-      date: '23 de Julho de 2025',
-      description: 'Descrição da Notícia 3. Comunidades locais participam de ações de reflorestamento.'
-    }
-  ];
-
   private http = inject(HttpClient);
 
   private readonly apiUrl = apiConfig.news.base;
@@ -62,8 +53,15 @@ export class NewsService {
    * Busca todas as notícias da API
    * @returns Observable<News[]>
    */
-  getNews(): Observable<News[]> {
-    return this.http.get<News[]>(this.apiUrl)
+  getNews(filters?: INewsFilters): Observable<IPageResponse<News[]>> {
+
+    const { direction, orderBy, title, createdAt, updatedAt, publishedAt } = filters || {};
+
+    const [page, limit] = [filters?.page ?? 1, filters?.limit ?? 10];
+
+    const filtersInString = `${direction ? `&direction=${direction}` : 'asc'}${orderBy ? `&orderBy=${orderBy}` : 'id'}${title ? `&title=${title}` : ''}${createdAt ? `&createdAt=${createdAt}` : ''}${updatedAt ? `&updatedAt=${updatedAt}` : ''}${publishedAt ? `&publishedAt=${publishedAt}` : ''}`;
+
+    return this.http.get<IPageResponse<News[]>>(this.apiUrl + `?page=${page}&limit=${limit}${filtersInString}`)
       .pipe(
         catchError(this.handleError)
       );

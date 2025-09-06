@@ -15,7 +15,6 @@ import { Subscription } from 'rxjs';
   styleUrl: './news.component.scss'
 })
 export class NewsComponent implements OnInit, OnDestroy {
-  newsInPortuguese: INewsPortugueseResponse[] = [];
   newsList: News[] = [];
   private subscription: Subscription = new Subscription();
 
@@ -35,7 +34,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   private loadNews(): void {
     const newsSub = this.newsService.getNews().subscribe({
       next: (news) => {
-        this.newsInPortuguese = (news as any).data as INewsPortugueseResponse[] || [];
+        this.newsList = news.data;
       },
       error: (error) => {
         console.error('Erro ao carregar notícias:', error);

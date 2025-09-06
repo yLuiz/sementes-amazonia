@@ -50,12 +50,12 @@
       <div class="filter-container">
         <span class="filter-label">Filtrar por:</span>
         <div class="filter-buttons">
-          <button 
+          <!-- <button 
             class="filter-btn"
             [class.active]="selectedFilter === 'all'"
             (click)="onFilterChange('all')">
             Todos
-          </button>
+          </button> -->
           <button 
             class="filter-btn news"
             [class.active]="selectedFilter === 'news'"
@@ -80,28 +80,26 @@
       </button>
     </div>
 
-    <!-- Grid unificada de todos os cards -->
-    <div class="cards-grid">
-      <div *ngFor="let item of paginatedItems" class="card-wrapper">
+     <div class="cards-grid">
+      <div *ngFor="let item of news" class="card-wrapper">
         <app-news-card 
-          *ngIf="item.type === 'news'"
           [title]="item.title"
-          [description]="item.description"
-          [date]="item.date"
-          [image]="item.image || ''">
+          [description]="item.summary"
+          [date]="item.published_at"
+          [image]="item.image_thumb || ''">
         </app-news-card>
         
-        <app-project-card 
+        <!-- <app-project-card 
           *ngIf="item.type === 'project'"
           [title]="item.title"
           [description]="item.description"
           [date]="item.date"
           [image]="item.image || ''">
-        </app-project-card>
+        </app-project-card> -->
         
         <!-- Tag de tipo -->
-        <div class="type-tag" [ngClass]="item.type">
-          {{ item.type === 'news' ? 'Notícia' : 'Projeto' }}
+        <div class="type-tag" [ngClass]="'news'">
+          Notícia
         </div>
 
         <!-- Botões de ação (só para admin) -->
@@ -138,7 +136,7 @@
     </div>
 
     <!-- Paginação -->
-    <div class="pagination-container" *ngIf="totalItems > 0">
+    <div class="pagination-container">
       <mat-paginator
         [length]="totalItems"
         [pageSize]="pageSize"
@@ -163,8 +161,8 @@
     <div class="modal-content">
       <h3>Confirmar exclusão</h3>
       <p>
-        Tem certeza que deseja deletar 
-        <span class="item-type">{{ itemToDelete?.type === 'news' ? 'esta notícia' : 'este projeto' }}</span>?
+        Tem certeza que deseja deletar esta notícia?
+        <!-- <span class="item-type">{{ itemToDelete?.type === 'news' ? 'esta notícia' : 'este projeto' }}</span>? -->
       </p>
       <p class="item-title">"{{ itemToDelete?.title }}"</p>
       <p class="warning-text">Esta ação não pode ser desfeita.</p>

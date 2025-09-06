@@ -1,12 +1,12 @@
 <section id="news" class="news">
   <h2>Últimas notícias</h2>
   <div class="cards">
-    <ng-container *ngFor="let news of newsInPortuguese">
+    <ng-container *ngFor="let news of newsList">
       <app-news-card
-        [date]="news.createdAt"
-        [title]="news.titulo || '-'"
-        [description]="news.conteudoCompleto || '-'"
-        [image]="news.imagemThumb">
+        [date]="news.created_at"
+        [title]="news.title || '-'"
+        [description]="news.summary || '-'"
+        [image]="news.image_thumb">
       </app-news-card>
     </ng-container>
   </div>

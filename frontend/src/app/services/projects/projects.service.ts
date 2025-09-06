@@ -2,54 +2,23 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { apiConfig } from '../../config/api.config';
+import { IPageResponse } from '../../shared/interfaces/IPageResponse';
 
-
-export interface IProjectPortugueseResponse {
-  id: number,
-  nome: string,
-  resumo: string,
-  imagemThumb: string,
-  descricaoCompleta: string,
-  createdAt: string,
-  updatedAt: string,
-}
 
 export interface Project {
   id: number;
-  image: string;
   title: string;
-  date: string;
-  description: string;
+  summary: string;
+  content: string;
+  image_thumb: string;
+  created_at: string;
+  updated_at: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
-
-  private mockProjects: Project[] = [
-    {
-      id: 1,
-      image: '../../../assets/Image 1.png',
-      title: 'Projeto 1',
-      date: '31 de Maio de 2025',
-      description: 'Descrição do Projeto 1. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
-    },
-    {
-      id: 2,
-      image: '../../../assets/Image 2.png',
-      title: 'Projeto 2',
-      date: '31 de Maio de 2025',
-      description: 'Descrição do Projeto 2. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
-    },
-    {
-      id: 3,
-      image: '../../../assets/Image 3.png',
-      title: 'Projeto 3',
-      date: '31 de Maio de 2025',
-      description: 'Descrição do Projeto 3. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
-    }
-  ];
 
   private http = inject(HttpClient);
 
@@ -59,8 +28,8 @@ export class ProjectsService {
    * Busca todos os projetos da API
    * @returns Observable<Project[]>
    */
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.apiUrl)
+  getProjects(): Observable<IPageResponse<Project[]>> {
+    return this.http.get<IPageResponse<Project[]>>(this.apiUrl)
       .pipe(
         catchError(this.handleError)
       );
