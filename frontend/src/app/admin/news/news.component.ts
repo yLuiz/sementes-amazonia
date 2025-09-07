@@ -4,12 +4,28 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatIconModule } from '@angular/material/icon';
 import { NewsService } from '../../services/news/news.service';
 import { ToastrService } from 'ngx-toastr';
+import { CalendarDateComponent } from '../../blog/components/calendar-date/calendar-date.component';
+
+export interface INewsFormData {
+  title: string;
+  summary: string;
+  content: string;
+  author?: string;
+  tags?: string;
+  image_thumb?: File; // Arquivo que vai no FormData
+  published_at?: string; // ISO string
+  created_at?: string;
+  updated_at?: string;
+}
+
+export type INewsUpdateFormData = Partial<INewsFormData>;
 
 @Component({
   standalone: true,
   selector: 'app-news',
   imports: [
-    MatIconModule, CommonModule, ReactiveFormsModule
+    MatIconModule, CommonModule, ReactiveFormsModule,
+    CalendarDateComponent
   ],
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss']
@@ -24,12 +40,13 @@ export class NewsComponent {
     private _toastr: ToastrService
   ) {
     this.form = this.fb.group({
-      titulo: ['', Validators.required],
-      resumo: ['', Validators.required],
-      conteudoCompleto: ['', Validators.required],
-      dataPublicacao: ['', Validators.required],
+      title: ['', Validators.required],
+      summary: ['', Validators.required],
+      content: ['', Validators.required],
+      published_at: [''],
+      author: [''],
       tags: [''],
-      imagemThumb: [null]
+      image_thumb: [null]
     });
   }
 
@@ -37,7 +54,7 @@ export class NewsComponent {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (file) {
-      this.form.patchValue({ imagemThumb: file });
+      this.form.patchValue({ image_thumb: file });
 
       // Gera o preview
       const reader = new FileReader();
@@ -45,9 +62,7 @@ export class NewsComponent {
         this.imagePreviewUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
-    }
-
-    else {
+    } else {
       this.imagePreviewUrl = null;
     }
   }
@@ -55,31 +70,30 @@ export class NewsComponent {
   onSubmit() {
     if (this.form.valid) {
       const formData = new FormData();
+
       Object.entries(this.form.value).forEach(([key, value]) => {
-        // Para data, converter para ISO string se necessário
-        if (key === 'dataPublicacao' && value) {
-          // Se já for ISO, só adiciona
+        if (!value) return;
+
+        if (key === 'published_at') {
           formData.append(key, new Date(value as string).toISOString());
-        } else if (key === 'imagemThumb' && value) {
-          formData.append(key, value as string); // arquivo
-        } else if (value !== null && value !== undefined) {
+        } else if (key === 'image_thumb') {
+          formData.append(key, value as File);
+        } else {
           formData.append(key, value as string);
         }
       });
 
       this._newsService.createNews(formData).subscribe({
-        next: (res) => {
+        next: () => {
           this._toastr.success('Notícia criada com sucesso.', 'Sucesso.', {
             closeButton: true,
             tapToDismiss: true,
             progressBar: true
           });
-
           this.clearForm();
         },
         error: (err) => {
-          console.error('News: ', err)
-
+          console.error('News: ', err);
           this._toastr.error('Houve um erro ao criar a notícia.', 'Falha.', {
             closeButton: true,
             tapToDismiss: true,
@@ -88,12 +102,14 @@ export class NewsComponent {
         }
       });
     }
-
-
   }
 
-  get imagemThumb() {
-    return this.form.get('imagemThumb')?.value;
+  get publishedAt() {
+    return this.form.get('published_at')?.value;
+  }
+
+  get image_thumb() {
+    return this.form.get('image_thumb')?.value;
   }
 
   clearForm() {

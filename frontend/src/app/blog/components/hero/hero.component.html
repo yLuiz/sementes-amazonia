@@ -32,7 +32,7 @@
                 (onPage)="onPageChange($event)"
                 class="hero-carousel">
         <ng-template pTemplate="item" let-item>
-            <div class="hero-slide" [ngStyle]="{ 'background-image': 'url(' + item.image + ')' }">
+            <div class="hero-slide" [ngStyle]="{ 'background-image': 'url(' + mediaUrl + item.image + ')' }">
                 <div class="overlay">
                     <div class="content">
                         <span *ngFor="let tag of item.tag" class="tag">{{tag}}</span>

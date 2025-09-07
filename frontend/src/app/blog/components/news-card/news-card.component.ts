@@ -36,7 +36,10 @@ export class NewsCardComponent {
     this.labelDate = new Date(this.news?.date || '').toLocaleString('pt-BR').split(',')[0];
 
     if (this.news?.image) {
+
+      
       this.imageUrl = `${apiConfig.media.base}/${this.news.image}`;
+      console.log('Image input for news card:', this.imageUrl);
     } else {
       console.warn('Image input is not provided for project card');
     }

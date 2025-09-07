@@ -21,6 +21,9 @@ export class News {
   @Column({ length: 255, nullable: true })
   image_thumb: string;
 
+  @Column({ length: 100, nullable: true })
+  author: string;
+
   @Column({ type: 'timestamp' })
   published_at: string | Date;
 

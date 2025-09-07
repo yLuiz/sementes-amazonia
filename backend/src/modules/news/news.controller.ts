@@ -33,7 +33,7 @@ export class NewsController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('imagemThumb', multerConfig))
+  @UseInterceptors(FileInterceptor('image_thumb', multerConfig))
   async create(
     @Body() createNewsDto: CreateNewsDto,
     @UploadedFile() file?: Express.Multer.File,
@@ -41,7 +41,7 @@ export class NewsController {
 
 
     if (file) {
-      createNewsDto['imagemThumb'] = file.filename;
+      createNewsDto['image_thumb'] = file.filename;
     }
     return this._newsService.create(createNewsDto);
   }
@@ -66,7 +66,7 @@ export class NewsController {
     @UploadedFile() file?: Express.Multer.File,
   ) {
     if (file) {
-      updateNewsDto['imagemThumb'] = file.filename;
+      updateNewsDto['image_thumb'] = file.filename;
     }
     return this._newsService.update(+id, updateNewsDto);
   }

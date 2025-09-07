@@ -21,6 +21,11 @@ export class CreateNewsDto {
   @IsNotEmpty()
   content: string;
 
+  @ApiProperty({ description: 'Author of the news article', example: 'John Doe', required: false })
+  @IsOptional()
+  @IsString()
+  author?: string;
+
   @ApiProperty({ description: 'Tags associated with the news article', example: 'news, breaking, event', required: false })
   @IsOptional()
   @IsString()
@@ -35,8 +40,9 @@ export class CreateNewsDto {
   image_thumb?: string;
 
   @ApiProperty({ description: 'Publication date of the news article', example: '2023-10-01T12:00:00Z' })
+  @IsOptional()
   @IsDateString()
-  published_at: string;
+  published_at?: string;
 
   @IsOptional()
   created_at?: string = getCurrentTimeString();

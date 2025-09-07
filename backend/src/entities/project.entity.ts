@@ -18,6 +18,15 @@ export class Project {
   @Column({ length: 255, nullable: true })
   image_thumb: string;
 
+  @Column({ length: 100, nullable: true })
+  author: string;
+  
+  @Column({ type: 'boolean', default: false })
+  is_featured: boolean;
+
+  @Column({ type: 'timestamp', nullable: true })
+  published_at: string | Date;
+
   @Column({ type: 'timestamp' })
   created_at: string | Date;
 

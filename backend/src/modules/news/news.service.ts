@@ -16,7 +16,7 @@ export class NewsService {
   async create(createNewsDto: CreateNewsDto): Promise<News> {
     const news = this._newsRepository.create({
       ...createNewsDto,
-      published_at: parseDateToString(createNewsDto.published_at),
+      published_at: parseDateToString(createNewsDto.published_at!),
     });
     return this._newsRepository.save(news);
   }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CarouselModule, Carousel } from 'primeng/carousel';
 import { NewsService } from '../../../services/news/news.service';
 import { capitalize } from '../../../shared/utils/capitalize';
+import { apiConfig, environment } from '../../../config/api.config';
 
 @Component({
   selector: 'app-hero',
@@ -14,6 +15,8 @@ import { capitalize } from '../../../shared/utils/capitalize';
 export class HeroComponent {
   @ViewChild('carousel') carousel!: Carousel;
   currentIndex = 0;
+
+  mediaUrl = apiConfig.media.base + '/';
 
   constructor(
     private readonly _newsService: NewsService

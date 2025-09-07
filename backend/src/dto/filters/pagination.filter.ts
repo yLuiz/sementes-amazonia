@@ -13,11 +13,11 @@ export class PaginationFilter {
   @ApiProperty({
     enum: Direction,
     description: 'Direção da ordenação',
-    example: Direction.ASC,
+    example: Direction.DESC,
     required: false,
   })
   @IsOptional()
-  direction?: Direction = Direction.ASC;
+  direction?: Direction = Direction.DESC;
 
   @ApiProperty({
     type: Number,

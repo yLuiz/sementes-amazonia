@@ -43,6 +43,12 @@ export class CreateNews1757121424097 implements MigrationInterface {
                     isNullable: true,
                 },
                 {
+                    name: "author",
+                    type: "varchar",
+                    length: "100",
+                    isNullable: true,
+                },
+                {
                     name: "published_at",
                     type: "timestamp",
                     isNullable: true,

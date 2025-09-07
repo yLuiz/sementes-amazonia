@@ -37,6 +37,22 @@ export class CreateProjects1757121430415 implements MigrationInterface {
                     isNullable: true,
                 },
                 {
+                    name: "author",
+                    type: "varchar",
+                    length: "100",
+                    isNullable: true,
+                },
+                {
+                    name: "is_featured",
+                    type: "boolean",
+                    default: false,
+                },
+                {
+                    name: "published_at",
+                    type: "timestamp",
+                    isNullable: true,
+                },
+                {
                     name: "created_at",
                     type: "timestamp",
                     default: "now()",

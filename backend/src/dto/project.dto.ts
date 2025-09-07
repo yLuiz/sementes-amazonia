@@ -1,6 +1,6 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { getCurrentTimeString } from 'src/utils/getCurrentTimeString';
 
 export class CreateProjectDto {
@@ -42,6 +42,11 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   image_thumb?: string;
+
+  @ApiProperty({ description: 'Publication date of the project', example: '2023-10-01T12:00:00Z' })
+  @IsOptional()
+  @IsDateString()
+  published_at?: string;
 
   @IsOptional()
   created_at?: string = getCurrentTimeString();
@@ -90,6 +95,11 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   image_thumb?: string;
+
+  @ApiProperty({ description: 'Publication date of the project', example: '2023-10-01T12:00:00Z' })
+  @IsOptional()
+  @IsDateString()
+  published_at?: string;
 
   @IsOptional()
   updated_at?: string = getCurrentTimeString();

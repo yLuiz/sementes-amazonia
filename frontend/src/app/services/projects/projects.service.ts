@@ -49,7 +49,7 @@ export class ProjectsService {
     let params = new HttpParams()
       .set('page', String(page))
       .set('limit', String(limit))
-      .set('direction', direction ?? 'asc')
+      .set('direction', direction ?? 'desc')
       .set('orderBy', orderBy ?? 'id');
 
     if (title) params = params.set('title', title);
