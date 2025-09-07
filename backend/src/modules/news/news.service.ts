@@ -5,7 +5,7 @@ import { NewsFilter, NewsOrderBy } from 'src/dto/filters/news.filter';
 import { CreateNewsDto, UpdateNewsDto } from 'src/dto/news.dto';
 import { News } from 'src/entities/news.entity';
 import { parseDateToString } from 'src/utils/parseDateToString';
-import { Between, Like, Repository } from 'typeorm';
+import { Between, ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class NewsService {
@@ -41,7 +41,7 @@ export class NewsService {
       skip,
       take: limit,
       where: {
-        title: newsFilter.title ? Like(`%${newsFilter.title}%`) : undefined,
+        title: newsFilter.title ? ILike(`%${newsFilter.title}%`) : undefined,
         created_at: this._buildDateRange(newsFilter.createdAt),
         updated_at: this._buildDateRange(newsFilter.updatedAt),
         published_at: this._buildDateRange(newsFilter.publishedAt),

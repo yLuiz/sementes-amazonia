@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NewsCardComponent } from '../news-card/news-card.component';
-import { NewsService, INewsPortugueseResponse, News } from '../../../services/news/news.service';
+import { NewsService, INews } from '../../../services/news/news.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-news',
@@ -15,10 +16,13 @@ import { Subscription } from 'rxjs';
   styleUrl: './news.component.scss'
 })
 export class NewsComponent implements OnInit, OnDestroy {
-  newsList: News[] = [];
+  newsList: INews[] = [];
   private subscription: Subscription = new Subscription();
 
-  constructor(private newsService: NewsService) { }
+  constructor(
+    private newsService: NewsService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadNews();
@@ -32,7 +36,9 @@ export class NewsComponent implements OnInit, OnDestroy {
    * Carrega as notícias
    */
   private loadNews(): void {
-    const newsSub = this.newsService.getNews().subscribe({
+    const newsSub = this.newsService.getNews({
+      limit: 3,
+    }).subscribe({
       next: (news) => {
         this.newsList = news.data;
       },
@@ -48,7 +54,8 @@ export class NewsComponent implements OnInit, OnDestroy {
    * Navega para a página de todas as notícias
    */
   onViewAllNews(): void {
-    // TODO: Implementar navegação para página de notícias
-    console.log('Navegar para todas as notícias');
+    this.router.navigate(['/list-all'], {
+      queryParams: { type: 'news' }
+    });
   }
 }

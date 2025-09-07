@@ -3,8 +3,13 @@
     <h2>Projetos</h2>
     <div class="cards">
         <ng-container *ngFor="let project of projects">
-            <app-project-card [date]="project.created_at || '-'" [title]="project.title || '-'" [description]="project.summary || '-'"
-                [image]="project.image_thumb"></app-project-card>
+            <app-project-card [project]="{
+                id: project.id,
+                title: project.title,
+                description: project.summary,
+                image: project.image_thumb,
+                date: project.published_at
+            }"></app-project-card>
         </ng-container>
     </div>
     <button (click)="onViewAllProjects()">Ver todos os projetos</button>

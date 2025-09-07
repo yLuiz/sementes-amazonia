@@ -6,7 +6,7 @@ import { UserOrderBy, UsersFilter } from 'src/dto/filters/users.filter';
 import { CreateUserDto } from 'src/dto/users.dto';
 import { User } from 'src/entities/user.entity';
 import { parseDateToString } from 'src/utils/parseDateToString';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -48,8 +48,8 @@ export class UsersService {
       skip,
       take: limit,
       where: {
-        email: usersFilter.email ? Like(`%${usersFilter.email}%`) : undefined,
-        username: usersFilter.username ? Like(`%${usersFilter.username}%`) : undefined,
+        email: usersFilter.email ? ILike(`%${usersFilter.email}%`) : undefined,
+        username: usersFilter.username ? ILike(`%${usersFilter.username}%`) : undefined,
       },
       order
     });

@@ -3,10 +3,13 @@
   <div class="cards">
     <ng-container *ngFor="let news of newsList">
       <app-news-card
-        [date]="news.created_at"
-        [title]="news.title || '-'"
-        [description]="news.summary || '-'"
-        [image]="news.image_thumb">
+        [news]="{
+          id: news.id,
+          title: news.title,
+          description: news.summary,
+          image: news.image_thumb,
+          date: news.published_at
+        }">
       </app-news-card>
     </ng-container>
   </div>

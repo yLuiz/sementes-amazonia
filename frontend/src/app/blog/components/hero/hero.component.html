@@ -35,7 +35,7 @@
             <div class="hero-slide" [ngStyle]="{ 'background-image': 'url(' + item.image + ')' }">
                 <div class="overlay">
                     <div class="content">
-                        <span class="tag">{{item.tag}}</span>
+                        <span *ngFor="let tag of item.tag" class="tag">{{tag}}</span>
                         <h1>{{item.title}}</h1>
                         <p>{{item.text}}</p>
                         <div class="buttons">

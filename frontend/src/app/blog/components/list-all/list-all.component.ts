@@ -10,11 +10,16 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { SidebarComponent } from '../../../admin/shared/sidebar/sidebar.component';
 import { AuthService } from '../../../services/auth/auth.service';
-import { INewsFilters, News, NewsService } from '../../../services/news/news.service';
-import { Project, ProjectsService } from '../../../services/projects/projects.service';
+import { INewsFilters, INews, NewsService } from '../../../services/news/news.service';
+import { IProjectsFilters, IProject, ProjectsService } from '../../../services/projects/projects.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { NewsCardComponent } from '../news-card/news-card.component';
 import { ProjectCardComponent } from '../project-card/project-card.component';
+
+export interface IItemToDelete {
+  id: number;
+  title: string;
+}
 
 class CustomMatPaginatorIntl extends MatPaginatorIntl {
   override itemsPerPageLabel = 'Itens por página:';
@@ -34,15 +39,6 @@ class CustomMatPaginatorIntl extends MatPaginatorIntl {
       startIndex + pageSize;
     return `${startIndex + 1} - ${endIndex} de ${length}`;
   };
-}
-
-interface MockItem {
-  id: number;
-  title: string;
-  description: string;
-  date: string;
-  image?: string;
-  type: 'news' | 'project';
 }
 
 @Component({
@@ -71,7 +67,7 @@ interface MockItem {
 export class ListAllComponent implements OnInit {
 
   searchTerm: string = '';
-  selectedFilter: 'all' | 'news' | 'project' = 'all';
+  selectedFilter: 'news' | 'project' = 'news';
   isAdminContext: boolean = false;
 
   totalItems: number = 0;
@@ -82,10 +78,10 @@ export class ListAllComponent implements OnInit {
 
   // Propriedades do modal de delete
   showDeleteModal: boolean = false;
-  itemToDelete: News | null = null;
+  itemToDelete: IItemToDelete | null = null;
 
-  news: News[] = [];
-  projects: Project[] = [];
+  news: INews[] = [];
+  projects: IProject[] = [];
 
   constructor(
     private _authService: AuthService,
@@ -93,7 +89,7 @@ export class ListAllComponent implements OnInit {
     private route: ActivatedRoute,
     private projectsService: ProjectsService,
     private newsService: NewsService
-  ) { 
+  ) {
     // Verifica se o usuário está autenticado como admin
     const token = this._authService.getToken();
     this.isAdminContext = token ? this._authService.validateToken(token) : false;
@@ -101,13 +97,10 @@ export class ListAllComponent implements OnInit {
 
 
   getNews(filters: INewsFilters) {
-
-    console.log(filters);
-    
-
     this.newsService.getNews({
       page: filters.page,
       limit: filters.limit,
+      title: filters.title
     }).subscribe({
       next: (response) => {
         this.news = response.data;
@@ -119,14 +112,28 @@ export class ListAllComponent implements OnInit {
     });
   }
 
+  getProjects(filters: IProjectsFilters) {
+    this.projectsService.getProjects({
+      page: filters.page,
+      limit: filters.limit,
+      title: filters.title
+    }).subscribe({
+      next: (response) => {
+        this.projects = response.data;
+        this.totalItems = response.meta.total;
+      },
+      error: (error) => {
+        console.error('Erro ao buscar projetos:', error);
+      }
+    });
+  }
+
   ngOnInit() {
-
-    this.getNews({ page: 1, limit: 10 });
-
     this.route.queryParams.subscribe(params => {
       if (params['type']) {
         const type = params['type'];
         if (type === 'news' || type === 'project') {
+          this.getItemsByType({ type, page: 1, limit: 10 });
           this.selectedFilter = type;
           this.currentPage = 0;
         }
@@ -134,29 +141,83 @@ export class ListAllComponent implements OnInit {
       else {
         this.selectedFilter = 'news';
         this.currentPage = 0;
+        this.getItemsByType({ type: 'news', page: 1, limit: 10 });
       }
     });
   }
 
-  onFilterChange(filter: 'all' | 'news' | 'project') {
+  getItemsByType(args: {
+    type: 'news' | 'project',
+    page: number,
+    limit: number,
+    title?: string
+  }) {
+    if (args.type === 'news') {
+      this.getNews({
+        page: args.page,
+        limit: args.limit,
+        title: this.searchTerm
+      });
+    }
+    else if (args.type === 'project') {
+      this.getProjects({
+        page: args.page,
+        limit: args.limit,
+        title: this.searchTerm
+      });
+    }
+  }
+
+  onFilterChange(filter: 'news' | 'project') {
+    this.getItemsByType({
+      type: filter,
+      page: 1,
+      limit: 10,
+      title: this.searchTerm
+    })
     this.selectedFilter = filter;
     this.currentPage = 0;
   }
 
+  private searchDebounce: NodeJS.Timeout | null = null;
   onSearchChange() {
-    this.currentPage = 0;
+    // limpa o timer anterior se o usuário digitar de novo
+    if (this.searchDebounce) {
+      clearTimeout(this.searchDebounce);
+    }
+
+    const SECONDS_TO_WAIT = 0.5 * 1000;
+    // espera 0.5 segundos depois da última tecla
+    this.searchDebounce = setTimeout(() => {
+      if (this.searchTerm.length === 0 || this.searchTerm.length > 2) {
+        this.getItemsByType({
+          type: this.selectedFilter,
+          page: 1,
+          limit: 10,
+          title: this.searchTerm
+        });
+      }
+
+      this.currentPage = 0;
+    }, SECONDS_TO_WAIT); // 1s
   }
 
   clearSearch() {
     this.searchTerm = '';
     this.currentPage = 0;
+    this.getItemsByType({
+      type: this.selectedFilter,
+      page: 1,
+      limit: 10
+    });
   }
 
   onPageChange(event: PageEvent) {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    
-    this.getNews({
+
+    this.getItemsByType({
+      type: this.selectedFilter,
       page: event.pageIndex + 1,
       limit: event.pageSize
     });
@@ -184,23 +245,40 @@ export class ListAllComponent implements OnInit {
     }
   }
 
-  editItem(item: any) {
-      // Vai ter que integrar o role do edit aq
-    console.log('Editando item:', item);
+  editProject(item: IProject) {
 
   }
 
-  deleteItem(item: News) {
+  editNews(item: INews) {
+    // Vai ter que integrar o role do edit aq
+    console.log('Editando item:', item);
+  }
+
+  cancelItemDelete(): void {
+    this.showDeleteModal = false;
+    this.itemToDelete = null;
+  }
+
+  confirmItemDelete(): void { }
+
+
+  deleteItem(item: IItemToDelete) {
     this.itemToDelete = item;
     this.showDeleteModal = true;
   }
 
   cancelDelete(): void {
-    this.showDeleteModal = false;
     this.itemToDelete = null;
+    this.showDeleteModal = false;
   }
 
-  confirmDelete(): void {    
-    this.cancelDelete();  
+  confirmDelete(): void {
+    if (this.itemToDelete) {
+
+      console.log(`Deletando item com ID ${this.itemToDelete.id} e título "${this.itemToDelete.title}"`);
+      // Lógica para deletar notícia ou projeto
+    }
+    this.showDeleteModal = false;
+    this.itemToDelete = null;
   }
 }

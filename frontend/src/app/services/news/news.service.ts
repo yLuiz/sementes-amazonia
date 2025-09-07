@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { apiConfig } from '../../config/api.config';
@@ -15,29 +15,17 @@ export interface INewsFilters {
   publishedAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
 }
 
-export interface News {
+export interface INews {
   id: number,
   title: string,
   summary: string,
   content: string,
   tags: string,
+  author?: string,
   image_thumb: string,
   published_at: string,
   created_at: string,
   updated_at: string,
-}
-
-
-export interface INewsPortugueseResponse {
-  id: number;
-  titulo: string;
-  resumo: string;
-  tags: string; // Separadas por vírgulas.
-  imagemThumb: string;
-  dataPublicacao: string;
-  conteudoCompleto: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 @Injectable({
@@ -53,18 +41,26 @@ export class NewsService {
    * Busca todas as notícias da API
    * @returns Observable<News[]>
    */
-  getNews(filters?: INewsFilters): Observable<IPageResponse<News[]>> {
 
+  getNews(filters?: INewsFilters): Observable<IPageResponse<INews[]>> {
     const { direction, orderBy, title, createdAt, updatedAt, publishedAt } = filters || {};
+    const page = filters?.page ?? 1;
+    const limit = filters?.limit ?? 10;
 
-    const [page, limit] = [filters?.page ?? 1, filters?.limit ?? 10];
+    let params = new HttpParams()
+      .set('page', String(page))
+      .set('limit', String(limit))
+      .set('direction', direction ?? 'asc')
+      .set('orderBy', orderBy ?? 'id');
 
-    const filtersInString = `${direction ? `&direction=${direction}` : 'asc'}${orderBy ? `&orderBy=${orderBy}` : 'id'}${title ? `&title=${title}` : ''}${createdAt ? `&createdAt=${createdAt}` : ''}${updatedAt ? `&updatedAt=${updatedAt}` : ''}${publishedAt ? `&publishedAt=${publishedAt}` : ''}`;
+    if (title) params = params.set('title', title);
+    if (createdAt) params = params.set('createdAt', createdAt);
+    if (updatedAt) params = params.set('updatedAt', updatedAt);
+    if (publishedAt) params = params.set('publishedAt', publishedAt);
 
-    return this.http.get<IPageResponse<News[]>>(this.apiUrl + `?page=${page}&limit=${limit}${filtersInString}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http
+      .get<IPageResponse<INews[]>>(this.apiUrl, { params })
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -72,8 +68,8 @@ export class NewsService {
    * @param id - ID da notícia
    * @returns Observable<News>
    */
-  getNewsById(id: number): Observable<News> {
-    return this.http.get<News>(`${this.apiUrl}/${id}`)
+  getNewsById(id: number): Observable<INews> {
+    return this.http.get<INews>(`${this.apiUrl}/${id}`)
       .pipe(
         catchError(this.handleError)
       );
@@ -84,8 +80,8 @@ export class NewsService {
    * @param news - Dados da notícia (sem ID)
    * @returns Observable<News>
    */
-  createNews(news: FormData): Observable<News> {
-    return this.http.post<News>(this.apiUrl, news)
+  createNews(news: FormData): Observable<INews> {
+    return this.http.post<INews>(this.apiUrl, news)
       .pipe(
         catchError(this.handleError)
       );
@@ -97,8 +93,8 @@ export class NewsService {
    * @param news - Dados atualizados da notícia
    * @returns Observable<News>
    */
-  updateNews(id: number, news: Partial<News>): Observable<News> {
-    return this.http.put<News>(`${this.apiUrl}/${id}`, news)
+  updateNews(id: number, news: Partial<INews>): Observable<INews> {
+    return this.http.put<INews>(`${this.apiUrl}/${id}`, news)
       .pipe(
         catchError(this.handleError)
       );
@@ -121,8 +117,8 @@ export class NewsService {
    * Busca notícias em destaque
    * @returns Observable<News[]>
    */
-  getFeaturedNews(): Observable<News[]> {
-    return this.http.get<News[]>(`${this.apiUrl}/featured`)
+  getFeaturedNews(): Observable<INews[]> {
+    return this.http.get<INews[]>(`${this.apiUrl}/featured`)
       .pipe(
         catchError(this.handleError)
       );
@@ -135,13 +131,13 @@ export class NewsService {
    * @returns Observable<{news: News[], total: number, page: number, limit: number}>
    */
   getNewsPaginated(page: number = 1, limit: number = 10): Observable<{
-    news: News[];
+    news: INews[];
     total: number;
     page: number;
     limit: number;
   }> {
     return this.http.get<{
-      news: News[];
+      news: INews[];
       total: number;
       page: number;
       limit: number;

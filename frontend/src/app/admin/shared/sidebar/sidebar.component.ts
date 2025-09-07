@@ -19,8 +19,8 @@ export class SidebarComponent {
 
   menuItems = [
     {
-      label: 'Register',
-      icon: 'pi pi-home',
+      label: 'Cadastros',
+      icon: 'pi pi-plus',
       route: '/admin/registers',
       active: false,
       queryParams: null
@@ -38,13 +38,6 @@ export class SidebarComponent {
       route: '/list-all',
       active: false,
       queryParams: { type: 'project' }
-    },
-    {
-      label: 'Configurações',
-      icon: 'pi pi-cog',
-      route: '/admin/settings',
-      active: false,
-      queryParams: null
     }
   ];
 

@@ -1,11 +1,11 @@
 <div class="news-card">
   <div class="card-image">
-    <img [src]="imageUrl" alt="Imagem do projeto" />
+    <img [src]="imageUrl" (error)="handleImageError($event)" alt="Imagem do projeto" />
   </div>
   <div class="card-body">
     <span class="date">{{ labelDate }}</span>
-    <h3 [title]="title">{{ title }}</h3>
-    <p [title]="description">{{ description }}</p>
-    <a class="see-more" href="#">Leia mais</a>
+    <h3 [title]="news?.title">{{ news?.title }}</h3>
+    <p [title]="news?.description">{{ news?.description }}</p>
+    <a class="see-more" [routerLink]="['/article', news?.id]" [queryParams]="{ type: 'news' }">Leia mais</a>
   </div>
 </div>

@@ -1,12 +1,12 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as moment from 'moment';
 import { ProjectsFilter, ProjectsOrderBy } from 'src/dto/filters/projects.filter';
 import { CreateProjectDto, UpdateProjectDto } from 'src/dto/project.dto';
 import { Project } from 'src/entities/project.entity';
-import { Between, Like, Repository } from 'typeorm';
-import * as moment from 'moment';
 import { parseDateToString } from 'src/utils/parseDateToString';
+import { Between, ILike, Repository } from 'typeorm';
 
 
 @Injectable()
@@ -40,7 +40,7 @@ export class ProjectsService {
       skip,
       take: limit,
       where: {
-        title: projectsFilters.title ? Like(`%${projectsFilters.title}%`) : undefined,
+        title: projectsFilters.title ? ILike(`%${projectsFilters.title}%`) : undefined,
         created_at: this._buildDateRange(projectsFilters.createdAt),
         updated_at: this._buildDateRange(projectsFilters.updatedAt),
       },

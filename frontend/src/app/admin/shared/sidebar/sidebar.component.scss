@@ -63,8 +63,10 @@
     color: var(--primary-text-color) !important;
     padding: 0.2rem;
     border: none;
+    cursor: pointer;
 
     &:hover {
+
       color: #16a34a !important;
     }
   }

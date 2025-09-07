@@ -5,14 +5,6 @@
   <!-- Header para Admin -->
   <header class="header" *ngIf="isAdminContext">
     <h1>Sementes da Amazônia</h1>
-    <!-- <div class="options-container">
-      <div class="redirect-container">
-        <button (click)="goToWebSite()">Ir para o site</button>
-      </div>
-      <div class="logout-container">
-        <button (click)="logout()">Sair</button>
-      </div>
-    </div> -->
   </header>
 
   <!-- Navbar para usuários não admin -->
@@ -30,17 +22,9 @@
       <div class="search-container">
         <div class="search-input-wrapper">
           <mat-icon class="search-icon">search</mat-icon>
-          <input 
-            type="text" 
-            placeholder="Pesquisar por título ou descrição..."
-            [(ngModel)]="searchTerm"
-            (input)="onSearchChange()"
-            class="search-input">
-          <button 
-            *ngIf="searchTerm" 
-            class="clear-button"
-            (click)="clearSearch()"
-            type="button">
+          <input type="text" placeholder="Pesquisar por título..." [(ngModel)]="searchTerm"
+            (input)="onSearchChange()" class="search-input">
+          <button *ngIf="searchTerm" class="clear-button" (click)="clearSearch()" type="button">
             <mat-icon>close</mat-icon>
           </button>
         </div>
@@ -50,21 +34,10 @@
       <div class="filter-container">
         <span class="filter-label">Filtrar por:</span>
         <div class="filter-buttons">
-          <!-- <button 
-            class="filter-btn"
-            [class.active]="selectedFilter === 'all'"
-            (click)="onFilterChange('all')">
-            Todos
-          </button> -->
-          <button 
-            class="filter-btn news"
-            [class.active]="selectedFilter === 'news'"
-            (click)="onFilterChange('news')">
+          <button class="filter-btn news" [class.active]="selectedFilter === 'news'" (click)="onFilterChange('news')">
             Notícias
           </button>
-          <button 
-            class="filter-btn project"
-            [class.active]="selectedFilter === 'project'"
+          <button class="filter-btn project" [class.active]="selectedFilter === 'project'"
             (click)="onFilterChange('project')">
             Projetos
           </button>
@@ -72,61 +45,68 @@
       </div>
     </div>
 
-    <!-- Resultado da busca/filtro -->
-    <div class="results-info" *ngIf="searchTerm || selectedFilter !== 'all'">
-      <span>{{ totalItems }} resultado(s) encontrado(s)</span>
-      <button class="clear-filters" (click)="searchTerm = ''; selectedFilter = 'all'; currentPage = 0">
-        Limpar filtros
-      </button>
-    </div>
+    <ng-container *ngIf="selectedFilter === 'news'">
+      <div class="cards-grid">
+        <div *ngFor="let item of news" class="card-wrapper">
+          <app-news-card [news]="{
+            id: item.id,
+            title: item.title,
+            description: item.summary,
+            image: item.image_thumb || '',
+            date: item.published_at
+          }">
+          </app-news-card>
 
-     <div class="cards-grid">
-      <div *ngFor="let item of news" class="card-wrapper">
-        <app-news-card 
-          [title]="item.title"
-          [description]="item.summary"
-          [date]="item.published_at"
-          [image]="item.image_thumb || ''">
-        </app-news-card>
-        
-        <!-- <app-project-card 
-          *ngIf="item.type === 'project'"
-          [title]="item.title"
-          [description]="item.description"
-          [date]="item.date"
-          [image]="item.image || ''">
-        </app-project-card> -->
-        
-        <!-- Tag de tipo -->
-        <div class="type-tag" [ngClass]="'news'">
-          Notícia
-        </div>
+          <!-- Tag de tipo -->
+          <div class="type-tag" [ngClass]="'news'">
+            Notícia
+          </div>
 
-        <!-- Botões de ação (só para admin) -->
-        <div class="action-buttons" *ngIf="isAdminContext">
-          <p-button 
-            icon="pi pi-pencil" 
-            [rounded]="true" 
-            [text]="true"
-            severity="secondary"
-            (click)="editItem(item)"
-            class="edit-btn"
-            >
-          </p-button>
-          
-          <p-button 
-            icon="pi pi-trash" 
-            [rounded]="true" 
-            [text]="true"
-            severity="danger"
-            size="small"
-            (click)="deleteItem(item)"
-            class="delete-btn"
-            >
-          </p-button>
+          <!-- Botões de ação (só para admin) -->
+          <div class="action-buttons" *ngIf="isAdminContext">
+            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (click)="editNews(item)"
+              class="edit-btn">
+            </p-button>
+
+            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
+              (click)="deleteItem(item)" class="delete-btn">
+            </p-button>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
+
+    <!-- Projetos -->
+    <ng-container *ngIf="selectedFilter === 'project'">
+      <div class="cards-grid">
+        <div *ngFor="let item of projects" class="card-wrapper">
+          <app-project-card [project]="{
+            id: item.id,
+            title: item.title,
+            description: item.summary,
+            image: item.image_thumb || '',
+            date: item.created_at
+          }">
+          </app-project-card>
+
+          <!-- Tag de tipo -->
+          <div class="type-tag" [ngClass]="'project'">
+            Projeto
+          </div>
+
+          <!-- Botões de ação (só para admin) -->
+          <div class="action-buttons" *ngIf="isAdminContext">
+            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+              (click)="editProject(item)" class="edit-btn">
+            </p-button>
+
+            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
+              (click)="deleteItem(item)" class="delete-btn">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
 
     <!-- Mensagem quando não há resultados -->
     <div class="no-results" *ngIf="totalItems === 0">
@@ -137,15 +117,9 @@
 
     <!-- Paginação -->
     <div class="pagination-container">
-      <mat-paginator
-        [length]="totalItems"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        [pageIndex]="currentPage"
-        (page)="onPageChange($event)"
-        showFirstLastButtons="true"
-        aria-label="Navegação de páginas"
-        class="custom-paginator">
+      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage" (page)="onPageChange($event)" showFirstLastButtons="true"
+        aria-label="Navegação de páginas" class="custom-paginator">
       </mat-paginator>
     </div>
   </section>
@@ -157,7 +131,7 @@
     <div class="modal-header">
       <mat-icon class="delete-icon">delete</mat-icon>
     </div>
-    
+
     <div class="modal-content">
       <h3>Confirmar exclusão</h3>
       <p>
@@ -167,7 +141,7 @@
       <p class="item-title">"{{ itemToDelete?.title }}"</p>
       <p class="warning-text">Esta ação não pode ser desfeita.</p>
     </div>
-    
+
     <div class="modal-actions">
       <button class="cancel-btn" (click)="cancelDelete()">
         Cancelar
