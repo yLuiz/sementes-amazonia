@@ -19,6 +19,11 @@ export const routes: Routes = [
       import('./blog/components/article/article.component').then((m) => m.ArticleComponent),
   },
   {
+    path: 'about-us',
+    loadComponent: () =>
+      import('./blog/components/about-us/about-us.component').then((m) => m.AboutUsComponent),
+  },
+  {
     path: 'admin',
     children: [
       {
