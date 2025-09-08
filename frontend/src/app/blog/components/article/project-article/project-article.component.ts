@@ -18,7 +18,7 @@ export class ProjectArticleComponent {
 
   constructor(
     private _toastr: ToastrService
-  ) {}
+  ) { }
 
   @ViewChild('imageCarousel') imageCarousel!: Carousel;
 
@@ -31,7 +31,14 @@ export class ProjectArticleComponent {
     },
   ];
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.images = [
+      {
+        src: this.project?.image_thumb ?? '',
+        alt: this.project?.title ?? ''
+      }
+    ]
+  }
 
   shareArticle() {
     const currentUrl = window.location.href;

@@ -9,6 +9,7 @@ import { IProject, ProjectsService } from '../../../services/projects/projects.s
 import { INews, NewsService } from '../../../services/news/news.service';
 import { ProjectArticleComponent } from './project-article/project-article.component';
 import { NewsArticleComponent } from './news-article/news-article.component';
+import { apiConfig } from '../../../config/api.config';
 
 @Component({
   selector: 'app-article',
@@ -84,7 +85,10 @@ export class ArticleComponent implements OnInit {
     if (args.type === 'news' && args.id) {
       this._newsService.getNewsById(args.id).subscribe({
         next: (news) => {
-          this.news = news;
+          this.news = {
+            ...news,
+            image_thumb: apiConfig.media.base + '/' + news.image_thumb
+          };
           // Formata a data em português brasileiro
           this.formattedDate = this.formatDateToPtBr(new Date(news.published_at));
         },
@@ -98,7 +102,10 @@ export class ArticleComponent implements OnInit {
     if (args.type === 'project' && args.id) {
       this._projectsService.getProjectById(args.id).subscribe({
         next: (project) => {
-          this.project = project;
+          this.project = {
+            ...project,
+            image_thumb: apiConfig.media.base + '/' + project.image_thumb
+          };
           // Formata a data em português brasileiro
           this.formattedDate = this.formatDateToPtBr(new Date(project.created_at));
         },

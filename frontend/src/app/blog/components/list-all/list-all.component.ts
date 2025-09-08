@@ -15,6 +15,7 @@ import { IProjectsFilters, IProject, ProjectsService } from '../../../services/p
 import { NavbarComponent } from '../navbar/navbar.component';
 import { NewsCardComponent } from '../news-card/news-card.component';
 import { ProjectCardComponent } from '../project-card/project-card.component';
+import { ToastrService } from 'ngx-toastr';
 
 export interface IItemToDelete {
   id: number;
@@ -88,7 +89,8 @@ export class ListAllComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _projectsService: ProjectsService,
-    private _newsService: NewsService
+    private _newsService: NewsService,
+    private _toastr: ToastrService
   ) {
     // Verifica se o usuário está autenticado como admin
     const token = this._authService.getToken();
@@ -273,7 +275,43 @@ export class ListAllComponent implements OnInit {
   }
 
   confirmDelete(): void {
-    this.showDeleteModal = false;
-    this.itemToDelete = null;
+
+    if (this.selectedFilter === 'news') {
+      this._newsService.deleteNews(this.itemToDelete!.id).subscribe({
+        next: (response) => {
+          this._toastr.success('Notícia removida com sucesso!', 'Sucesso.')
+        },
+        error: (error) => {
+          console.error(error);
+          this._toastr.error('Não foi possível concluir a ação.', 'Sucesso.');
+        }
+      })
+      .add(() => {
+        this.showDeleteModal = false;
+        this.itemToDelete = null;
+      })
+
+      return;
+    }
+
+    if (this.selectedFilter === 'projects') {
+      this._projectsService.deleteProject(this.itemToDelete!.id).subscribe({
+        next: (response) => {
+          this._toastr.success('Projeto removido com sucesso!', 'Sucesso.');
+        },
+        error: (error) => {
+          console.error(error);
+          this._toastr.error('Não foi possível concluir a ação.', 'Sucesso.');
+        }
+      })
+        .add(() => {
+          this.showDeleteModal = false;
+          this.itemToDelete = null;
+        })
+
+      return;
+
+    }
+
   }
 }

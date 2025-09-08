@@ -20,7 +20,7 @@ export class NewsArticleComponent {
 
   constructor(
     private _toastr: ToastrService
-  ) {}
+  ) { }
 
   currentImageIndex: number = 0;
 
@@ -30,7 +30,16 @@ export class NewsArticleComponent {
       alt: 'Floresta Amazônica'
     },
   ];
-  
+
+  ngOnInit() {
+    this.images = [
+      {
+        src: this.news?.image_thumb ?? '',
+        alt: this.news?.title ?? ''
+      }
+    ]
+  }
+
   shareArticle() {
     const currentUrl = window.location.href;
 
