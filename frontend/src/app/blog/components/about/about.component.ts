@@ -14,6 +14,10 @@ export class AboutComponent {
     private readonly _router: Router
   ) { }
 
+  goToAboutUs() {
+    this._router.navigate(['/about-us']);
+  }
+
   goToProjects() {
     this._router.navigate(['/list-all'], { queryParams: { type: 'projects' } });
   }

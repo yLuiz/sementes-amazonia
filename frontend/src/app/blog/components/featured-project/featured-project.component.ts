@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { IProject } from '../../../services/projects/projects.service';
+import { IProject, ProjectsService } from '../../../services/projects/projects.service';
 import { CommonModule } from '@angular/common';
+import { apiConfig } from '../../../config/api.config';
 
 @Component({
   selector: 'app-featured-project',
@@ -12,12 +13,32 @@ import { CommonModule } from '@angular/common';
 })
 export class FeaturedProjectComponent {
 
-  @Input() project: IProject | null = null;
-  @Input() imagePath: string | null = null;
+  project: IProject | null = null;
+  imagePath: string | null = null;
 
   constructor(
-    private readonly _router: Router
+    private readonly _router: Router,
+    private readonly _projectsService: ProjectsService
   ) { }
+
+  ngOnInit() {
+    this._projectsService.getFeaturedProjects().subscribe({
+      next: (projects) => {
+
+        console.log('Projetos em destaque:', projects);
+
+        this.project = projects;
+        this.imagePath = this.project?.image_thumb ? `${apiConfig.media.base}/${this.project.image_thumb}` : null;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar projetos em destaque:', err);
+      }
+    })
+  }
+
+  onImageLoad(event: Event) {
+    (event.target as HTMLImageElement).style.opacity = '1';
+  }
 
   handleImageError(event: Event) {
     (event.target as HTMLImageElement).src = 'assets/no-image.svg';

@@ -1,6 +1,6 @@
 :host {
   display: block;
-  padding-top: 100px;
+  padding-top: 40px;
   background-color: var(--primary-bg-color);
 }
 
@@ -8,6 +8,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
+
   min-height: calc(100vh - 100px);
   line-height: 1.6;
   color: var(--primary-text-color);

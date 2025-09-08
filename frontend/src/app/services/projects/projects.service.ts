@@ -116,8 +116,8 @@ export class ProjectsService {
    * Busca projetos em destaque
    * @returns Observable<Project[]>
    */
-  getFeaturedProjects(): Observable<IProject[]> {
-    return this.http.get<IProject[]>(`${this.apiUrl}/featured`)
+  getFeaturedProjects(): Observable<IProject> {
+    return this.http.get<IProject>(`${this.apiUrl}/featured`)
       .pipe(
         catchError(this.handleError)
       );
