@@ -32,7 +32,7 @@ export class CreateNewsDto {
   tags?: string;
 
   @ApiProperty({
-    description: 'Thumbnail image URL for the news article', example: 'https://example.com/image.jpg', required: false, type: 'string',
+    description: 'Thumbnail image for the news article', required: false, type: 'string',
     format: 'binary'
   })
   @IsOptional()
@@ -80,11 +80,17 @@ export class UpdateNewsDto {
   @IsString()
   content?: string;
 
+  @ApiProperty({ description: 'Author of the news article', example: 'Jane Smith', required: false })
+  @IsOptional()
+  @IsString()
+  author?: string;
+
   @ApiProperty({
-    description: 'Thumbnail image URL for the news article', example: 'https://example.com/image.jpg', required: false, type: 'string',
+    description: 'Thumbnail image for the news article', required: false, type: 'string',
     format: 'binary'
   })
   @IsOptional()
+  @IsString()
   image_thumb?: string;
 
   @IsOptional()

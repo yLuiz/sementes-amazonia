@@ -10,10 +10,10 @@
       <p>Temos o orgulho de anunciar nossa colaboração com a Petrobras em uma iniciativa inovadora de restauração
         ambiental. Este projeto visa restaurar ecossistemas degradados enquanto proporciona meios de subsistência
         sustentáveis para as comunidades locais.</p>
-      <button>Conheça o projeto</button>
+      <button (click)="readAboutProject(project?.id)">Conheça o projeto</button>
     </div>
     <div class="image">
-      <img src="../../../assets/petrobras.png" alt="Projeto" />
+      <img [src]="imagePath" (error)="handleImageError($event)" alt="Projeto" />
     </div>
   </div>
 </section>

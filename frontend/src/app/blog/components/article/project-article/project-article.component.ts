@@ -3,6 +3,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Carousel, CarouselModule } from 'primeng/carousel';
 import { IProject } from '../../../../services/projects/projects.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-project-article',
@@ -15,6 +16,10 @@ export class ProjectArticleComponent {
   @Input() project: IProject | null = null;
   @Input() formattedDate: string = '';
 
+  constructor(
+    private _toastr: ToastrService
+  ) {}
+
   @ViewChild('imageCarousel') imageCarousel!: Carousel;
 
   currentImageIndex: number = 0;
@@ -24,26 +29,16 @@ export class ProjectArticleComponent {
       src: 'assets/amazon_forest.png',
       alt: 'Floresta Amazônica'
     },
-    {
-      src: 'assets/amazon_forest_2.png',
-      alt: 'Biodiversidade da Amazônia'
-    },
-    {
-      src: 'assets/Image 1.png',
-      alt: 'Pesquisa na Amazônia'
-    }
   ];
 
-  ngOnInit() {
-    console.log(this.project);
-  }
+  ngOnInit() {}
 
   shareArticle() {
     const currentUrl = window.location.href;
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(currentUrl).then(() => {
-        alert('Link copiado para a área de transferência!');
+        this._toastr.success('Link copiado para a área de transferência!');
       }).catch(() => {
         this.fallbackCopyToClipboard(currentUrl);
       });

@@ -62,6 +62,12 @@ export class ProjectsService {
     };
   }
 
+  async findFeatured() {
+    return await this.projectsRepository.findOne({
+      where: { is_featured: true },
+    });
+  }
+
   async findOne(id: number): Promise<Project> {
     const project = await this.projectsRepository.findOne({ where: { id } });
     if (!project) {

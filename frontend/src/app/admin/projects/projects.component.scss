@@ -4,7 +4,7 @@
 }
 
 .form-container {
-  
+
   h2 {
     font-family: 'Cormorant', serif;
     margin: 0 auto;
@@ -126,12 +126,12 @@
         cursor: pointer;
         transition: background-color 0.2s;
 
-        &.gray {
-          background: #e2e2e2;
-          color: #555;
+        &.submit-button {
+          background: #2a9c1b;
+          color: #FFF;
 
           &:hover {
-            background: #d6d6d6;
+            background: #238017;
           }
         }
 

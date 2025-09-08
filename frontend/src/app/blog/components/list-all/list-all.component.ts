@@ -67,7 +67,7 @@ class CustomMatPaginatorIntl extends MatPaginatorIntl {
 export class ListAllComponent implements OnInit {
 
   searchTerm: string = '';
-  selectedFilter: 'news' | 'project' = 'news';
+  selectedFilter: 'news' | 'projects' = 'news';
   isAdminContext: boolean = false;
 
   totalItems: number = 0;
@@ -85,10 +85,10 @@ export class ListAllComponent implements OnInit {
 
   constructor(
     private _authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private projectsService: ProjectsService,
-    private newsService: NewsService
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _projectsService: ProjectsService,
+    private _newsService: NewsService
   ) {
     // Verifica se o usuário está autenticado como admin
     const token = this._authService.getToken();
@@ -97,7 +97,7 @@ export class ListAllComponent implements OnInit {
 
 
   getNews(filters: INewsFilters) {
-    this.newsService.getNews({
+    this._newsService.getNews({
       page: filters.page,
       limit: filters.limit,
       title: filters.title
@@ -113,7 +113,7 @@ export class ListAllComponent implements OnInit {
   }
 
   getProjects(filters: IProjectsFilters) {
-    this.projectsService.getProjects({
+    this._projectsService.getProjects({
       page: filters.page,
       limit: filters.limit,
       title: filters.title
@@ -129,10 +129,10 @@ export class ListAllComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this._route.queryParams.subscribe(params => {
       if (params['type']) {
         const type = params['type'];
-        if (type === 'news' || type === 'project') {
+        if (type === 'news' || type === 'projects') {
           this.getItemsByType({ type, page: 1, limit: 10 });
           this.selectedFilter = type;
           this.currentPage = 0;
@@ -147,7 +147,7 @@ export class ListAllComponent implements OnInit {
   }
 
   getItemsByType(args: {
-    type: 'news' | 'project',
+    type: 'news' | 'projects',
     page: number,
     limit: number,
     title?: string
@@ -159,7 +159,7 @@ export class ListAllComponent implements OnInit {
         title: this.searchTerm
       });
     }
-    else if (args.type === 'project') {
+    else if (args.type === 'projects') {
       this.getProjects({
         page: args.page,
         limit: args.limit,
@@ -168,7 +168,7 @@ export class ListAllComponent implements OnInit {
     }
   }
 
-  onFilterChange(filter: 'news' | 'project') {
+  onFilterChange(filter: 'news' | 'projects') {
     this.getItemsByType({
       type: filter,
       page: 1,
@@ -227,7 +227,7 @@ export class ListAllComponent implements OnInit {
     switch (this.selectedFilter) {
       case 'news':
         return 'Todas as Notícias';
-      case 'project':
+      case 'projects':
         return 'Todos os Projetos';
       default:
         return 'Todas as Notícias e Projetos';
@@ -238,7 +238,7 @@ export class ListAllComponent implements OnInit {
     switch (this.selectedFilter) {
       case 'news':
         return 'Visualize todas as notícias cadastradas no site';
-      case 'project':
+      case 'projects':
         return 'Visualize todos os projetos cadastrados no site';
       default:
         return 'Visualize todos os conteúdos cadastrados no site';
@@ -246,12 +246,12 @@ export class ListAllComponent implements OnInit {
   }
 
   editProject(item: IProject) {
-
+    this._router.navigate(['/admin/edit', item.id], { queryParams: { type: 'project' } });
   }
 
   editNews(item: INews) {
-    // Vai ter que integrar o role do edit aq
-    console.log('Editando item:', item);
+    this._router.navigate(['/admin/edit', item.id], { queryParams: { type: 'news' } });
+
   }
 
   cancelItemDelete(): void {
@@ -273,11 +273,6 @@ export class ListAllComponent implements OnInit {
   }
 
   confirmDelete(): void {
-    if (this.itemToDelete) {
-
-      console.log(`Deletando item com ID ${this.itemToDelete.id} e título "${this.itemToDelete.title}"`);
-      // Lógica para deletar notícia ou projeto
-    }
     this.showDeleteModal = false;
     this.itemToDelete = null;
   }

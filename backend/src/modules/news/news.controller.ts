@@ -38,8 +38,6 @@ export class NewsController {
     @Body() createNewsDto: CreateNewsDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-
-
     if (file) {
       createNewsDto['image_thumb'] = file.filename;
     }
@@ -56,21 +54,29 @@ export class NewsController {
     return this._newsService.findOne(+id);
   }
 
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  @UseInterceptors(FileInterceptor('image', multerConfig))
+  @UseInterceptors(FileInterceptor('image_thumb', multerConfig))
   async update(
     @Param('id') id: string,
     @Body() updateNewsDto: UpdateNewsDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    if (file) {
-      updateNewsDto['image_thumb'] = file.filename;
+    try {
+      if (file) {
+        updateNewsDto['image_thumb'] = file.filename;
+      }
+      return await this._newsService.update(+id, updateNewsDto);
     }
-    return this._newsService.update(+id, updateNewsDto);
+    catch (error) {
+      console.error('Error updating news:', error);
+      throw error;
+    }
   }
 
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')

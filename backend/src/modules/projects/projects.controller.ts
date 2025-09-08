@@ -1,5 +1,6 @@
-
+/* eslint-disable prettier/prettier */
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -37,12 +38,24 @@ export class ProjectsController {
     if (file) {
       createProjectDto['image_thumb'] = file.filename;
     }
-    return this.projectsService.create(createProjectDto);
+    return await this.projectsService.create(createProjectDto);
   }
 
   @Get()
   async findAll(@Query() projectsFilters: ProjectsFilter) {
-    return this.projectsService.findAll(projectsFilters);
+    return await this.projectsService.findAll(projectsFilters);
+  }
+
+  @Get('featured')
+  async findFeatured() {
+
+    const featuredProject = await this.projectsService.findFeatured();
+
+    if (!featuredProject) {
+      throw new BadRequestException('Nenhum projeto em destaque encontrado');
+    }
+
+    return featuredProject;
   }
 
   @Get(':id')

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Project } from 'src/entities/project.entity';
 import { getCurrentTimeString } from 'src/utils/getCurrentTimeString';
 import { parseDateToString } from 'src/utils/parseDateToString';
@@ -14,6 +15,14 @@ export class PopulateProjects1757133723324 implements Seeder {
         const projectRepository = dataSource.getRepository(Project);
 
         const projectsToCreate: Partial<Project>[] = [
+            {
+                title: 'Projeto Petrobrás',
+                summary: 'Iniciativa de restauração ambiental em parceria com a Petrobrás.',
+                content: 'Estamos entusiasmados em anunciar nossa parceria com a Petrobrás para um projeto inovador de restauração ambiental. Este projeto visa restaurar ecossistemas degradados enquanto proporciona meios de subsistência sustentáveis para as comunidades locais. Através de técnicas avançadas de reflorestamento e manejo sustentável, esperamos criar um impacto positivo duradouro na região.',
+                image_thumb: 'https://example.com/images/projeto-petrobras.jpg',
+                published_at: parseDateToString('2024-01-15 10:00:00'),
+                is_featured: true
+            },
             {
                 title: 'Projeto Sementes da Amazônia',
                 summary: 'Iniciativa para preservar a biodiversidade da Amazônia através do plantio de árvores nativas.',

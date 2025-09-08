@@ -93,7 +93,7 @@ export class NewsService {
    * @param news - Dados atualizados da notícia
    * @returns Observable<News>
    */
-  updateNews(id: number, news: Partial<INews>): Observable<INews> {
+  updateNews(id: number, news: FormData): Observable<INews> {
     return this.http.put<INews>(`${this.apiUrl}/${id}`, news)
       .pipe(
         catchError(this.handleError)

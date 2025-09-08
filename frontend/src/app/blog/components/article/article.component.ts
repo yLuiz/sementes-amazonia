@@ -66,12 +66,8 @@ export class ArticleComponent implements OnInit {
     this._route.queryParamMap.subscribe(params => {
       const typeParam = params.get('type');
 
-      console.log('Tipo de artigo:', typeParam);
-
       if (typeParam === 'news' || typeParam === 'project') {
         this.type = typeParam;
-
-        console.log('Tipo definido como:', this.type);
       }
 
       this.getInfoByType({

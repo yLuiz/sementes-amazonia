@@ -4,6 +4,17 @@ import { CarouselModule, Carousel } from 'primeng/carousel';
 import { NewsService } from '../../../services/news/news.service';
 import { capitalize } from '../../../shared/utils/capitalize';
 import { apiConfig, environment } from '../../../config/api.config';
+import { Router } from '@angular/router';
+
+export interface INewsCarouselItem {
+  id?: number;
+  image: string;
+  tag: string[];
+  title: string;
+  text: string;
+  button1: string;
+  button2: string;
+}
 
 @Component({
   selector: 'app-hero',
@@ -19,8 +30,19 @@ export class HeroComponent {
   mediaUrl = apiConfig.media.base + '/';
 
   constructor(
-    private readonly _newsService: NewsService
+    private readonly _newsService: NewsService,
+    private readonly _router: Router
   ) { }
+
+  redirectToNews() {
+    this._router.navigate(['/list-all'], {
+      queryParams: { type: 'news' }
+    });
+  }
+
+  readMore(newsId: number) {
+    this._router.navigate(['/article', newsId]);
+  }
 
   ngOnInit() {
     this._newsService.getNews({
@@ -30,8 +52,8 @@ export class HeroComponent {
     })
       .subscribe({
         next: (news) => {
-          console.log('Notícias carregadas para o carrossel:', news);
           this.items = news.data.map(n => ({
+            id: n.id,
             image: n.image_thumb || 'assets/amazon_forest.png',
             tag: n.tags.split(',').map(tag => capitalize(tag)) || ['Notícia'],
             title: n.title || 'Título da Notícia',
@@ -45,8 +67,8 @@ export class HeroComponent {
         }
       })
   }
-  
-  items = [
+
+  items: INewsCarouselItem[] = [
     {
       image: 'assets/amazon_forest.png',
       tag: ['Novo'],

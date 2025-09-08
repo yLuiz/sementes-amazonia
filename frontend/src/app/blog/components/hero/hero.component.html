@@ -39,8 +39,8 @@
                         <h1>{{item.title}}</h1>
                         <p>{{item.text}}</p>
                         <div class="buttons">
-                            <button class="read-more">{{item.button1}}</button>
-                            <button class="see-news">{{item.button2}}</button>
+                            <button *ngIf="item.id" (click)="readMore(item.id)" class="read-more">{{item.button1}}</button>
+                            <button (click)="redirectToNews()" class="see-news">{{item.button2}}</button>
                         </div>
                     </div>
                 </div>

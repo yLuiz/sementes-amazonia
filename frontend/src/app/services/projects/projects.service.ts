@@ -92,7 +92,7 @@ export class ProjectsService {
    * @param project - Dados atualizados do projeto
    * @returns Observable<Project>
    */
-  updateProject(id: number, project: Partial<IProject>): Observable<IProject> {
+  updateProject(id: number, project: FormData): Observable<IProject> {
     return this.http.put<IProject>(`${this.apiUrl}/${id}`, project)
       .pipe(
         catchError(this.handleError)

@@ -32,6 +32,11 @@ export class CreateProjectDto {
   @IsNotEmpty()
   content: string;
 
+  @ApiProperty({ description: 'Author of the news article', example: 'Jane Smith', required: false })
+  @IsOptional()
+  @IsString()
+  author?: string;
+
   @ApiProperty({
     description: 'Thumbnail image URL for the project',
     example: 'https://example.com/image.jpg',
@@ -84,6 +89,11 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   content?: string;
+
+  @ApiProperty({ description: 'Author of the news article', example: 'Jane Smith', required: false })
+  @IsOptional()
+  @IsString()
+  author?: string;
 
   @ApiProperty({
     description: 'Thumbnail image URL for the project',

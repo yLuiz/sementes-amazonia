@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-about',
@@ -9,4 +10,11 @@ import { Component } from '@angular/core';
 })
 export class AboutComponent {
 
+  constructor(
+    private readonly _router: Router
+  ) { }
+
+  goToProjects() {
+    this._router.navigate(['/list-all'], { queryParams: { type: 'projects' } });
+  }
 }

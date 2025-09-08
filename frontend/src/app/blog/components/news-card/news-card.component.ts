@@ -39,7 +39,6 @@ export class NewsCardComponent {
 
       
       this.imageUrl = `${apiConfig.media.base}/${this.news.image}`;
-      console.log('Image input for news card:', this.imageUrl);
     } else {
       console.warn('Image input is not provided for project card');
     }
