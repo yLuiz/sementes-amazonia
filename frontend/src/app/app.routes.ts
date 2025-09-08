@@ -21,6 +21,11 @@ export const routes: Routes = [
 
 
   {
+    path: 'about-us',
+    loadComponent: () =>
+      import('./blog/components/about-us/about-us.component').then((m) => m.AboutUsComponent),
+  },
+  {
     path: 'admin',
     children: [
       // Sem layout

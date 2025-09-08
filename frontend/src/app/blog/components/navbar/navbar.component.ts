@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +11,8 @@ import { Component, HostListener } from '@angular/core';
 export class NavbarComponent {
   isMenuOpen = false;
   isMobileDropdownOpen = false;
+
+  constructor(private router: Router) {}
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -26,6 +29,11 @@ export class NavbarComponent {
   toggleMobileDropdown(event: Event) {
     event.preventDefault();
     this.isMobileDropdownOpen = !this.isMobileDropdownOpen;
+  }
+
+  navigateToAboutUs() {
+    this.router.navigate(['/about-us']);
+    this.closeMenu();
   }
 
   @HostListener('document:click', ['$event'])
