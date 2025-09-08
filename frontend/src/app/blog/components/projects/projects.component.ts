@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProjectCardComponent } from '../project-card/project-card.component';
 import { CommonModule } from '@angular/common';
-import { ProjectsService, Project, IProjectPortugueseResponse } from '../../../services/projects/projects.service';
+import { ProjectsService, IProject } from '../../../services/projects/projects.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,11 +18,13 @@ import { Subscription } from 'rxjs';
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
 
-  projectsInPortuguese: IProjectPortugueseResponse[] = [];
-  projects: Project[] = [];
+  projects: IProject[] = [];
   private subscription: Subscription = new Subscription();
 
-  constructor(private projectsService: ProjectsService) { }
+  constructor(
+    private projectsService: ProjectsService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadProjects();
@@ -36,9 +39,11 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   */
   private loadProjects(): void {
 
-    const projectsSub = this.projectsService.getProjects().subscribe({
+    const projectsSub = this.projectsService.getProjects({
+      limit: 3,
+    }).subscribe({
       next: (projects) => {
-        this.projectsInPortuguese = (projects as unknown as any).data as IProjectPortugueseResponse[];
+        this.projects = projects.data;
       },
       error: (error) => {
         console.error('Erro ao carregar projetos:', error);
@@ -51,9 +56,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   /**
    * Navega para a página dos projetos
    */
-  onViewAllProjects(): void {
-    // TODO: Implementar navegação para página
-    console.log('Navegar para todos os projetos');
+    onViewAllProjects(): void {
+    this.router.navigate(['/list-all'], {
+      queryParams: { type: 'project' }
+    });
   }
 
 }

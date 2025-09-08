@@ -1,9 +1,9 @@
 
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module';
+import envConfig from './config/config';
 
 import * as crypto from 'crypto';
 
@@ -14,7 +14,7 @@ if (!(global as any).crypto) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  const _logger = new Logger('Bootstrap');
   // Enable CORS
   app.enableCors();
 
@@ -28,8 +28,8 @@ async function bootstrap() {
   );
   // Swagger config
   const config = new DocumentBuilder()
-    .setTitle('API')
-    .setDescription('Documentação da API')
+    .setTitle('🌳 Sementes da Amazônia API 🌳')
+    .setDescription('🌿 API para o site Sementes da Amazônia 🌿')
     .setVersion('1.0')
     .addBearerAuth() // Para endpoints protegidos com JWT
     .build();
@@ -37,11 +37,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  const configService = app.get(ConfigService);
-  const port = configService.get('PORT') || 3000;
+  const host = 'localhost';
+  const port = envConfig().PORT;
 
   await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
-  console.log(`Swagger docs: http://localhost:${port}/docs`);
+  console.log('\n');
+  _logger.debug(`🚀 Application is running on: http://${host}:${port} 🚀`);
+  _logger.debug(`📃 Swagger docs: http://${host}:${port}/docs 📃`);
+  console.log('\n');
 }
 bootstrap();

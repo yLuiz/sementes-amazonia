@@ -1,55 +1,37 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { apiConfig } from '../../config/api.config';
+import { IPageResponse } from '../../shared/interfaces/IPageResponse';
 
-
-export interface IProjectPortugueseResponse {
-  id: number,
-  nome: string,
-  resumo: string,
-  imagemThumb: string,
-  descricaoCompleta: string,
-  createdAt: string,
-  updatedAt: string,
+export interface IProjectsFilters {
+  page?: number;
+  limit?: number;
+  direction?: 'ASC' | 'DESC';
+  orderBy?: 'created_at' | 'updated_at' | 'published_at' | 'title' | 'id';
+  title?: string;
+  createdAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
+  updatedAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
+  publishedAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
 }
 
-export interface Project {
+
+export interface IProject {
   id: number;
-  image: string;
   title: string;
-  date: string;
-  description: string;
+  summary: string;
+  content: string;
+  author?: string;
+  image_thumb: string;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
-
-  private mockProjects: Project[] = [
-    {
-      id: 1,
-      image: '../../../assets/Image 1.png',
-      title: 'Projeto 1',
-      date: '31 de Maio de 2025',
-      description: 'Descrição do Projeto 1. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
-    },
-    {
-      id: 2,
-      image: '../../../assets/Image 2.png',
-      title: 'Projeto 2',
-      date: '31 de Maio de 2025',
-      description: 'Descrição do Projeto 2. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
-    },
-    {
-      id: 3,
-      image: '../../../assets/Image 3.png',
-      title: 'Projeto 3',
-      date: '31 de Maio de 2025',
-      description: 'Descrição do Projeto 3. Este projeto visa promover a conservação da Amazônia através de práticas sustentáveis e educação ambiental.'
-    }
-  ];
 
   private http = inject(HttpClient);
 
@@ -59,11 +41,25 @@ export class ProjectsService {
    * Busca todos os projetos da API
    * @returns Observable<Project[]>
    */
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.apiUrl)
-      .pipe(
-        catchError(this.handleError)
-      );
+  getProjects(filters?: IProjectsFilters): Observable<IPageResponse<IProject[]>> {
+    const { direction, orderBy, title, createdAt, updatedAt, publishedAt } = filters || {};
+    const page = filters?.page ?? 1;
+    const limit = filters?.limit ?? 10;
+
+    let params = new HttpParams()
+      .set('page', String(page))
+      .set('limit', String(limit))
+      .set('direction', direction ?? 'desc')
+      .set('orderBy', orderBy ?? 'id');
+
+    if (title) params = params.set('title', title);
+    if (createdAt) params = params.set('createdAt', createdAt);
+    if (updatedAt) params = params.set('updatedAt', updatedAt);
+    if (publishedAt) params = params.set('publishedAt', publishedAt);
+
+    return this.http
+      .get<IPageResponse<IProject[]>>(this.apiUrl, { params })
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -71,8 +67,8 @@ export class ProjectsService {
    * @param id - ID do projeto
    * @returns Observable<Project>
    */
-  getProjectById(id: number): Observable<Project> {
-    return this.http.get<Project>(`${this.apiUrl}/${id}`)
+  getProjectById(id: number): Observable<IProject> {
+    return this.http.get<IProject>(`${this.apiUrl}/${id}`)
       .pipe(
         catchError(this.handleError)
       );
@@ -83,8 +79,8 @@ export class ProjectsService {
    * @param project - Dados do projeto (sem ID)
    * @returns Observable<Project>
    */
-  createProject(project: FormData): Observable<Project> {
-    return this.http.post<Project>(this.apiUrl, project)
+  createProject(project: FormData): Observable<IProject> {
+    return this.http.post<IProject>(this.apiUrl, project)
       .pipe(
         catchError(this.handleError)
       );
@@ -96,8 +92,8 @@ export class ProjectsService {
    * @param project - Dados atualizados do projeto
    * @returns Observable<Project>
    */
-  updateProject(id: number, project: Partial<Project>): Observable<Project> {
-    return this.http.put<Project>(`${this.apiUrl}/${id}`, project)
+  updateProject(id: number, project: FormData): Observable<IProject> {
+    return this.http.put<IProject>(`${this.apiUrl}/${id}`, project)
       .pipe(
         catchError(this.handleError)
       );
@@ -120,8 +116,8 @@ export class ProjectsService {
    * Busca projetos em destaque
    * @returns Observable<Project[]>
    */
-  getFeaturedProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.apiUrl}/featured`)
+  getFeaturedProjects(): Observable<IProject> {
+    return this.http.get<IProject>(`${this.apiUrl}/featured`)
       .pipe(
         catchError(this.handleError)
       );
@@ -134,13 +130,13 @@ export class ProjectsService {
    * @returns Observable<{projects: Project[], total: number, page: number, limit: number}>
    */
   getProjectsPaginated(page: number = 1, limit: number = 10): Observable<{
-    projects: Project[];
+    projects: IProject[];
     total: number;
     page: number;
     limit: number;
   }> {
     return this.http.get<{
-      projects: Project[];
+      projects: IProject[];
       total: number;
       page: number;
       limit: number;

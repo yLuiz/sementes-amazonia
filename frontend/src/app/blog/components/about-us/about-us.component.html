@@ -1,0 +1,104 @@
+<app-navbar></app-navbar>
+
+<div class="about-container">
+  <!-- Header Section -->
+  <section class="header-section">
+    <div class="container">
+      <h1 class="main-title">Sobre Nossa Organização</h1>
+      <p class="subtitle">
+        Conheça nossa história, missão, visão e a equipe por trás dos nossos esforços de conservação da Amazônia.
+      </p>
+    </div>
+  </section>
+
+  <section class="mission-vision-section">
+    <div class="container">
+      <div class="content-grid">
+        <div class="text-content">
+          <div class="mission-block">
+            <h2 class="section-title">Nossa Missão</h2>
+            <p class="mission-text">
+              A Associação Sementes da Amazônia é dedicada à promoção da conservação ambiental e ao desenvolvimento sustentável na região amazônica. Trabalhamos incansavelmente para preservar a biodiversidade única da floresta tropical, apoiando comunidades locais e promovendo práticas que garantam um futuro sustentável para as próximas gerações.
+            </p>
+          </div>
+          
+          <div class="vision-block">
+            <h2 class="section-title">Nossa Visão</h2>
+            <p class="vision-text">
+              Um mundo onde pessoas e natureza prosperam juntas, onde a Amazônia é preservada como patrimônio mundial, e onde as comunidades locais são empoderadas para serem guardiãs da floresta, garantindo sua conservação através de práticas sustentáveis e inovação científica.
+            </p>
+          </div>
+        </div>
+        
+        <div class="image-content">
+          <div class="mission-image">
+            <img src="assets/amazon_forest.png" alt="Floresta Amazônica" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section class="timeline-section">
+    <div class="container">
+      <h2 class="section-header">Nossa História</h2>
+      
+      <div class="timeline">
+        <div *ngFor="let event of timeline; let i = index" class="timeline-item" [class.left]="i % 2 === 0" [class.right]="i % 2 === 1">
+          <div class="timeline-dot">
+            <div class="dot"></div>
+          </div>
+          <mat-card class="timeline-card">
+            <mat-card-header>
+              <mat-card-title>{{ event.year }} - {{ event.title }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ event.description }}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section class="team-section">
+    <div class="container">
+      <h2 class="section-header">Nossa Equipe</h2>
+      
+      <div class="team-grid">
+        <mat-card *ngFor="let member of teamMembers" class="team-card">
+          <mat-card-header>
+            <div mat-card-avatar class="team-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+            <mat-card-title>{{ member.name }}</mat-card-title>
+            <mat-card-subtitle>{{ member.position }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="member-description">{{ member.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <!-- <div class="container">
+      <div class="cta-content">
+        <h3 class="cta-title">Faça Parte da Nossa Missão</h3>
+        <p class="cta-description">
+          Junte-se a nós na preservação da maior floresta tropical do mundo
+        </p>
+        <button mat-raised-button color="primary" class="cta-button">
+          <mat-icon>group_add</mat-icon>
+          Junte-se à Nossa Equipe
+        </button>
+      </div>
+    </div> -->
+  </section>
+</div>

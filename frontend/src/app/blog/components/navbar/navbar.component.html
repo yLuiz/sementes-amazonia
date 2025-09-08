@@ -1,6 +1,6 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <div class="navbar-title">Sementes da Amazônia</div>
+    <a class="navbar-title" href="/">Sementes da Amazônia</a>
 
     <!-- Menu Desktop -->
     <ul class="navbar-links desktop-menu">
@@ -11,8 +11,8 @@
         </a>
         <!-- Submenu opcional -->
         <ul class="dropdown-menu">
-          <li><a href="#">Nossa história</a></li>
-          <li><a href="#">Áreas de atuação</a></li>
+          <li><a (click)="navigateToAboutUs()" style="cursor: pointer;">Nossa história</a></li>
+          <!-- <li><a href="#">Áreas de atuação</a></li> -->
         </ul>
       </li>
       <li><a href="#news">Notícias</a></li>
@@ -41,7 +41,7 @@
             <span class="material-icons-outlined">keyboard_arrow_down</span>  
             </a>
             <ul class="mobile-dropdown-menu" [class.active]="isMobileDropdownOpen">
-              <li><a href="#historia" (click)="closeMenu()">Nossa história</a></li>
+              <li><a (click)="navigateToAboutUs()" style="cursor: pointer;">Nossa história</a></li>
               <li><a href="#areas" (click)="closeMenu()">Áreas de atuação</a></li>
             </ul>
           </li>

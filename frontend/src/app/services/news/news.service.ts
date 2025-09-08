@@ -1,58 +1,37 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { apiConfig } from '../../config/api.config';
+import { IPageResponse } from '../../shared/interfaces/IPageResponse';
 
-export interface News {
-  id: number;
-  image: string;
-  title: string;
-  date: string;
-  description: string;
+export interface INewsFilters {
+  page?: number;
+  limit?: number;
+  direction?: 'ASC' | 'DESC';
+  orderBy?: 'created_at' | 'updated_at' | 'published_at' | 'title' | 'id';
+  title?: string;
+  createdAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
+  updatedAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
+  publishedAt?: string; // Formato: 'YYYY-MM-DD,YYYY-MM-DD'
 }
 
-
-export interface INewsPortugueseResponse {
-  id: number;
-  titulo: string;
-  resumo: string;
-  tags: string; // Separadas por vírgulas.
-  imagemThumb: string;
-  dataPublicacao: string;
-  conteudoCompleto: string;
-  createdAt: string;
-  updatedAt: string;
+export interface INews {
+  id: number,
+  title: string,
+  summary: string,
+  content: string,
+  tags: string,
+  author?: string,
+  image_thumb: string,
+  published_at: string,
+  created_at: string,
+  updated_at: string,
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
-
-  // Mock de notícias
-  private mockNews: News[] = [
-    {
-      id: 1,
-      image: '../../../assets/news1.png',
-      title: 'Notícia 1',
-      date: '25 de Julho de 2025',
-      description: 'Descrição da Notícia 1. Acompanhe as novidades sobre a conservação da Amazônia e projetos em andamento.'
-    },
-    {
-      id: 2,
-      image: '../../../assets/news2.png',
-      title: 'Notícia 2',
-      date: '24 de Julho de 2025',
-      description: 'Descrição da Notícia 2. Novas parcerias fortalecem a proteção ambiental na região amazônica.'
-    },
-    {
-      id: 3,
-      image: '../../../assets/news3.png',
-      title: 'Notícia 3',
-      date: '23 de Julho de 2025',
-      description: 'Descrição da Notícia 3. Comunidades locais participam de ações de reflorestamento.'
-    }
-  ];
 
   private http = inject(HttpClient);
 
@@ -62,11 +41,26 @@ export class NewsService {
    * Busca todas as notícias da API
    * @returns Observable<News[]>
    */
-  getNews(): Observable<News[]> {
-    return this.http.get<News[]>(this.apiUrl)
-      .pipe(
-        catchError(this.handleError)
-      );
+
+  getNews(filters?: INewsFilters): Observable<IPageResponse<INews[]>> {
+    const { direction, orderBy, title, createdAt, updatedAt, publishedAt } = filters || {};
+    const page = filters?.page ?? 1;
+    const limit = filters?.limit ?? 10;
+
+    let params = new HttpParams()
+      .set('page', String(page))
+      .set('limit', String(limit))
+      .set('direction', direction ?? 'desc')
+      .set('orderBy', orderBy ?? 'id');
+
+    if (title) params = params.set('title', title);
+    if (createdAt) params = params.set('createdAt', createdAt);
+    if (updatedAt) params = params.set('updatedAt', updatedAt);
+    if (publishedAt) params = params.set('publishedAt', publishedAt);
+
+    return this.http
+      .get<IPageResponse<INews[]>>(this.apiUrl, { params })
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -74,8 +68,8 @@ export class NewsService {
    * @param id - ID da notícia
    * @returns Observable<News>
    */
-  getNewsById(id: number): Observable<News> {
-    return this.http.get<News>(`${this.apiUrl}/${id}`)
+  getNewsById(id: number): Observable<INews> {
+    return this.http.get<INews>(`${this.apiUrl}/${id}`)
       .pipe(
         catchError(this.handleError)
       );
@@ -86,8 +80,8 @@ export class NewsService {
    * @param news - Dados da notícia (sem ID)
    * @returns Observable<News>
    */
-  createNews(news: FormData): Observable<News> {
-    return this.http.post<News>(this.apiUrl, news)
+  createNews(news: FormData): Observable<INews> {
+    return this.http.post<INews>(this.apiUrl, news)
       .pipe(
         catchError(this.handleError)
       );
@@ -99,8 +93,8 @@ export class NewsService {
    * @param news - Dados atualizados da notícia
    * @returns Observable<News>
    */
-  updateNews(id: number, news: Partial<News>): Observable<News> {
-    return this.http.put<News>(`${this.apiUrl}/${id}`, news)
+  updateNews(id: number, news: FormData): Observable<INews> {
+    return this.http.put<INews>(`${this.apiUrl}/${id}`, news)
       .pipe(
         catchError(this.handleError)
       );
@@ -123,8 +117,8 @@ export class NewsService {
    * Busca notícias em destaque
    * @returns Observable<News[]>
    */
-  getFeaturedNews(): Observable<News[]> {
-    return this.http.get<News[]>(`${this.apiUrl}/featured`)
+  getFeaturedNews(): Observable<INews[]> {
+    return this.http.get<INews[]>(`${this.apiUrl}/featured`)
       .pipe(
         catchError(this.handleError)
       );
@@ -137,13 +131,13 @@ export class NewsService {
    * @returns Observable<{news: News[], total: number, page: number, limit: number}>
    */
   getNewsPaginated(page: number = 1, limit: number = 10): Observable<{
-    news: News[];
+    news: INews[];
     total: number;
     page: number;
     limit: number;
   }> {
     return this.http.get<{
-      news: News[];
+      news: INews[];
       total: number;
       page: number;
       limit: number;

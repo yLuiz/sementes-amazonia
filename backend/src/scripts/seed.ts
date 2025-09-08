@@ -1,7 +1,7 @@
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
-import { UsersService } from '../users/users.service';
+import { UsersService } from 'src/modules/users/users.service';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
@@ -10,10 +10,14 @@ async function bootstrap() {
   try {
     // Verificar se o usuário já existe
     const existingUser = await usersService.findByUsername('admin');
-    
+
     if (!existingUser) {
       // Criar usuário padrão
-      await usersService.create('admin', 'admin123');
+      await usersService.create({
+        email: 'admin@example.com',
+        username: 'admin',
+        password: 'admin123'
+      });
       console.log('✅ Usuário padrão criado com sucesso!');
       console.log('Username: admin');
       console.log('Password: admin123');

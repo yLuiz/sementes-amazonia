@@ -15,12 +15,12 @@ import { AuthService } from '../../../services/auth/auth.service';
 })
 export class SidebarComponent {
   
-  sidebarVisible: boolean = true;
+  sidebarVisible: boolean = false;
 
   menuItems = [
     {
-      label: 'Register',
-      icon: 'pi pi-home',
+      label: 'Cadastros',
+      icon: 'pi pi-plus',
       route: '/admin/registers',
       active: false,
       queryParams: null
@@ -28,23 +28,16 @@ export class SidebarComponent {
     {
       label: 'Notícias',
       icon: 'pi pi-file-edit',
-      route: '/list-all',
+      route: 'admin/list-all',
       active: false,
       queryParams: { type: 'news' }
     },
     {
       label: 'Projetos',
       icon: 'pi pi-briefcase',
-      route: '/list-all',
+      route: 'admin/list-all',
       active: false,
-      queryParams: { type: 'project' }
-    },
-    {
-      label: 'Configurações',
-      icon: 'pi pi-cog',
-      route: '/admin/settings',
-      active: false,
-      queryParams: null
+      queryParams: { type: 'projects' }
     }
   ];
 
@@ -69,19 +62,18 @@ export class SidebarComponent {
   }
 
   navigateToItem(index: number) {
-    console.log('Navegando para item índice:', index);
     this.menuItems.forEach(item => item.active = false);
     const selectedItem = this.menuItems[index];
     if (selectedItem) {
       selectedItem.active = true;
-      console.log('Item selecionado por índice:', selectedItem);
+
       
       // Navegar com query parameters se existirem
       if (selectedItem.queryParams) {
-        console.log('Navegando com query params:', selectedItem.queryParams);
+  
         this.router.navigate([selectedItem.route], { queryParams: selectedItem.queryParams });
       } else {
-        console.log('Navegando sem query params');
+  
         this.router.navigate([selectedItem.route]);
       }
     }

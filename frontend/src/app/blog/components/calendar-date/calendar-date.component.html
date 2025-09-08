@@ -1,0 +1,34 @@
+<div [formGroup]="fg" class="cd-container">
+  <label *ngIf="label" class="cd-label">{{ label }}</label>
+
+  <div class="cd-grid">
+    <select
+      formControlName="year"
+      (change)="recalcDays()"
+      (blur)="onBlurField()"
+      [disabled]="disabled"
+    >
+      <option *ngIf="allowEmpty" [ngValue]="null">Ano</option>
+      <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+    </select>
+
+    <select
+      formControlName="month"
+      (change)="recalcDays()"
+      (blur)="onBlurField()"
+      [disabled]="disabled"
+    >
+      <option *ngIf="allowEmpty" [ngValue]="null">Mês</option>
+      <option *ngFor="let m of months" [value]="m.value">{{ m.label }}</option>
+    </select>
+
+    <select
+      formControlName="day"
+      (blur)="onBlurField()"
+      [disabled]="disabled"
+    >
+      <option *ngIf="allowEmpty" [ngValue]="null">Dia</option>
+      <option *ngFor="let d of daysInMonth" [value]="d">{{ d }}</option>
+    </select>
+  </div>
+</div>

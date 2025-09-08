@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h2>Novo projeto</h2>
+  <h2>{{ project ? 'Editar projeto' : 'Novo projeto' }}</h2>
   <p>Preencha os dados abaixo para cadastrar um novo projeto.</p>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -7,13 +7,26 @@
       <div class="column">
         <label>
           Nome do projeto *(Obrigatório)
-          <input type="text" formControlName="nome" placeholder="Digite um título claro e direto" />
+          <input type="text" formControlName="title" placeholder="Digite um título claro e direto" />
         </label>
 
         <label>
           Resumo *(Obrigatório)
-          <textarea formControlName="resumo"
+          <textarea formControlName="summary"
             placeholder="Escreva um breve resumo para destacar os principais pontos do projeto"></textarea>
+        </label>
+
+        <label>
+          <!-- Projects / News form -->
+          <app-calendar-date formControlName="published_at" [label]="'Data de publicação'" [allowEmpty]="true"
+            [yearSpan]="11">
+          </app-calendar-date>
+
+        </label>
+
+        <label>
+          Autor (opcional)
+          <input type="text" formControlName="author" placeholder="Nome do autor do projeto" />
         </label>
 
         <label class="custom-file-label">
@@ -23,11 +36,11 @@
             <p>Prévia da imagem:</p>
             <img [src]="imagePreviewUrl" alt="Prévia da imagem"
               style="max-width: 100%; max-height: 200px; border-radius: 8px;" />
-            <br>
-            <small>{{ imagemThumb.name }}</small>
+            <br />
+            <small>{{ imageThumbControl?.name }}</small>
           </div>
           <p>Escolha uma imagem que represente o projeto.</p>
-          <input type="file" (change)="onFileChange($event)" />
+          <input type="file" accept="image/*" (change)="onFileChange($event)" />
           <span>Escolher arquivo</span>
         </label>
       </div>
@@ -35,17 +48,19 @@
       <div class="column">
         <label>
           Descrição completa *(Obrigatório)
-          <textarea formControlName="descricaoCompleta" rows="14"
+          <textarea formControlName="content" rows="14"
             placeholder="Conte em detalhes sobre o projeto, objetivos, processo e resultados."></textarea>
         </label>
       </div>
     </div>
 
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid" class="gray">Publicar projeto</button>
-      <!-- <button type="button" class="gray">Salvar rascunho</button>
-      <button type="button" class="preview">Ver prévia</button> -->
-      <button type="button" class="clear" (click)="clearForm()">Limpar tudo</button>
+      <button type="submit" [disabled]="form.invalid || !publishedAt" class="submit-button">
+        {{ project ? 'Atualizar projeto' : 'Publicar projeto' }}
+      </button>
+      <button type="button" class="clear" (click)="clearForm()">
+        Limpar tudo
+      </button>
     </div>
   </form>
 </div>

@@ -1,0 +1,19 @@
+<app-sidebar></app-sidebar>
+<div class="page-wrapper">
+    <header class="header">
+        <h1>Sementes da Amazônia</h1>
+    </header>
+
+    <section>
+        <main>
+            <ng-container [ngSwitch]="type">
+                <ng-container *ngSwitchCase="'news'">
+                    <app-news *ngIf="newsToEdit" [news]="newsToEdit" ></app-news>
+                </ng-container>
+                <ng-container *ngSwitchCase="'project'">
+                    <app-projects *ngIf="projectToEdit" [project]="projectToEdit"></app-projects>
+                </ng-container>
+            </ng-container>
+        </main>
+    </section>
+</div>

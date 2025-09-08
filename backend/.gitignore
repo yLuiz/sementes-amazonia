@@ -6,9 +6,11 @@
 /out-tsc
 /bazel-out
 
-# Uploads - ignora tudo, exceto a pasta e o .gitkeep
-/upload/*
-!/upload/.gitkeep
+.env
+
+# # Uploads - ignora tudo, exceto a pasta e o .gitkeep
+# /upload/*
+# !/upload/.gitkeep
 
 # Node
 /node_modules

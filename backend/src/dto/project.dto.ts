@@ -1,6 +1,7 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, MaxLength, IsOptional } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { getCurrentTimeString } from 'src/utils/getCurrentTimeString';
 
 export class CreateProjectDto {
   @ApiProperty({
@@ -11,7 +12,7 @@ export class CreateProjectDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  nome: string;
+  title: string;
 
   @ApiProperty({
     description: 'Summary of the project',
@@ -20,16 +21,21 @@ export class CreateProjectDto {
   })
   @IsString()
   @IsNotEmpty()
-  resumo: string;
+  summary: string;
 
   @ApiProperty({
-    description: 'Full description of the project',
-    example: 'This is the full description of the project.',
+    description: 'Full content of the project',
+    example: 'This is the full content of the project.',
     required: true,
   })
   @IsString()
   @IsNotEmpty()
-  descricaoCompleta: string;
+  content: string;
+
+  @ApiProperty({ description: 'Author of the news article', example: 'Jane Smith', required: false })
+  @IsOptional()
+  @IsString()
+  author?: string;
 
   @ApiProperty({
     description: 'Thumbnail image URL for the project',
@@ -40,7 +46,19 @@ export class CreateProjectDto {
   })
   @IsOptional()
   @IsString()
-  imagemThumb?: string;
+  image_thumb?: string;
+
+  @ApiProperty({ description: 'Publication date of the project', example: '2023-10-01T12:00:00Z' })
+  @IsOptional()
+  @IsDateString()
+  published_at?: string;
+
+  @IsOptional()
+  created_at?: string = getCurrentTimeString();
+
+  @IsOptional()
+  updated_at?: string = getCurrentTimeString();
+
 }
 
 export class UpdateProjectDto {
@@ -52,7 +70,7 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  nome?: string;
+  title?: string;
 
   @ApiProperty({
     description: 'Summary of the project',
@@ -61,7 +79,7 @@ export class UpdateProjectDto {
   })
   @IsOptional()
   @IsString()
-  resumo?: string;
+  summary?: string;
 
   @ApiProperty({
     description: 'Full description of the project',
@@ -70,7 +88,12 @@ export class UpdateProjectDto {
   })
   @IsOptional()
   @IsString()
-  descricaoCompleta?: string;
+  content?: string;
+
+  @ApiProperty({ description: 'Author of the news article', example: 'Jane Smith', required: false })
+  @IsOptional()
+  @IsString()
+  author?: string;
 
   @ApiProperty({
     description: 'Thumbnail image URL for the project',
@@ -81,5 +104,14 @@ export class UpdateProjectDto {
   })
   @IsOptional()
   @IsString()
-  imagemThumb?: string;
+  image_thumb?: string;
+
+  @ApiProperty({ description: 'Publication date of the project', example: '2023-10-01T12:00:00Z' })
+  @IsOptional()
+  @IsDateString()
+  published_at?: string;
+
+  @IsOptional()
+  updated_at?: string = getCurrentTimeString();
+
 }

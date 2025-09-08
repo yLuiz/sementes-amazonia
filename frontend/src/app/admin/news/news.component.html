@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h2>Nova notícia</h2>
+  <h2>{{ news ? 'Editar notícia' : 'Nova notícia' }}</h2>
   <p>Preencha as informações abaixo para criar uma nova publicação.</p>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -7,37 +7,45 @@
       <div class="column">
         <label>
           Título da notícia *(Obrigatório)
-          <input type="text" formControlName="titulo" placeholder="Digite um título claro e direto" />
+          <input type="text" formControlName="title" placeholder="Digite um título claro e direto" />
         </label>
 
         <label>
           Resumo *(Obrigatório)
-          <textarea formControlName="resumo"
+          <textarea rows="10" formControlName="summary"
             placeholder="Escreva um breve resumo para destacar os principais pontos da notícia"></textarea>
         </label>
 
         <label>
-          Data de publicação *(Obrigatório)
-          <input type="date" formControlName="dataPublicacao" />
+          <!-- Projects / News form -->
+          <app-calendar-date formControlName="published_at" [label]="'Data de publicação'" [allowEmpty]="true"
+            [yearSpan]="11">
+          </app-calendar-date>
+
         </label>
 
         <label>
-          Tags *(Obrigatório)
-          <input type="text" formControlName="tags" placeholder="Ex: floresta, impacto, comunidade e etc." />
+          Autor (opcional)
+          <input type="text" formControlName="author" placeholder="Nome do autor da notícia" />
+        </label>
+
+        <label>
+          Tags (opcional)
+          <input type="text" formControlName="tags" placeholder="Ex: floresta, impacto, comunidade" />
         </label>
 
         <label class="custom-file-label">
           Imagem da capa *(Obrigatório)
           <!-- Preview da imagem -->
-          <div *ngIf="imagePreviewUrl" class="image-preview">
+          <div *ngIf="imagePreviewUrl || news?.image_thumb" class="image-preview">
             <p>Prévia da imagem:</p>
-            <img [src]="imagePreviewUrl" alt="Prévia da imagem"
+            <img [src]="imagePreviewUrl || news?.image_thumb" alt="Prévia da imagem"
               style="max-width: 100%; max-height: 200px; border-radius: 8px;" />
-            <br>
-            <small>{{ imagemThumb.name }}</small>
+            <br />
+            <small>{{ (news && !image_thumb?.name) ? news.image_thumb : image_thumb?.name }}</small>
           </div>
           <p>Escolha uma imagem que represente a notícia.</p>
-          <input type="file" (change)="onFileChange($event)" />
+          <input type="file" accept="image/*" (change)="onFileChange($event)" />
           <span>Escolher arquivo</span>
         </label>
       </div>
@@ -45,18 +53,19 @@
       <div class="column">
         <label>
           Conteúdo completo *(Obrigatório)
-          <textarea formControlName="conteudoCompleto" placeholder="Digite aqui o texto principal da notícia"
-            rows="12"></textarea>
+          <textarea formControlName="content" placeholder="Digite aqui o texto principal da notícia"
+            rows="15"></textarea>
         </label>
-
       </div>
     </div>
 
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid" class="gray">Publicar notícia</button>
-      <!-- <button type="button" class="gray">Salvar rascunho</button>
-      <button type="button" class="preview">Ver prévia</button> -->
-      <button type="button" class="clear" (click)="clearForm()">Limpar tudo</button>
+      <button type="submit" [disabled]="form.invalid || !publishedAt" class="submit-button">
+        {{ news ? 'Atualizar notícia' : 'Publicar notícia' }}
+      </button>
+      <button type="button" class="clear" (click)="clearForm()">
+        Limpar tudo
+      </button>
     </div>
   </form>
 </div>
