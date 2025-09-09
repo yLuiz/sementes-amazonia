@@ -1,5 +1,5 @@
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as moment from 'moment';
 import { ProjectsFilter, ProjectsOrderBy } from 'src/dto/filters/projects.filter';
@@ -8,12 +8,20 @@ import { Project } from 'src/entities/project.entity';
 import { parseDateToString } from 'src/utils/parseDateToString';
 import { Between, ILike, Repository } from 'typeorm';
 
+import * as fs from 'fs/promises';
+import envConfig from 'src/config/config';
+import { resolve } from 'path';
+
+// Use a mesma pasta dos uploads (volume ou local)
+const BASE_DIR = envConfig().UPLOAD_DIR;
 
 @Injectable()
 export class ProjectsService {
 
   @InjectRepository(Project)
   private projectsRepository: Repository<Project>;
+
+  private readonly _logger = new Logger();
 
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
     const project = this.projectsRepository.create(createProjectDto);
@@ -76,16 +84,58 @@ export class ProjectsService {
     return project;
   }
 
+  private _safePath(filename: string) {
+    const base = resolve(BASE_DIR);
+    const full = resolve(base, filename);
+    if (!full.startsWith(base)) {
+      throw new BadRequestException('Caminho de arquivo inválido');
+    }
+    return full;
+  }
+
+  private async _deleteFileIfExists(filename?: string) {
+    if (!filename) return;
+    try {
+      await fs.unlink(this._safePath(filename));
+    } catch (err: any) {
+      if (err?.code !== 'ENOENT') {
+        this._logger.warn(`Falha ao remover arquivo "${filename}": ${err?.message || err}`);
+      }
+    }
+  }
+
   async update(id: number, updateProjectDto: UpdateProjectDto): Promise<Project> {
     const project = await this.findOne(id);
-    Object.assign(project, updateProjectDto);
-    return this.projectsRepository.save(project);
+    const oldImage = project.image_thumb;
+
+    const updateData: any = { ...updateProjectDto };
+    if (updateProjectDto.published_at) {
+      updateData.published_at = parseDateToString(updateProjectDto.published_at);
+    }
+
+    Object.assign(project, updateData);
+    const saved = await this.projectsRepository.save(project);
+
+    // Se veio uma nova imagem no DTO, remove a antiga (se diferente)
+    if (
+      updateProjectDto.image_thumb &&
+      oldImage &&
+      oldImage !== updateProjectDto.image_thumb
+    ) {
+      await this._deleteFileIfExists(oldImage);
+    }
+
+    return saved;
   }
 
   async remove(id: number): Promise<void> {
-    const project = await this.findOne(id);
-    await this.projectsRepository.remove(project);
+    const news = await this.findOne(id);
+    const oldImage = news.image_thumb;
+
+    await this.projectsRepository.remove(news);
+    await this._deleteFileIfExists(oldImage);
   }
+
 
   private _buildDateRange(date?: Date | string) {
     if (!date) return undefined;
@@ -96,3 +146,4 @@ export class ProjectsService {
     return Between(start, end);
   }
 }
+
