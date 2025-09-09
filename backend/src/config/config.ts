@@ -1,10 +1,12 @@
 import * as dotenv from 'dotenv';
+import { join } from 'path';
 
 // Carrega as variáveis do .env
 dotenv.config();
 
 export default function envConfig() {
   return {
+    UPLOAD_DIR: process.env.UPLOAD_DIR || join(process.cwd(), 'uploads'),
     MODE: process.env.MODE || 'dev',
     PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 3333,
     API_JWT_SECRET: process.env.API_JWT_SECRET || 'secret-key',
