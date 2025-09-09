@@ -8,8 +8,7 @@ import { NavbarComponent } from '../blog/components/navbar/navbar.component';
   standalone: true,
   imports: [
     RouterOutlet,
-    SidebarComponent,
-    NavbarComponent
+    SidebarComponent
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'

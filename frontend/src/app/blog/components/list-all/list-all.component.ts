@@ -56,8 +56,7 @@ class CustomMatPaginatorIntl extends MatPaginatorIntl {
     TooltipModule,
     NewsCardComponent,
     ProjectCardComponent,
-    NavbarComponent,
-    SidebarComponent
+    NavbarComponent
   ],
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
