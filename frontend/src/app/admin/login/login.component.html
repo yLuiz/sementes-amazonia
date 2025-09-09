@@ -30,19 +30,16 @@
       <button class="submit-btn" type="submit" [disabled]="form.invalid || isLoading">
         <span *ngIf="!isLoading">Entrar no painel</span>
         <span *ngIf="isLoading" class="loading-content">
-          <p-progressSpinner 
-            styleClass="login-spinner" 
-            strokeWidth="4" 
-            [style]="{ width: '20px', height: '20px' }">
+          <p-progressSpinner styleClass="login-spinner" strokeWidth="4" [style]="{ width: '20px', height: '20px' }">
           </p-progressSpinner>
           Entrando...
         </span>
       </button>
     </form>
-
+    <!-- 
     <div class="forgot-password">
       <small>Esqueceu sua senha?</small>
       <a href="#">Clique aqui para recuperar o acesso</a>
-    </div>
+    </div> -->
   </div>
 </div>

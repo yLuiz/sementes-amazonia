@@ -6,6 +6,7 @@ import { IProject, ProjectsService } from '../../services/projects/projects.serv
 import { ToastrService } from 'ngx-toastr';
 import { CalendarDateComponent } from '../../blog/components/calendar-date/calendar-date.component';
 import { Router } from '@angular/router';
+import { apiConfig } from '../../config/api.config';
 
 @Component({
   standalone: true,
@@ -42,6 +43,8 @@ export class ProjectsComponent {
       image_thumb: [null],                       // imagemThumb → image_thumb
       published_at: [this.project?.published_at ?? '']                         // opcional
     });
+
+    this.imagePreviewUrl = this.project?.image_thumb ? apiConfig.media.base + `/${this.project.image_thumb}` : null;
   }
 
   onFileChange(event: Event) {
@@ -114,6 +117,19 @@ export class ProjectsComponent {
     }
   }
 
+  removeImage(event: Event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+
+    this.form.patchValue({ image_thumb: null });
+    this.imagePreviewUrl = null;
+    if (this.project) {
+      this.project.image_thumb = '';
+    }
+  }
+
   createProject(formData: FormData) {
     this._projectsService.createProject(formData).subscribe({
       next: () => {
@@ -164,7 +180,7 @@ export class ProjectsComponent {
     return this.form.get('published_at')?.value;
   }
 
-  get imageThumbControl() {
+  get image_thumb() {
     return this.form.get('image_thumb')?.value;
   }
 

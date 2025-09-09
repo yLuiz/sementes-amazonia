@@ -28,21 +28,32 @@
           Autor (opcional)
           <input type="text" formControlName="author" placeholder="Nome do autor do projeto" />
         </label>
-
-        <label class="custom-file-label">
-          Imagem da capa *(Obrigatório)
+        <div class="custom-file-container">
+          <label>Imagem da capa *(Obrigatório)*</label>
           <!-- Preview da imagem -->
-          <div *ngIf="imagePreviewUrl" class="image-preview">
+          <div *ngIf="imagePreviewUrl || project?.image_thumb" class="image-preview">
             <p>Prévia da imagem:</p>
-            <img [src]="imagePreviewUrl" alt="Prévia da imagem"
-              style="max-width: 100%; max-height: 200px; border-radius: 8px;" />
+            <div class="image-container">
+              <button (click)="removeImage($event)" class="remove-button">X</button>
+              <img [src]="imagePreviewUrl || project?.image_thumb" alt="Prévia da imagem"
+                style="max-width: 100%; max-height: 200px; border-radius: 8px;" />
+            </div>
             <br />
-            <small>{{ imageThumbControl?.name }}</small>
+            <div>
+              <small>{{ (project && !image_thumb?.name) ? project.image_thumb : image_thumb?.name }}</small>
+            </div>
           </div>
-          <p>Escolha uma imagem que represente o projeto.</p>
-          <input type="file" accept="image/*" (change)="onFileChange($event)" />
-          <span>Escolher arquivo</span>
-        </label>
+
+          <label class="custom-file-label">
+            <p>Escolha uma imagem que represente a notícia.</p>
+            <div>
+              <input type="file" accept="image/*" (change)="onFileChange($event)" />
+              <span class="choose-file">Escolher arquivo</span>
+            </div>
+          </label>
+        </div>
+
+
       </div>
 
       <div class="column">

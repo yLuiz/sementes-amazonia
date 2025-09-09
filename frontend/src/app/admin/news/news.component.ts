@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { INews, NewsService } from '../../services/news/news.service';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ButtonModule } from 'primeng/button';
 import { CalendarDateComponent } from '../../blog/components/calendar-date/calendar-date.component';
 import { apiConfig } from '../../config/api.config';
-import { Router } from '@angular/router';
+import { INews, NewsService } from '../../services/news/news.service';
 
 export interface INewsFormData {
   title: string;
@@ -27,7 +28,7 @@ export type INewsUpdateFormData = Partial<INewsFormData>;
   selector: 'app-news',
   imports: [
     MatIconModule, CommonModule, ReactiveFormsModule,
-    CalendarDateComponent
+    CalendarDateComponent, ButtonModule
   ],
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss']
@@ -172,6 +173,19 @@ export class NewsComponent {
         });
       }
     });
+  }
+
+  removeImage(event: Event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+    
+
+    this.form.patchValue({ image_thumb: null });
+    this.imagePreviewUrl = null;
+    if (this.news) {
+      this.news.image_thumb = '';
+    }
   }
 
   get publishedAt() {

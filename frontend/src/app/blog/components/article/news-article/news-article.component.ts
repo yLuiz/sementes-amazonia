@@ -40,6 +40,11 @@ export class NewsArticleComponent {
     ]
   }
 
+  handleImageError(event: Event) {
+    const target = event.target as HTMLImageElement;
+    target.src = 'assets/no-image.svg';
+  }
+
   shareArticle() {
     const currentUrl = window.location.href;
 

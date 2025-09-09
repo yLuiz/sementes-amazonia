@@ -23,7 +23,7 @@
       [showNavigators]="false" [showIndicators]="false" [autoplayInterval]="5000" (onPage)="onPageChange($event)">
       <ng-template pTemplate="item" let-image>
         <div class="carousel-item">
-          <img [src]="image.src" [alt]="image.alt" class="carousel-image">
+          <img [src]="image.src" (error)="handleImageError($event)" [alt]="image.alt" class="carousel-image">
         </div>
       </ng-template>
     </p-carousel>
@@ -31,7 +31,7 @@
 
   <div *ngIf="images.length < 2" class="article-carousel">
     <div class="carousel-item">
-      <img [src]="images[0].src" [alt]="images[0].alt" class="carousel-image">
+      <img [src]="images[0].src" [alt]="images[0].alt" (error)="handleImageError($event)" class="carousel-image">
     </div>
   </div>
 

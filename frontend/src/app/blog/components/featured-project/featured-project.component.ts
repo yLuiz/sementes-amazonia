@@ -24,9 +24,6 @@ export class FeaturedProjectComponent {
   ngOnInit() {
     this._projectsService.getFeaturedProjects().subscribe({
       next: (projects) => {
-
-        console.log('Projetos em destaque:', projects);
-
         this.project = projects;
         this.imagePath = this.project?.image_thumb ? `${apiConfig.media.base}/${this.project.image_thumb}` : null;
       },

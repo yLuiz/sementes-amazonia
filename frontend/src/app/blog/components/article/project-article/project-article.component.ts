@@ -40,6 +40,14 @@ export class ProjectArticleComponent {
     ]
   }
 
+
+  handleImageError(event: Event) {
+    const target = event.target as HTMLImageElement;
+    target.src = 'assets/no-image.svg';
+    target.style.opacity = '0.125';
+  }
+
+
   shareArticle() {
     const currentUrl = window.location.href;
 
