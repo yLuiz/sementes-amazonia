@@ -65,30 +65,9 @@
 
   <mat-divider></mat-divider>
 
-  <section class="team-section">
-    <div class="container">
-      <h2 class="section-header">Nossa Equipe</h2>
-      
-      <div class="team-grid">
-        <mat-card *ngFor="let member of teamMembers" class="team-card">
-          <mat-card-header>
-            <div mat-card-avatar class="team-avatar">
-              <mat-icon>person</mat-icon>
-            </div>
-            <mat-card-title>{{ member.name }}</mat-card-title>
-            <mat-card-subtitle>{{ member.position }}</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <p class="member-description">{{ member.description }}</p>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
+  <!-- CTA Section
   <section class="cta-section">
-    <!-- <div class="container">
+     <div class="container">
       <div class="cta-content">
         <h3 class="cta-title">Faça Parte da Nossa Missão</h3>
         <p class="cta-description">
@@ -99,6 +78,8 @@
           Junte-se à Nossa Equipe
         </button>
       </div>
-    </div> -->
+    </div>
   </section>
-</div>
+</div> -->
+
+<app-footer></app-footer>

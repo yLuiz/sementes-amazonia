@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { FooterComponent } from '../footer/footer.component';
 
 interface TeamMember {
   name: string;
@@ -28,35 +29,13 @@ interface TimelineEvent {
     MatCardModule,
     MatDividerModule,
     MatIconModule,
-    NavbarComponent
+    NavbarComponent,
+    FooterComponent
   ],
   templateUrl: './about-us.component.html',
   styleUrl: './about-us.component.scss'
 })
 export class AboutUsComponent {
-
-  teamMembers: TeamMember[] = [
-    {
-      name: 'Dr. Maria Silva',
-      position: 'Diretora de Ecologia',
-      description: 'Especialista em biodiversidade amazônica com mais de 20 anos de experiência em conservação e pesquisa de espécies nativas.'
-    },
-    {
-      name: 'Prof. João Santos',
-      position: 'Líder de Pesquisa Ambiental',
-      description: 'Botânico renomado, responsável pela catalogação de espécies vegetais e desenvolvimento de programas de reflorestamento.'
-    },
-    {
-      name: 'Ana Rodrigues',
-      position: 'Coordenadora de Extensão',
-      description: 'Responsável pelo engajamento comunitário e programas educacionais nas comunidades locais da Amazônia.'
-    },
-    {
-      name: 'Carlos Oliveira',
-      position: 'Gestor de Projetos',
-      description: 'Especialista em captação de recursos e gestão de projetos sustentáveis, com foco em parcerias internacionais.'
-    }
-  ];
 
   timeline: TimelineEvent[] = [
     {
