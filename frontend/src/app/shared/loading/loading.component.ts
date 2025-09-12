@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   template: `
     <div *ngIf="isLoading" class="loading-overlay">
       <div class="loading-container">
-        <img src="assets/logo.png" alt="Logo" class="loading-logo">
+        <img src="assets/logo.svg" alt="Logo" class="loading-logo">
       </div>
     </div>
   `,

@@ -39,29 +39,29 @@ export class AboutUsComponent {
 
   timeline: TimelineEvent[] = [
     {
-      year: '2005',
-      title: 'Fundação',
-      description: 'Criação da organização com foco na preservação da biodiversidade amazônica e desenvolvimento sustentável.'
+      year: '2021',
+      title: 'Fundação da Associação',
+      description: 'Criação da Associação com o objetivo de estabelecer um elo legal e institucional entre os coletores de sementes florestais do Amazonas e as iniciativas de restauração ecológica.'
     },
     {
-      year: '2010',
-      title: 'Primeiro Grande Projeto',
-      description: 'Lançamento do programa "Sementes do Futuro" para coleta e distribuição de sementes nativas.'
+      year: '2021',
+      title: 'Origem no CSNAM',
+      description: 'A ideia nasceu das experiências do Centro de Sementes Nativas do Amazonas (CSNAM), laboratório da UFAM, identificando a necessidade de articulação na cadeia do restauro.'
     },
     {
-      year: '2015',
-      title: 'Expansão',
-      description: 'Ampliação das atividades para 5 estados da região amazônica, alcançando mais de 50 comunidades.'
+      year: '2021',
+      title: 'Liderança Acadêmica',
+      description: 'Professor Dr. Manuel de Jesus Vieira Lima Junior, da UFAM e coordenador do CSNAM, lidera a criação com propósito de integrar agentes da restauração ecológica.'
     },
     {
-      year: '2020',
-      title: 'Inovação',
-      description: 'Implementação de tecnologias digitais para monitoramento da biodiversidade e educação ambiental.'
+      year: '2021-2022',
+      title: 'Primeiras Ações',
+      description: 'Lançamento do curso de Manejo e Coleta de Sementes no Dossel, tornando-se referência na formação de coletores capacitados.'
     },
     {
-      year: '2025',
-      title: 'Presente',
-      description: 'Mais de 10 mil mudas plantadas e 100 espécies catalogadas, com impacto positivo em toda a região.'
+      year: '2022-2025',
+      title: 'Expansão e Consolidação',
+      description: 'Com equipe comprometida, a Associação expandiu suas frentes de atuação, consolidando-se como organização referência na cadeia do restauro.'
     }
   ];
 
