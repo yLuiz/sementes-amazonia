@@ -1,6 +1,8 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <a class="navbar-title" href="/">Sementes da Amazônia</a>
+    <a class="navbar-title" href="/">
+      <img src="assets/logo_name.svg" alt="Logo Sementes da Amazônia" class="navbar-logo" style="height: 50px; vertical-align: middle;">
+    </a>
 
     <!-- Menu Desktop -->
     <ul class="navbar-links desktop-menu">
@@ -15,8 +17,8 @@
           <!-- <li><a href="#">Áreas de atuação</a></li> -->
         </ul>
       </li>
-      <li><a href="#news">Notícias</a></li>
-      <li><a href="#projects">Projetos</a></li>
+      <li><a href="/list-all?type=news">Notícias</a></li>
+      <li><a href="/list-all?type=projects">Projetos</a></li>
       <li><a href="#footer">Contato</a></li>
     </ul>
 
@@ -45,7 +47,7 @@
               <li><a href="#areas" (click)="closeMenu()">Áreas de atuação</a></li>
             </ul>
           </li>
-          <li><a href="#news" (click)="closeMenu()">Notícias</a></li>
+          <li><a href="/list-all?type=news" (click)="closeMenu()">Notícias</a></li>
           <li><a href="#projects" (click)="closeMenu()">Projetos</a></li>
           <li><a href="#footer" (click)="closeMenu()">Contato</a></li>
         </ul>
