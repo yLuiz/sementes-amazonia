@@ -134,7 +134,7 @@
   </section>
 
   <mat-divider></mat-divider>
-
+  <!---
   <section class="projetos-destaque">
     <div class="container">
       <h2 class="section-header">
@@ -182,9 +182,9 @@
       </div>
     </div>
   </section>
-
+  --->
+  
   <mat-divider></mat-divider>
-
   <section class="timeline-section">
     <div class="container">
       <h2 class="section-header">
@@ -192,9 +192,14 @@
         Nossa História
       </h2>
       <p class="timeline-intro">
-        Conheça a trajetória da nossa organização desde sua fundação em 2021, quando surgiu da necessidade de conectar e fortalecer a cadeia de restauração ecológica na Amazônia.
+        <i class="pi pi-circle-on intro-icon"></i>
+        A Associação foi fundada em 2021, a partir das experiências acumuladas no CSNAM/UFAM, que revelaram a necessidade de uma maior articulação entre coletores, pesquisadores, projetos de reflorestamento e o mercado. A iniciativa foi idealizada e conduzida pelo professor Dr. Manuel de Jesus Vieira Lima Junior, docente da Universidade Federal do Amazonas (UFAM) e coordenador do CSNAM, com o propósito de criar um elo legal e institucional capaz de fortalecer toda a cadeia de restauração ecológica na região.
       </p>
-
+      <p class="timeline-intro" style="margin-top: 20px;"> 
+        <i class="pi pi-circle-on intro-icon"></i>
+        O primeiro marco da trajetória da Associação foi a realização do Curso de Manejo e Coleta de Sementes no Dossel, que constituiu seu primeiro serviço e se tornou uma referência na formação de coletores qualificados. A partir dessa experiência pioneira, a instituição ampliou sua atuação, passando a desenvolver projetos de restauração e a oferecer serviços especializados, consolidando gradualmente sua presença e relevância no setor.
+      </p>
+  <!---
       <div class="timeline">
         <div *ngFor="let event of timeline; let i = index" class="timeline-item" [class.left]="i % 2 === 0" [class.right]="i % 2 === 1">
           <div class="timeline-dot">
@@ -210,6 +215,7 @@
           </mat-card>
         </div>
       </div>
+    --->
     </div>
   </section>
 
@@ -219,86 +225,118 @@
     <div class="container">
       <h2 class="section-header">
         <i class="pi pi-users title-icon"></i>
-        Nossa Equipe
+        Conselho Administrativo
       </h2>
       <div class="team-grid">
+        
         <div class="team-member-card">
-          <div class="member-image">
-            <img src="assets/eudisvam.png" alt="Eudisvam" />
-          </div>
-          <div class="member-info">
-            <h3 class="member-name">Eudisvam</h3>
-            <p class="member-position">Coordenador de Projetos</p>
-            <p class="member-description">
-              Engenheiro Florestal especialista na área de harboricultura, instrutor de coletores, com conhecimento em implantação de ACS e coletores de sementes na Amazônia.
-            </p>
-          </div>
-        </div>
-
-        <div class="team-member-card">
-          <div class="member-image">
-            <img src="assets/daniel.png" alt="Daniel Andrade Santiago" style="height: 150%;" />
-          </div>
-          <div class="member-info">
-            <h3 class="member-name">Daniel Andrade Santiago</h3>
-            <p class="member-position">Pesquisador em Biodiversidade</p>
-            <p class="member-description">
-              Engenheiro Florestal formado pela Universidade Federal do Amazonas (UFAM) e mestrando em Ciências Florestais e Ambientais (PPGCIFA/UFAM). Possui experiência em Silvicultura atuando principalmente em agroecologia, SAFs e projetos comunitários na Amazônia.
-            </p>
-          </div>
-        </div>
-
-        <div class="team-member-card">
-          <div class="member-image">
-            <img src="assets/valdejane.png" alt="Valdejane da Silva Menezes" style="height: 170%;" />
-          </div>
-          <div class="member-info">
-            <h3 class="member-name">Valdejane da Silva Menezes</h3>
-            <p class="member-position">Educadora Ambiental</p>
-            <p class="member-description">
-              Tecnóloga em Alimentos, atua em projetos voltados à segurança alimentar, contribuindo para o fortalecimento das cadeias produtivas da região.
-            </p>
-          </div>
-        </div>
-
-        <div class="team-member-card">
-          <div class="member-image">
-            <img src="assets/paulo.png" alt="Paulo Vinícius" style="height: 200%;" />
-          </div>
-          <div class="member-info">
-            <h3 class="member-name">Paulo Vinícius</h3>
-            <p class="member-position">Consultor Ambiental</p>
-            <p class="member-description">
-              Engenheiro Florestal, Mestre em Ciências Florestais e Pós-Graduado em Georreferenciamento. Com 6 anos de experiência em Licenciamento Ambiental e Florestal, possui expertise em inventário florestal, arborização urbana e análise de solos.
-            </p>
-          </div>
-        </div>
-
-        <div class="team-member-card">
-          <div class="member-image">
-            <img src="assets/rimer.png" alt="Rimer de Oliveira Maduro" style="height: 100%;"/>
-          </div>
-          <div class="member-info">
-            <h3 class="member-name">Rimer de Oliveira Maduro</h3>
-            <p class="member-position">Especialista em Restauração</p>
-            <p class="member-description">
-              Formado pela UFAM e mestre em Ciências Florestais e Ambientais. Possui pós-graduação em Gestão de Projetos e expertise em trabalhos de campo, com atuação direta em comunidades indígenas e projetos de restauração ecológica.
-            </p>
-          </div>
-        </div>
-
-        <div class="team-member-card">
+          <!---
           <div class="member-image">
             <img src="assets/israel.png" alt="Israel Silva Junior" style="height: 150%;" />
           </div>
+          --->
           <div class="member-info">
-            <h3 class="member-name">Israel Silva Junior</h3>
-            <p class="member-position">Articulador Comunitário</p>
+            <h3 class="member-position">Presidente</h3>
+            <p class="member-name">Israel Silva Junior</p>
             <p class="member-description">
-              Engenheiro Florestal, com Mestrado em Ciências Florestais e Ambientais pela UFAM. Com experiência focada na silvicultura, atua principalmente na cadeia produtiva de sementes e no restauro florestal.
+              Engenheiro Florestal, com Mestrado em Ciências Florestais e Ambientais pela UFAM.
             </p>
+            <a href="http://lattes.cnpq.br/8618253212004413" target="_blank" class="lattes-link">
+              <i class="pi pi-external-link"></i> Currículo Lattes
+            </a>
           </div>
         </div>
+
+        <div class="team-member-card">
+          <!---
+          <div class="member-image">
+            <img src="assets/rimer.png" alt="Rimer de Oliveira Maduro" style="height: 100%;"/>
+          </div>
+          --->
+          <div class="member-info">
+            <h3 class="member-position">Tesoureiro</h3>
+            <p class="member-name">Rimer de Oliveira Maduro</p>
+            <p class="member-description">
+              Engenheiro Florestal, Mestre em Ciências Florestais e Ambientais pela UFAM. Pós-graduado em Gestão de Projetos com expertise em comunidades indígenas e restauração ecológica.
+            </p>
+            <a href="http://lattes.cnpq.br/9696301120763498" target="_blank" class="lattes-link">
+              <i class="pi pi-external-link"></i> Currículo Lattes
+            </a>
+          </div>
+        </div>
+
+        <div class="team-member-card">
+          <!---
+          <div class="member-image">
+            <img src="assets/paulo.png" alt="Paulo Vinícius" style="height: 200%;" />
+          </div>
+          --->
+          <div class="member-info">
+            <h3 class="member-position">Secretário</h3>
+            <p class="member-name">Paulo Vinícius da Silva Santos</p>
+            <p class="member-description">
+              Engenheiro Florestal, Mestre em Ciências Florestais e Pós-Graduado em Georreferenciamento. 6 anos de experiência em Licenciamento Ambiental e Florestal.
+            </p>
+            <a href="http://lattes.cnpq.br/8437631035559919" target="_blank" class="lattes-link">
+              <i class="pi pi-external-link"></i> Currículo Lattes
+            </a>
+          </div>
+        </div>
+
+        <div class="team-member-card">
+          <!---
+          <div class="member-image">
+            <img src="assets/valdejane.png" alt="Valdejane da Silva Menezes" style="height: 170%;" />
+          </div>
+          --->
+          <div class="member-info">
+            <h3 class="member-position">Suplente</h3>
+            <p class="member-name">Valdejane da Silva Menezes</p>
+            <p class="member-description">
+              Tecnóloga em Alimentos, atua em projetos de segurança alimentar e fortalecimento das cadeias produtivas regionais.
+            </p>
+            <a href="http://lattes.cnpq.br/8282511867735434" target="_blank" class="lattes-link">
+              <i class="pi pi-external-link"></i> Currículo Lattes
+            </a>
+          </div>
+        </div>
+
+        <div class="team-member-card">
+          <!---
+          <div class="member-image">
+            <img src="assets/daniel.png" alt="Daniel Andrade Santiago" style="height: 150%;" />
+          </div>
+          --->
+          <div class="member-info">
+            <h3 class="member-position">Conselheiro Fiscal</h3>
+            <p class="member-name">Daniel Andrade Santiago</p>
+            <p class="member-description">
+              Engenheiro Florestal pela UFAM e mestrando em Ciências Florestais e Ambientais. Experiência em agroecologia, SAFs e projetos comunitários na Amazônia.
+            </p>
+            <a href="http://lattes.cnpq.br/8078182786541483" target="_blank" class="lattes-link">
+              <i class="pi pi-external-link"></i> Currículo Lattes
+            </a>
+          </div>
+        </div>
+
+        <div class="team-member-card">
+          <!---
+          <div class="member-image">
+            <img src="assets/eudisvam.png" alt="Eudisvam" />
+          </div>
+          --->
+          <div class="member-info">
+            <h3 class="member-position">Conselheiro Fiscal Suplente</h3>
+            <p class="member-name">Eudisvam Araujo Oliveira</p>
+            <p class="member-description">
+              Engenheiro Florestal especialista em arboricultura, instrutor de coletores com expertise em implantação de ACS e coleta de sementes na Amazônia.
+            </p>
+            <a href="http://lattes.cnpq.br/2371976242137325" target="_blank" class="lattes-link">
+              <i class="pi pi-external-link"></i> Currículo Lattes
+            </a>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
