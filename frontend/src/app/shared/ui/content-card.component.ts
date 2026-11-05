@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { formatShortDate } from '../utils/format-date';
@@ -23,6 +23,7 @@ export interface ContentCardItem {
 @Component({
   selector: 'app-content-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgOptimizedImage, RouterLink, BadgeComponent, ImgFallbackDirective],
   templateUrl: './content-card.component.html',
   styleUrl: './content-card.component.scss',

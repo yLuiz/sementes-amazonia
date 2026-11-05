@@ -78,4 +78,25 @@ describe('ChangePasswordComponent', () => {
     expect(component.errorMessage).toBe('Senha atual incorreta.');
     expect(component.isSaving).toBeFalse();
   });
+
+  it('mostra o erro na tela e libera o botão', () => {
+    fill('uma-senha-bem-longa');
+    component.onSubmit();
+    controller
+      .expectOne('/api/v1/auth/change-password')
+      .flush({ message: ['Senha fraca', 'Use outra senha'] }, { status: 400, statusText: 'Bad Request' });
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('.password-panel__error')?.textContent).toContain('Senha fraca. Use outra senha.');
+    expect(element.querySelector<HTMLButtonElement>('button[type=submit]')!.disabled).toBeFalse();
+  });
+
+  it('erro de rede explica a falta de conexão', () => {
+    fill('uma-senha-bem-longa');
+    component.onSubmit();
+    controller.expectOne('/api/v1/auth/change-password').error(new ProgressEvent('error'));
+
+    expect(component.errorMessage).toContain('Sem conexão');
+  });
 });

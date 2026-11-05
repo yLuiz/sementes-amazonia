@@ -8,6 +8,12 @@
   @include card-grid;
 }
 
+// A seção já tem o fundo do esqueleto padrão; sem isto, ele não aparece.
+.projects__placeholder {
+  height: 420px;
+  background-color: var(--color-surface-card);
+}
+
 .projects__action {
   display: flex;
   justify-content: center;

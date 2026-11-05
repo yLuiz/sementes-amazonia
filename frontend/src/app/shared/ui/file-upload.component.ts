@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
 import { ImgFallbackDirective } from './img-fallback.directive';
 
 /** Seleção de imagem com prévia em 16:9, nome do arquivo e botão de remover. */
 @Component({
   selector: 'app-file-upload',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ImgFallbackDirective],
   templateUrl: './file-upload.component.html',
   styleUrl: './file-upload.component.scss',

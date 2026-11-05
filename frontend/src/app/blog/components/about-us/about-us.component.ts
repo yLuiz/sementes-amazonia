@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RevealDirective } from '../../../shared/ui/reveal.directive';
 import { SectionHeaderComponent } from '../../../shared/ui/section-header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -8,6 +8,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 @Component({
   selector: 'app-about-us',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgOptimizedImage, FooterComponent, NavbarComponent, RevealDirective, SectionHeaderComponent],
   templateUrl: './about-us.component.html',
   styleUrl: './about-us.component.scss',

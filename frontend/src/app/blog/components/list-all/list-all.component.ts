@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { NewsService } from '../../../services/news/news.service';
 import { ProjectsService } from '../../../services/projects/projects.service';
+import { IPageResponse } from '../../../shared/interfaces/IPageResponse';
+import { ButtonDirective } from '../../../shared/ui/button.directive';
 import { ContentCardComponent, ContentCardItem } from '../../../shared/ui/content-card.component';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state.component';
 import { PtBrPaginatorIntl } from '../../../shared/ui/paginator-intl';
@@ -21,9 +23,11 @@ const MIN_SEARCH_LENGTH = 3;
 @Component({
   selector: 'app-list-all',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     MatPaginatorModule,
+    ButtonDirective,
     ContentCardComponent,
     EmptyStateComponent,
     FooterComponent,
@@ -46,7 +50,9 @@ export class ListAllComponent implements OnInit, OnDestroy {
   currentPage = 0;
   pageSize = 12;
   isLoading = true;
+  hasError = false;
 
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly newsService = inject(NewsService);
@@ -96,12 +102,14 @@ export class ListAllComponent implements OnInit, OnDestroy {
     this.load();
   }
 
-  private load(): void {
+  load(): void {
     const filters = { page: this.currentPage + 1, limit: this.pageSize, title: this.searchTerm };
-    const source =
+    const source: Observable<IPageResponse<ContentCardItem[]>> =
       this.selectedFilter === 'news' ? this.newsService.getNews(filters) : this.projectsService.getProjects(filters);
 
     this.isLoading = true;
+    this.hasError = false;
+    this.cdr.markForCheck();
     // Cancela a busca anterior: uma resposta atrasada não pode sobrescrever a atual.
     this.request?.unsubscribe();
     this.request = source.subscribe({
@@ -109,12 +117,14 @@ export class ListAllComponent implements OnInit, OnDestroy {
         this.items = response.data;
         this.totalItems = response.meta.total;
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
-      error: (error) => {
-        console.error('Erro ao carregar a listagem:', error);
+      error: () => {
         this.items = [];
         this.totalItems = 0;
         this.isLoading = false;
+        this.hasError = true;
+        this.cdr.markForCheck();
       },
     });
   }

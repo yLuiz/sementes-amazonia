@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { RouteLoadingService } from './services/route-loading.service';
@@ -6,6 +6,7 @@ import { RouteLoadingService } from './services/route-loading.service';
 @Component({
   selector: 'app-root',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterOutlet,
     LoadingComponent,
