@@ -1,43 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { LoadingService } from '../services/loading.service';
-import { filter } from 'rxjs/operators';
+
+/** A barra só aparece se a rota demorar mais do que isso, para não piscar. */
+const SHOW_AFTER_MS = 150;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RouteLoadingService {
+  private showTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private router: Router,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
   ) {
-    this.initRouteLoading();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.clearTimer();
+        this.showTimer = setTimeout(() => this.loadingService.show(), SHOW_AFTER_MS);
+      } else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ) {
+        this.clearTimer();
+        this.loadingService.hide();
+      }
+    });
   }
 
-  private initRouteLoading(): void {
-    this.router.events
-      .pipe(
-        filter(event => 
-          event instanceof NavigationStart ||
-          event instanceof NavigationEnd ||
-          event instanceof NavigationCancel ||
-          event instanceof NavigationError
-        )
-      )
-      .subscribe(event => {
-        if (event instanceof NavigationStart) {
-          this.loadingService.show();
-        } else if (
-          event instanceof NavigationEnd ||
-          event instanceof NavigationCancel ||
-          event instanceof NavigationError
-        ) {
-          // Pequeno delay para garantir que a transição seja visível
-          setTimeout(() => {
-            this.loadingService.hide();
-          }, 300);
-        }
-      });
+  private clearTimer(): void {
+    if (this.showTimer) clearTimeout(this.showTimer);
+    this.showTimer = null;
   }
 }

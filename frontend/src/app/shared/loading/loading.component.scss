@@ -1,54 +1,71 @@
-.loading-overlay {
+@use 'mixins' as *;
+
+.top-progress {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--primary-bg-color);
-  opacity: 0.5;
-  backdrop-filter: blur(2px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
+  inset: 0 0 auto;
+  z-index: 1200;
+  height: 3px;
+  overflow: hidden;
+  background-color: var(--color-brand-100);
 
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.loading-logo {
-  width: 120px;
-  height: auto;
-  max-width: 200px;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 0.5;
+  &::after {
+    content: '';
+    display: block;
+    width: 40%;
+    height: 100%;
+    background-color: var(--color-brand-500);
+    animation: top-progress 1s var(--ease-standard) infinite;
   }
+}
+
+// Véu leve, sem desfoque (caro em celular) e sem bloquear cliques.
+.loading-logo {
+  position: fixed;
+  inset: 0;
+  z-index: 1190;
+  display: grid;
+  place-items: center;
+  background-color: var(--color-loading-veil);
+  pointer-events: none;
+  animation: loading-fade-in var(--duration-base) var(--ease-standard);
+
+  img {
+    width: 72px;
+    height: 72px;
+    animation: loading-pulse 1.6s ease-in-out infinite;
+
+    @include up(md) {
+      width: 96px;
+      height: 96px;
+    }
+  }
+}
+
+@keyframes top-progress {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes loading-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes loading-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+
   50% {
     opacity: 1;
-  }
-  100% {
-    opacity: 0.5;
-  }
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .loading-logo {
-    width: 100px;
-    max-width: 150px;
-  }
-}
-
-@media (max-width: 480px) {
-  .loading-logo {
-    width: 80px;
-    max-width: 120px;
+    transform: scale(1);
   }
 }

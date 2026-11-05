@@ -1,0 +1,28 @@
+#toast-container > div {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  opacity: 1;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.toast-success {
+  background-color: var(--color-brand-700);
+}
+
+.toast-error {
+  background-color: var(--color-danger-strong);
+}
+
+.toast-warning {
+  background-color: var(--color-accent-gold);
+  color: var(--color-text-default);
+}
+
+.toast-info {
+  background-color: var(--color-brand-900);
+}

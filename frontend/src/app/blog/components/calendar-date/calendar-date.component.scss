@@ -1,22 +1,19 @@
 .cd-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  display: grid;
+  gap: var(--space-2);
 }
 
 .cd-label {
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
 .cd-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: .5rem;
-}
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
 
-select {
-  padding: .5rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background: #fff;
+  .control {
+    padding-inline: var(--space-2);
+  }
 }

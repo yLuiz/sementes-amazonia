@@ -1,51 +1,33 @@
-import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { NgOptimizedImage } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { IProject, ProjectsService } from '../../../services/projects/projects.service';
-import { CommonModule } from '@angular/common';
-import { apiConfig } from '../../../config/api.config';
+import { BadgeComponent } from '../../../shared/ui/badge.component';
+import { ButtonDirective } from '../../../shared/ui/button.directive';
+import { ImgFallbackDirective } from '../../../shared/ui/img-fallback.directive';
+import { RevealDirective } from '../../../shared/ui/reveal.directive';
+import { mediaUrl } from '../../../shared/utils/media-url';
 
 @Component({
   selector: 'app-featured-project',
   standalone: true,
-  imports: [CommonModule],
+  imports: [NgOptimizedImage, RouterLink, BadgeComponent, ButtonDirective, ImgFallbackDirective, RevealDirective],
   templateUrl: './featured-project.component.html',
-  styleUrl: './featured-project.component.scss'
+  styleUrl: './featured-project.component.scss',
 })
-export class FeaturedProjectComponent {
-
+export class FeaturedProjectComponent implements OnInit {
   project: IProject | null = null;
-  imagePath: string | null = null;
+  image = 'assets/photos/community-planting.webp';
 
-  constructor(
-    private readonly _router: Router,
-    private readonly _projectsService: ProjectsService
-  ) { }
+  private readonly projectsService = inject(ProjectsService);
 
-  ngOnInit() {
-    this._projectsService.getFeaturedProjects().subscribe({
-      next: (projects) => {
-        this.project = projects;
-        this.imagePath = this.project?.image_thumb ? `${apiConfig.media.base}/${this.project.image_thumb}` : null;
+  ngOnInit(): void {
+    this.projectsService.getFeaturedProjects().subscribe({
+      next: (project) => {
+        this.project = project;
+        this.image = mediaUrl(project?.image_thumb) ?? this.image;
       },
-      error: (err) => {
-        console.error('Erro ao buscar projetos em destaque:', err);
-      }
-    })
-  }
-
-  onImageLoad(event: Event) {
-    (event.target as HTMLImageElement).style.opacity = '1';
-  }
-
-  handleImageError(event: Event) {
-    (event.target as HTMLImageElement).src = 'assets/no-image.svg';
-
-    (event.target as HTMLImageElement).style.opacity = '0.125';
-  }
-
-  readAboutProject(id?: number) {
-    this._router.navigate(['/article', id], {
-      queryParams: { type: 'project' }
+      error: (error) => console.error('Erro ao buscar projeto em destaque:', error),
     });
   }
 }

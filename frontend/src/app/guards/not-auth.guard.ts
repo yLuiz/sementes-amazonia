@@ -8,7 +8,7 @@ export const notAuthGuard: CanActivateFn = (route, state) => {
   const token = authService.getToken();
 
   if (token && authService.validateToken(token)) {
-    router.navigate(['admin/registers']);
+    router.navigate(['/admin/news']);
     return false;
   }
 

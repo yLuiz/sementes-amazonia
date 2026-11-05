@@ -1,45 +1,44 @@
-<div class="login-wrapper">
-    <a class="header" href="/">
-      <img src="assets/logo_white.svg" alt="Logo Sementes da Amazônia" class="navbar-logo" style="height: 50px; vertical-align: middle;">
+<div class="login">
+  <header class="login__header">
+    <a routerLink="/" aria-label="Ir para o site">
+      <img src="assets/logo_white.svg" alt="Sementes da Amazônia" width="180" height="48" />
     </a>
+  </header>
 
-  <div class="login-card">
-    <h2>Acesse a sua conta</h2>
-    <p>Insira as credenciais para acessar o painel de administrador do site</p>
+  <main class="login__main">
+    <section class="login__card">
+      <h1>Acesse a sua conta</h1>
+      <p class="login__intro">Insira as credenciais para acessar o painel de administrador do site.</p>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <label>
-        Usuário
-        <input type="text" formControlName="username" placeholder="Digite seu usuário" />
-      </label>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <app-form-field label="Usuário" controlId="login-username">
+          <input id="login-username" class="control" type="text" autocomplete="username" formControlName="username" placeholder="Digite seu usuário" />
+        </app-form-field>
 
-      <label>
-        Senha
-        <div class="password-field">
-          <input [type]="inputType" formControlName="password" placeholder="Digite sua senha" />
-          <button type="button" *ngIf="inputType === 'password'" (click)="changePasswordInput()" class="eye-icon">
-            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="visibility"></mat-icon>
-          </button>
+        <app-form-field label="Senha" controlId="login-password">
+          <div class="login__password">
+            <input id="login-password" class="control" [type]="inputType" autocomplete="current-password" formControlName="password" placeholder="Digite sua senha" />
+            <button
+              class="login__eye"
+              type="button"
+              [attr.aria-label]="inputType === 'password' ? 'Mostrar senha' : 'Ocultar senha'"
+              (click)="changePasswordInput()">
+              <i class="pi" [class.pi-eye]="inputType === 'password'" [class.pi-eye-slash]="inputType === 'text'" aria-hidden="true"></i>
+            </button>
+          </div>
+        </app-form-field>
 
-          <button type="button" *ngIf="inputType === 'text'" (click)="changePasswordInput()" class="eye-icon">
-            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="visibility_off"></mat-icon>
-          </button>
-        </div>
-      </label>
+        @if (errorMessage) {
+          <p class="login__error" role="alert">
+            <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+            {{ errorMessage }}
+          </p>
+        }
 
-      <button class="submit-btn" type="submit" [disabled]="form.invalid || isLoading">
-        <span *ngIf="!isLoading">Entrar no painel</span>
-        <span *ngIf="isLoading" class="loading-content">
-          <p-progressSpinner styleClass="login-spinner" strokeWidth="4" [style]="{ width: '20px', height: '20px' }">
-          </p-progressSpinner>
-          Entrando...
-        </span>
-      </button>
-    </form>
-    <!-- 
-    <div class="forgot-password">
-      <small>Esqueceu sua senha?</small>
-      <a href="#">Clique aqui para recuperar o acesso</a>
-    </div> -->
-  </div>
+        <button appButton class="login__submit" type="submit" [loading]="isLoading" [disabled]="form.invalid || isLoading">
+          {{ isLoading ? 'Entrando...' : 'Entrar no painel' }}
+        </button>
+      </form>
+    </section>
+  </main>
 </div>

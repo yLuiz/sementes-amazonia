@@ -1,57 +1,75 @@
-<nav class="navbar">
-  <div class="navbar-container">
-    <a class="navbar-title" href="/">
-      <img src="assets/logo_name.svg" alt="Logo Sementes da Amazônia" class="navbar-logo" style="height: 50px; vertical-align: middle;">
+<header class="navbar" [class.navbar--solid]="!overlay || scrolled">
+  <div class="container navbar__inner">
+    <a class="navbar__logo" routerLink="/" aria-label="Sementes da Amazônia, página inicial" (click)="closeMenu()">
+      <img src="assets/logo_white.svg" alt="" width="180" height="48" />
     </a>
 
-    <!-- Menu Desktop -->
-    <ul class="navbar-links desktop-menu">
-      <li class="dropdown">
-        <a href="#about" class="link">
+    <nav class="navbar__links" aria-label="Navegação principal">
+      <div class="navbar__dropdown" [class.is-open]="isDropdownOpen">
+        <button
+          class="navbar__link"
+          type="button"
+          aria-haspopup="true"
+          [attr.aria-expanded]="isDropdownOpen"
+          (click)="toggleDropdown($event)">
           Sobre nós
-          <span class="material-icons-outlined">keyboard_arrow_down</span>
-        </a>
-        <!-- Submenu opcional -->
-        <ul class="dropdown-menu">
-          <li><a (click)="navigateToAboutUs()" style="cursor: pointer;">Nossa história</a></li>
-          <!-- <li><a href="#">Áreas de atuação</a></li> -->
+          <i class="pi pi-chevron-down" aria-hidden="true"></i>
+        </button>
+        <ul class="navbar__submenu">
+          <li><a routerLink="/about-us" (click)="closeDropdown()">Nossa história</a></li>
+          <li><a routerLink="/about-us" fragment="areas" (click)="closeDropdown()">Áreas de atuação</a></li>
         </ul>
-      </li>
-      <li><a href="/list-all?type=news">Notícias</a></li>
-      <li><a href="/list-all?type=projects">Projetos</a></li>
-      <li><a href="#footer">Contato</a></li>
-    </ul>
+      </div>
+      <a
+        class="navbar__link"
+        routerLink="/list-all"
+        [queryParams]="{ type: 'news' }"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="activeOptions">
+        Notícias
+      </a>
+      <a
+        class="navbar__link"
+        routerLink="/list-all"
+        [queryParams]="{ type: 'projects' }"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="activeOptions">
+        Projetos
+      </a>
+      <button class="navbar__link" type="button" (click)="goToContact()">Contato</button>
+    </nav>
 
-    <!-- Menu Hambúrguer -->
-    <div class="hamburger-menu">
-      <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="isMenuOpen">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-      <nav class="menu-nav" [class.active]="isMenuOpen">
-        <div class="menu-header">
-          <button class="close-btn" (click)="closeMenu()">
-            <span>&times;</span>
-          </button>
-        </div>
-        <ul>
-          <li><a href="#home" (click)="closeMenu()">Início</a></li>
-          <li class="mobile-dropdown" [class.active]="isMobileDropdownOpen">
-            <a href="#about" class="mobile-dropdown-toggle" (click)="toggleMobileDropdown($event)">
-              Sobre nós
-            <span class="material-icons-outlined">keyboard_arrow_down</span>  
-            </a>
-            <ul class="mobile-dropdown-menu" [class.active]="isMobileDropdownOpen">
-              <li><a (click)="navigateToAboutUs()" style="cursor: pointer;">Nossa história</a></li>
-              <li><a href="#areas" (click)="closeMenu()">Áreas de atuação</a></li>
-            </ul>
-          </li>
-          <li><a href="/list-all?type=news" (click)="closeMenu()">Notícias</a></li>
-          <li><a href="#projects" (click)="closeMenu()">Projetos</a></li>
-          <li><a href="#footer" (click)="closeMenu()">Contato</a></li>
-        </ul>
-      </nav>
-    </div>
+    <a class="navbar__cta" appButton="inverse" size="sm" routerLink="/list-all" [queryParams]="{ type: 'projects' }">
+      Conheça os projetos
+    </a>
+
+    <button
+      class="navbar__toggle"
+      type="button"
+      [attr.aria-label]="isMenuOpen ? 'Fechar menu' : 'Abrir menu'"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-controls="mobile-menu"
+      (click)="toggleMenu()">
+      <i class="pi" [class.pi-bars]="!isMenuOpen" [class.pi-times]="isMenuOpen" aria-hidden="true"></i>
+    </button>
   </div>
+</header>
+
+<!-- Fora do header: o desfoque dele criaria um novo contexto para o painel fixo. -->
+<div class="mobile-backdrop" [class.is-open]="isMenuOpen" (click)="closeMenu()"></div>
+<nav id="mobile-menu" class="mobile-menu" [class.is-open]="isMenuOpen" [attr.inert]="isMenuOpen ? null : ''" aria-label="Menu">
+  <ul>
+    <li><a routerLink="/about-us" (click)="closeMenu()">Nossa história</a></li>
+    <li><a routerLink="/about-us" fragment="areas" (click)="closeMenu()">Áreas de atuação</a></li>
+    <li><a routerLink="/list-all" [queryParams]="{ type: 'news' }" (click)="closeMenu()">Notícias</a></li>
+    <li><a routerLink="/list-all" [queryParams]="{ type: 'projects' }" (click)="closeMenu()">Projetos</a></li>
+    <li><button type="button" (click)="goToContact()">Contato</button></li>
+  </ul>
+  <a appButton="inverse" routerLink="/list-all" [queryParams]="{ type: 'projects' }" (click)="closeMenu()">
+    Conheça os projetos
+  </a>
 </nav>
+
+@if (!overlay) {
+  <div class="navbar-spacer"></div>
+}

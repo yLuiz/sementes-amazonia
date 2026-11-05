@@ -1,8 +1,16 @@
-<section class="partners">
-  <h2>Nossos parceiros</h2>
-  <div class="partners-list">
-    <div class="partner-card" *ngFor="let partner of partners">
-      {{ partner }}
-    </div>
+<section id="parceiros" class="partners">
+  <div class="container">
+    <app-section-header eyebrow="Quem caminha conosco" title="Nossos parceiros" align="center"></app-section-header>
+    <ul class="partners__list">
+      @for (partner of partners; track partner.name) {
+        <li class="partners__item" appReveal>
+          @if (partner.logo) {
+            <img [src]="partner.logo" [alt]="partner.name" />
+          } @else {
+            <span>{{ partner.name }}</span>
+          }
+        </li>
+      }
+    </ul>
   </div>
 </section>

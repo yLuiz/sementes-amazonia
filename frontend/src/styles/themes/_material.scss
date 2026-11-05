@@ -1,0 +1,71 @@
+@use '@angular/material' as mat;
+
+// O Material exige valores Sass, por isso esta paleta repete a escala dos tokens.
+$_brand: (
+  50: #eef7ee,
+  100: #e0f8e0,
+  200: #c3d6b1,
+  300: #7cc47e,
+  400: #37b03b,
+  500: #28912c,
+  600: #237225,
+  700: #237225,
+  800: #1c4b1f,
+  900: #1c4b1f,
+  A100: #e0f8e0,
+  A200: #37b03b,
+  A400: #28912c,
+  A700: #237225,
+  contrast: (
+    50: #333333,
+    100: #333333,
+    200: #333333,
+    300: #333333,
+    400: #333333,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #333333,
+    A200: #333333,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$_primary: mat.define-palette($_brand, 700, 400, 800);
+$_warn: mat.define-palette(mat.$red-palette);
+$_theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $_primary,
+      accent: $_primary,
+      warn: $_warn,
+    ),
+    typography: mat.define-typography-config(
+        $font-family: 'Montserrat, system-ui, sans-serif',
+      ),
+    density: 0,
+  )
+);
+
+@include mat.core();
+
+// Só o que o paginador usa, em vez do tema completo de todos os componentes.
+@include mat.core-theme($_theme);
+@include mat.paginator-theme($_theme);
+@include mat.form-field-theme($_theme);
+@include mat.select-theme($_theme);
+@include mat.icon-button-theme($_theme);
+@include mat.tooltip-theme($_theme);
+
+.mat-mdc-paginator {
+  background: transparent !important; // vence o fundo branco do tema Material
+  font-family: var(--font-body);
+}
+
+.mat-mdc-paginator-container {
+  justify-content: center !important; // vence o alinhamento à direita do Material
+  gap: var(--space-2);
+}

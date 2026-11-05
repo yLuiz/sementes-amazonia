@@ -1,14 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { SITE_CONTENT } from '../../../shared/content/site-content';
+import { RevealDirective } from '../../../shared/ui/reveal.directive';
+import { SectionHeaderComponent } from '../../../shared/ui/section-header.component';
 
 @Component({
   selector: 'app-partners',
   standalone: true,
-  imports: [CommonModule],
+  imports: [RevealDirective, SectionHeaderComponent],
   templateUrl: './partners.component.html',
-  styleUrl: './partners.component.scss'
+  styleUrl: './partners.component.scss',
 })
 export class PartnersComponent {
-  partners = ['Parceiro 1', 'Parceiro 2', 'Parceiro 3', 'Parceiro 4'];
-
+  readonly partners = SITE_CONTENT.partners;
 }

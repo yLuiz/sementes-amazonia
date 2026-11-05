@@ -1,36 +1,22 @@
-    import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { LoadingService } from '../../services/loading.service';
-import { Subscription } from 'rxjs';
 
+/** Indica a troca de rota com a barra no topo e a logo pulsando no centro. */
 @Component({
   selector: 'app-loading',
   standalone: true,
-  imports: [CommonModule],
+  imports: [AsyncPipe],
   template: `
-    <div *ngIf="isLoading" class="loading-overlay">
-      <div class="loading-container">
-        <img src="assets/logo.svg" alt="Logo" class="loading-logo">
+    @if (loading$ | async) {
+      <div class="top-progress" role="progressbar" aria-label="Carregando página"></div>
+      <div class="loading-logo" aria-hidden="true">
+        <img src="assets/logo.svg" alt="" width="96" height="96" />
       </div>
-    </div>
-  `,
-  styleUrls: ['./loading.component.scss']
-})
-export class LoadingComponent implements OnInit, OnDestroy {
-  isLoading = false;
-  private subscription?: Subscription;
-
-  constructor(private loadingService: LoadingService) {}
-
-  ngOnInit(): void {
-    this.subscription = this.loadingService.loading$.subscribe(
-      (loading: boolean) => this.isLoading = loading
-    );
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
     }
-  }
+  `,
+  styleUrl: './loading.component.scss',
+})
+export class LoadingComponent {
+  readonly loading$ = inject(LoadingService).loading$;
 }

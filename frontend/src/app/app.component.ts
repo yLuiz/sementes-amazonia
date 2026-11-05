@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { RouteLoadingService } from './services/route-loading.service';
@@ -13,11 +13,6 @@ import { RouteLoadingService } from './services/route-loading.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-  title = 'sementes-amazonia';
-
+export class AppComponent {
   constructor(private routeLoadingService: RouteLoadingService) {}
-
-  ngOnInit(): void {
-  }
 }

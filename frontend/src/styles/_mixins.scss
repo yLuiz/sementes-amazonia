@@ -1,0 +1,57 @@
+@use 'sass:map';
+
+$breakpoints: (
+  sm: 480px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+);
+
+@mixin up($bp) {
+  @media (min-width: map.get($breakpoints, $bp)) {
+    @content;
+  }
+}
+
+@mixin down($bp) {
+  @media (max-width: #{map.get($breakpoints, $bp) - 1px}) {
+    @content;
+  }
+}
+
+@mixin container($kind: default) {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--container-gutter);
+
+  @if $kind == narrow {
+    max-width: calc(var(--container-narrow) + 2 * var(--container-gutter));
+  } @else {
+    max-width: calc(var(--container-max) + 2 * var(--container-gutter));
+  }
+}
+
+@mixin section($tone: page) {
+  padding-block: var(--section-y);
+  background-color: var(--color-surface-#{$tone});
+}
+
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  line-clamp: $lines;
+}
+
+@mixin focus-ring($color: var(--color-brand-500)) {
+  outline: 2px solid $color;
+  outline-offset: 2px;
+}
+
+// Grade de cards que se adapta sozinha à largura disponível.
+@mixin card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: var(--space-6);
+}

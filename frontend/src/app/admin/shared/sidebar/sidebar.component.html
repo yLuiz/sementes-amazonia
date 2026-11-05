@@ -1,70 +1,36 @@
-<!-- Sidebar fixo do PrimeNG -->
-<div class="sidebar-container">
-  <p-sidebar 
-    [(visible)]="sidebarVisible" 
-    position="left" 
-    [modal]="false"
-    [showCloseIcon]="false"
-    [dismissible]="false"
-    styleClass="admin-sidebar">
-    
-    <!-- Header do Sidebar -->
-    <div class="sidebar-header">
-      <div class="logo-container">
-        <i class="pi pi-leaf sidebar-logo-icon"></i>
-        <h3>Sementes Admin</h3>
-      </div>
-      <button 
-        pButton 
-        type="button" 
-        icon="pi pi-times" 
-        class="p-button-text p-button-rounded toggle-btn"
-        (click)="toggleSidebar()"
-        title="Fechar sidebar">
-      </button>
-    </div>
+<div class="sidebar-backdrop" [class.is-open]="open" (click)="closed.emit()"></div>
 
-    <!-- Navegação -->
-    <nav class="sidebar-nav">
-      <ul class="menu-list">
-        <li *ngFor="let item of menuItems; let i = index" class="menu-item">
-          <button 
-            class="menu-button"
-            [class.active]="item.active"
-            (click)="navigateToItem(i)">
-            <i [class]="item.icon"></i>
-            <span>{{ item.label }}</span>
-          </button>
+<aside class="sidebar" [class.is-open]="open" aria-label="Painel administrativo">
+  <div class="sidebar__header">
+    <a routerLink="/" aria-label="Ir para o site">
+      <img src="assets/logo_name.svg" alt="Sementes da Amazônia" width="180" height="48" />
+    </a>
+    <button class="sidebar__close" type="button" aria-label="Fechar menu" (click)="closed.emit()">
+      <i class="pi pi-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <nav class="sidebar__nav">
+    <ul>
+      @for (item of menuItems; track item.route) {
+        <li>
+          <a [routerLink]="item.route" routerLinkActive="is-active" (click)="closed.emit()">
+            <i [class]="'pi ' + item.icon" aria-hidden="true"></i>
+            {{ item.label }}
+          </a>
         </li>
-      </ul>
-    </nav>
+      }
+    </ul>
+  </nav>
 
-    <!-- Footer do Sidebar -->
-    <div class="sidebar-footer">
-      <button 
-        class="footer-button"
-        (click)="goToWebsite()">
-        <i class="pi pi-external-link"></i>
-        <span>Ir para o site</span>
-      </button>
-      
-      <button 
-        class="footer-button logout-btn"
-        (click)="logout()">
-        <i class="pi pi-sign-out"></i>
-        <span>Sair</span>
-      </button>
-    </div>
-  </p-sidebar>
-
-  <!-- Botão para abrir sidebar quando fechado -->
-  <button 
-    *ngIf="!sidebarVisible"
-    pButton 
-    type="button" 
-    icon="pi pi-bars" 
-    class="p-button-rounded open-sidebar-btn"
-    (click)="toggleSidebar()"
-    title="Abrir sidebar">
-  </button>
-</div>
+  <div class="sidebar__footer">
+    <a appButton="secondary" size="sm" routerLink="/">
+      <i class="pi pi-external-link" aria-hidden="true"></i>
+      Ir para o site
+    </a>
+    <button class="sidebar__logout" appButton="outline" size="sm" type="button" (click)="logout()">
+      <i class="pi pi-sign-out" aria-hidden="true"></i>
+      Sair
+    </button>
+  </div>
+</aside>

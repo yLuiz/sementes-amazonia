@@ -1,0 +1,19 @@
+<header
+  class="section-header"
+  [class.section-header--center]="align === 'center'"
+  [class.section-header--inverse]="tone === 'inverse'"
+  [class.section-header--split]="description && align === 'start'">
+  <div class="section-header__heading">
+    @if (eyebrow) {
+      <p class="eyebrow">{{ eyebrow }}</p>
+    }
+    @if (level === 'h1') {
+      <h1 class="section-header__title">{{ title }}</h1>
+    } @else {
+      <h2 class="section-header__title">{{ title }}</h2>
+    }
+  </div>
+  @if (description) {
+    <p class="section-header__description">{{ description }}</p>
+  }
+</header>

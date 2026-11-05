@@ -1,93 +1,53 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
-import { ToastrService } from 'ngx-toastr';
+import { ButtonDirective } from '../../shared/ui/button.directive';
+import { FormFieldComponent } from '../../shared/ui/form-field.component';
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [MatIconModule, CommonModule, ReactiveFormsModule, ProgressSpinnerModule],
+  imports: [ReactiveFormsModule, RouterLink, ButtonDirective, FormFieldComponent],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  form: FormGroup;
-  isLoading = false;
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
-  constructor(
-    private fb: FormBuilder,
-    private _router: Router,
-    private _authService: AuthService,
-    private _toastr: ToastrService
-  ) {
-    this.form = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
+  readonly form = inject(FormBuilder).group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+
+  isLoading = false;
+  errorMessage = '';
+  inputType: 'password' | 'text' = 'password';
+
+  onSubmit(): void {
+    if (this.form.invalid || this.isLoading) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const { username, password } = this.form.getRawValue();
+    this.authService.login({ username: username!, password: password! }).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.authService.authInApplication(response);
+        this.router.navigate(['/admin/news']);
+      },
+      error: (error) => {
+        console.error(error);
+        this.isLoading = false;
+        this.errorMessage =
+          error.status === 401 ? 'Usuário ou senha incorretos.' : 'Não foi possível entrar. Tente novamente.';
+      },
     });
   }
 
-  onSubmit() {
-    if (this.form.valid && !this.isLoading) {
-      this.isLoading = true;
-      
-      this._authService.login({
-        username: this.username,
-        password: this.password,
-      })
-        .subscribe({
-          next: (res) => {
-            this.isLoading = false;
-            this._authService.authInApplication(res);
-            this._router.navigate(['/admin/registers']);
-          },
-          error: (err) => {
-            this.isLoading = false;
-            console.error(err)
-            if (err.status === 401) {
-
-              this._toastr.error('Credências inválidas', 'Não autorizado.', {
-                closeButton: true,
-                tapToDismiss: true,
-                progressBar: true
-              });
-
-              return;
-            }
-
-            this._toastr.error('Houve um erro ao fazer login.', 'Falha de login.', {
-              closeButton: true,
-              tapToDismiss: true,
-              progressBar: true
-            });
-          }
-        });
-    }
-  }
-
-  inputType = 'password';
-
-  changePasswordInput() {
-    if (this.inputType === 'password') {
-      this.inputType = 'text';
-    } else {
-      this.inputType = 'password';
-    }
-  }
-
-  get username() {
-    return this.form.get('username')?.value || '';
-  }
-
-  get password() {
-    return this.form.get('password')?.value || '';
+  changePasswordInput(): void {
+    this.inputType = this.inputType === 'password' ? 'text' : 'password';
   }
 }

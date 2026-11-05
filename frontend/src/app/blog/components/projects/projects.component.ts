@@ -1,65 +1,27 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ProjectCardComponent } from '../project-card/project-card.component';
-import { CommonModule } from '@angular/common';
-import { ProjectsService, IProject } from '../../../services/projects/projects.service';
-import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
-
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { IProject, ProjectsService } from '../../../services/projects/projects.service';
+import { ButtonDirective } from '../../../shared/ui/button.directive';
+import { ContentCardComponent } from '../../../shared/ui/content-card.component';
+import { RevealDirective } from '../../../shared/ui/reveal.directive';
+import { SectionHeaderComponent } from '../../../shared/ui/section-header.component';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [
-    CommonModule,
-    ProjectCardComponent
-  ],
+  imports: [RouterLink, ButtonDirective, ContentCardComponent, RevealDirective, SectionHeaderComponent],
   templateUrl: './projects.component.html',
-  styleUrl: './projects.component.scss'
+  styleUrl: './projects.component.scss',
 })
-export class ProjectsComponent implements OnInit, OnDestroy {
-
+export class ProjectsComponent implements OnInit {
   projects: IProject[] = [];
-  private subscription: Subscription = new Subscription();
 
-  constructor(
-    private projectsService: ProjectsService,
-    private router: Router
-  ) { }
+  private readonly projectsService = inject(ProjectsService);
 
   ngOnInit(): void {
-    this.loadProjects();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  /**
-   * Carrega os projetos
-  */
-  private loadProjects(): void {
-
-    const projectsSub = this.projectsService.getProjects({
-      limit: 3,
-    }).subscribe({
-      next: (projects) => {
-        this.projects = projects.data;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar projetos:', error);
-      }
-    });
-    
-    this.subscription.add(projectsSub);
-  }
-
-  /**
-   * Navega para a página dos projetos
-   */
-    onViewAllProjects(): void {
-    this.router.navigate(['/list-all'], {
-      queryParams: { type: 'project' }
+    this.projectsService.getProjects({ limit: 3 }).subscribe({
+      next: (projects) => (this.projects = projects.data),
+      error: (error) => console.error('Erro ao carregar projetos:', error),
     });
   }
-
 }

@@ -1,0 +1,25 @@
+<div class="upload">
+  @if (previewUrl) {
+    <div class="upload__preview media">
+      <img [src]="previewUrl" alt="Prévia da imagem de capa" appImgFallback />
+      <button type="button" class="upload__remove" aria-label="Remover imagem" title="Remover imagem" (click)="remove()">
+        <i class="pi pi-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+    @if (fileName) {
+      <p class="upload__name" [title]="fileName">
+        <i class="pi pi-image" aria-hidden="true"></i>
+        {{ fileName }}
+      </p>
+    }
+  }
+
+  <label class="upload__drop">
+    <input #input class="visually-hidden" type="file" [accept]="accept" (change)="onChange($event)" />
+    <i class="pi pi-upload" aria-hidden="true"></i>
+    <span class="upload__action">{{ previewUrl ? 'Trocar imagem' : 'Escolher imagem' }}</span>
+    @if (hint) {
+      <span class="upload__hint">{{ hint }}</span>
+    }
+  </label>
+</div>

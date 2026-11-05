@@ -1,130 +1,92 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { NavbarComponent } from '../navbar/navbar.component';
-import { CarouselModule } from 'primeng/carousel';
-import { Carousel } from 'primeng/carousel';
-import { IProject, ProjectsService } from '../../../services/projects/projects.service';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Observable, Subscription } from 'rxjs';
 import { INews, NewsService } from '../../../services/news/news.service';
-import { ProjectArticleComponent } from './project-article/project-article.component';
-import { NewsArticleComponent } from './news-article/news-article.component';
-import { apiConfig } from '../../../config/api.config';
+import { IProject, ProjectsService } from '../../../services/projects/projects.service';
+import { ButtonDirective } from '../../../shared/ui/button.directive';
+import { EmptyStateComponent } from '../../../shared/ui/empty-state.component';
+import { ImgFallbackDirective } from '../../../shared/ui/img-fallback.directive';
+import { formatLongDate } from '../../../shared/utils/format-date';
+import { mediaUrl } from '../../../shared/utils/media-url';
+import { FooterComponent } from '../footer/footer.component';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { contentToParagraphs } from './content-to-paragraphs';
+
+type ArticleContent = INews | IProject;
 
 @Component({
   selector: 'app-article',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatIconModule,
-    NavbarComponent,
-    CarouselModule,
-    ProjectArticleComponent,
-    NewsArticleComponent
-  ],
+  imports: [RouterLink, ButtonDirective, EmptyStateComponent, FooterComponent, ImgFallbackDirective, NavbarComponent],
   templateUrl: './article.component.html',
-  styleUrl: './article.component.scss'
+  styleUrl: './article.component.scss',
 })
-export class ArticleComponent implements OnInit {
-
-  @ViewChild('imageCarousel') imageCarousel!: Carousel;
-
-  currentImageIndex: number = 0;
-
-  images = [
-    {
-      src: 'assets/amazon_forest.png',
-      alt: 'Floresta Amazônica'
-    },
-    {
-      src: 'assets/amazon_forest_2.png',
-      alt: 'Biodiversidade da Amazônia'
-    },
-    {
-      src: 'assets/Image 1.png',
-      alt: 'Pesquisa na Amazônia'
-    }
-  ];
-
-  news: INews | null = null;
-  project: IProject | null = null;
-
-  articleId: number | null = null;
-
-  formattedDate: string = '';
+export class ArticleComponent implements OnInit, OnDestroy {
+  status: 'loading' | 'ready' | 'notFound' = 'loading';
   type: 'news' | 'project' = 'news';
+  content: ArticleContent | null = null;
+  coverImage: string | null = null;
+  formattedDate = '';
+  paragraphs: string[] = [];
 
-  constructor(
-    private _route: ActivatedRoute,
-    private readonly _projectsService: ProjectsService,
-    private readonly _newsService: NewsService
-  ) { }
+  private readonly route = inject(ActivatedRoute);
+  private readonly newsService = inject(NewsService);
+  private readonly projectsService = inject(ProjectsService);
+  private readonly toastr = inject(ToastrService);
+  private routeSubscription?: Subscription;
+  private request?: Subscription;
 
-  ngOnInit() {
-    // Captura o ID da URL
-    this.articleId = Number(this._route.snapshot.paramMap.get('id')) || null;
+  get typeLabel(): string {
+    return this.type === 'news' ? 'Notícias' : 'Projetos';
+  }
 
-    this._route.queryParamMap.subscribe(params => {
-      const typeParam = params.get('type');
+  get listingType(): 'news' | 'projects' {
+    return this.type === 'news' ? 'news' : 'projects';
+  }
 
-      if (typeParam === 'news' || typeParam === 'project') {
-        this.type = typeParam;
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.routeSubscription = this.route.queryParamMap.subscribe((params) => {
+      this.type = params.get('type') === 'project' ? 'project' : 'news';
+
+      if (!id) {
+        this.status = 'notFound';
+        return;
       }
 
-      this.getInfoByType({
-        type: this.type,
-        id: this.articleId
+      const source: Observable<ArticleContent> =
+        this.type === 'news' ? this.newsService.getNewsById(id) : this.projectsService.getProjectById(id);
+
+      this.status = 'loading';
+      this.request?.unsubscribe();
+      this.request = source.subscribe({
+        next: (content) => {
+          this.content = content;
+          this.coverImage = mediaUrl(content.image_thumb);
+          this.formattedDate = formatLongDate(content.published_at || content.created_at);
+          this.paragraphs = contentToParagraphs(content.content);
+          this.status = 'ready';
+        },
+        error: (error) => {
+          console.error('Erro ao carregar o conteúdo:', error);
+          this.status = 'notFound';
+        },
       });
     });
   }
 
-  getInfoByType(args: {
-    type: 'news' | 'project',
-    id: number | null
-  }) {
-    if (args.type === 'news' && args.id) {
-      this._newsService.getNewsById(args.id).subscribe({
-        next: (news) => {
-          this.news = {
-            ...news,
-            image_thumb: apiConfig.media.base + '/' + news.image_thumb
-          };
-          // Formata a data em português brasileiro
-          this.formattedDate = this.formatDateToPtBr(new Date(news.published_at));
-        },
-        error: (err) => {
-          console.error('Erro ao carregar notícia:', err);
-        }
-      });
-      return;
-    }
-
-    if (args.type === 'project' && args.id) {
-      this._projectsService.getProjectById(args.id).subscribe({
-        next: (project) => {
-          this.project = {
-            ...project,
-            image_thumb: apiConfig.media.base + '/' + project.image_thumb
-          };
-          // Formata a data em português brasileiro
-          this.formattedDate = this.formatDateToPtBr(new Date(project.created_at));
-        },
-        error: (err) => {
-          console.error('Erro ao carregar projeto:', err);
-        }
-      });
-      return;
-    }
-
-    console.warn('Tipo ou ID inválido para carregar informações.');
+  ngOnDestroy(): void {
+    this.routeSubscription?.unsubscribe();
+    this.request?.unsubscribe();
   }
 
-  formatDateToPtBr(date: Date): string {
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    };
-    return date.toLocaleDateString('pt-BR', options);
+  share(): void {
+    const url = window.location.href;
+    navigator.clipboard
+      ?.writeText(url)
+      .then(() => this.toastr.success('Link copiado para a área de transferência!'))
+      .catch(() => this.toastr.error(`Não foi possível copiar. Copie o endereço manualmente: ${url}`));
   }
 }
