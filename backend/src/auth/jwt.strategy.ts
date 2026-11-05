@@ -5,11 +5,12 @@ import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from 'src/modules/users/users.service';
 import { SESSION_COOKIE } from './session-cookie';
+import { isSessionVersionValid } from './session-version';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    configService: ConfigService,
+    private configService: ConfigService,
     private usersService: UsersService,
   ) {
     super({
@@ -21,7 +22,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     const user = await this.usersService.findById(payload.sub);
-    if (!user) {
+    const secret = this.configService.getOrThrow<string>('JWT_SECRET');
+    if (!user || !isSessionVersionValid(payload.sv, user.password, secret)) {
       throw new UnauthorizedException();
     }
     return { id: user.id, username: user.username };

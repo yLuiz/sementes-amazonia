@@ -8,6 +8,7 @@ import envConfig from './config/config';
 
 import * as cookieParser from 'cookie-parser';
 import * as crypto from 'crypto';
+import helmet from 'helmet';
 
 // 🔑 Polyfill para garantir que crypto.randomUUID exista
 if (!(global as any).crypto) {
@@ -17,6 +18,11 @@ if (!(global as any).crypto) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const _logger = new Logger('Bootstrap');
+
+  // A Vercel repassa estes cabeçalhos ao navegador no domínio do site, e o HSTS
+  // fica guardado por um ano: sem `includeSubDomains`, ele não alcança outros
+  // subdomínios que a organização venha a ter.
+  app.use(helmet({ strictTransportSecurity: { includeSubDomains: false } }));
 
   // O site chama a API pela própria origem, então o CORS fica fechado.
   app.use(cookieParser());
