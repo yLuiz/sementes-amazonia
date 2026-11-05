@@ -45,30 +45,6 @@
   color: var(--color-text-muted);
 }
 
-.login__password {
-  position: relative;
-
-  .control {
-    padding-right: 52px;
-  }
-}
-
-.login__eye {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  color: var(--color-text-muted);
-
-  &:hover {
-    color: var(--color-brand-700);
-  }
-}
-
 .login__error {
   display: flex;
   align-items: center;

@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { ButtonDirective } from '../../shared/ui/button.directive';
 import { FormFieldComponent } from '../../shared/ui/form-field.component';
+import { PasswordRevealComponent } from '../../shared/ui/password-reveal.component';
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, ButtonDirective, FormFieldComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonDirective, FormFieldComponent, PasswordRevealComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -23,7 +24,6 @@ export class LoginComponent {
 
   isLoading = false;
   errorMessage = '';
-  inputType: 'password' | 'text' = 'password';
 
   onSubmit(): void {
     if (this.form.invalid || this.isLoading) return;
@@ -44,9 +44,5 @@ export class LoginComponent {
           error.status === 401 ? 'Usuário ou senha incorretos.' : 'Não foi possível entrar. Tente novamente.';
       },
     });
-  }
-
-  changePasswordInput(): void {
-    this.inputType = this.inputType === 'password' ? 'text' : 'password';
   }
 }

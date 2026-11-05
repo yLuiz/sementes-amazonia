@@ -27,6 +27,22 @@ describe('ChangePasswordComponent', () => {
 
   afterEach(() => controller.verify());
 
+  it('mostra e oculta cada senha de forma independente', () => {
+    const element: HTMLElement = fixture.nativeElement;
+    const input = (id: string) => element.querySelector<HTMLInputElement>(id)!;
+    const buttons = element.querySelectorAll<HTMLButtonElement>('.password-toggle');
+
+    expect(buttons.length).toBe(3);
+    buttons[1].click();
+    fixture.detectChanges();
+    expect(input('#password-new').type).toBe('text');
+    expect(input('#password-old').type).toBe('password');
+    expect(buttons[1].getAttribute('aria-label')).toBe('Ocultar senha');
+
+    buttons[1].click();
+    expect(input('#password-new').type).toBe('password');
+  });
+
   it('não envia senha curta', () => {
     fill('curta');
     component.onSubmit();

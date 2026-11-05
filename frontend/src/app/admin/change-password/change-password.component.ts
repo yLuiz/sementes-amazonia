@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth/auth.service';
 import { ButtonDirective } from '../../shared/ui/button.directive';
 import { FormFieldComponent } from '../../shared/ui/form-field.component';
+import { PasswordRevealComponent } from '../../shared/ui/password-reveal.component';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
 
 // Mesmos limites de `backend/src/auth/password-policy.ts`.
@@ -16,7 +17,7 @@ const passwordsMatch = (group: AbstractControl): ValidationErrors | null =>
 @Component({
   standalone: true,
   selector: 'app-change-password',
-  imports: [ReactiveFormsModule, ButtonDirective, FormFieldComponent, PageHeaderComponent],
+  imports: [ReactiveFormsModule, ButtonDirective, FormFieldComponent, PageHeaderComponent, PasswordRevealComponent],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss',
 })
