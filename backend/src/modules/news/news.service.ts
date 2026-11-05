@@ -11,6 +11,7 @@ import { parseDateToString } from 'src/utils/parseDateToString';
 import { Between, ILike, Repository } from 'typeorm';
 
 import * as fs from 'fs/promises';
+import { deleteImageVariants } from '../media/media-variants';
 
 // Use a mesma pasta dos uploads (volume ou local)
 const BASE_DIR = envConfig().UPLOAD_DIR;
@@ -104,6 +105,7 @@ export class NewsService {
         this._logger.warn(`Falha ao remover arquivo "${filename}": ${err?.message || err}`);
       }
     }
+    await deleteImageVariants(filename);
   }
 
   async update(id: number, updateNewsDto: UpdateNewsDto): Promise<News> {

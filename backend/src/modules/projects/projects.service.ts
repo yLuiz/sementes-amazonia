@@ -9,6 +9,7 @@ import { parseDateToString } from 'src/utils/parseDateToString';
 import { Between, ILike, Not, Repository } from 'typeorm';
 
 import * as fs from 'fs/promises';
+import { deleteImageVariants } from '../media/media-variants';
 import envConfig from 'src/config/config';
 import { resolve } from 'path';
 
@@ -110,6 +111,7 @@ export class ProjectsService {
         this._logger.warn(`Falha ao remover arquivo "${filename}": ${err?.message || err}`);
       }
     }
+    await deleteImageVariants(filename);
   }
 
   async update(id: number, updateProjectDto: UpdateProjectDto): Promise<Project> {
