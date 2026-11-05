@@ -8,7 +8,8 @@
       [ngSrc]="image"
       fill
       [priority]="priority"
-      sizes="(max-width: 767px) 100vw, 33vw"
+      ngSrcset="320w, 640w, 960w"
+      sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 384px"
       [class.is-fallback]="!hasImage"
       [alt]="content.title"
       appImgFallback />
