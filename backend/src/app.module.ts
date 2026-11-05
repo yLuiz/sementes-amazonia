@@ -10,7 +10,8 @@ import { UsersModule } from './modules/users/users.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { NewsModule } from './modules/news/news.module';
 import dataSource from './db/data-source';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { CsrfGuard } from './auth/csrf.guard';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 
 @Module({
@@ -38,6 +39,10 @@ import { LoggingInterceptor } from './interceptors/logging.interceptor';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: CsrfGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,

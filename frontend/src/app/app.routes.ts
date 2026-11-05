@@ -63,6 +63,11 @@ export const routes: Routes = [
         children: [
           ...contentRoutes('news', 'news', 'Notícias', 'notícia'),
           ...contentRoutes('projects', 'project', 'Projetos', 'projeto'),
+          {
+            path: 'password',
+            title: 'Trocar senha | Painel',
+            loadComponent: () => import('./admin/change-password/change-password.component').then((m) => m.ChangePasswordComponent),
+          },
           // Endereços antigos do painel.
           { path: 'registers', redirectTo: 'news/new', pathMatch: 'full' },
           { path: '**', redirectTo: 'news' },

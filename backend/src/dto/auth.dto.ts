@@ -1,6 +1,7 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '../auth/password-policy';
 
 export class LoginDto {
   @ApiProperty({ description: 'Username for login', example: 'john_doe' })
@@ -16,15 +17,14 @@ export class LoginDto {
 }
 
 export class ChangePasswordDto {
-  @ApiProperty({ description: 'Old password', example: 'oldPassword123' })
+  @ApiProperty({ description: 'Current password' })
   @IsString()
   @IsNotEmpty()
-  @MinLength(6)
   oldPassword: string;
 
-  @ApiProperty({ description: 'New password', example: 'newPassword123' })
+  @ApiProperty({ description: 'New password', minLength: MIN_PASSWORD_LENGTH, maxLength: MAX_PASSWORD_LENGTH })
   @IsString()
-  @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(MIN_PASSWORD_LENGTH, { message: `A nova senha precisa ter pelo menos ${MIN_PASSWORD_LENGTH} caracteres` })
+  @MaxLength(MAX_PASSWORD_LENGTH, { message: `A nova senha pode ter no máximo ${MAX_PASSWORD_LENGTH} caracteres` })
   newPassword: string;
 }

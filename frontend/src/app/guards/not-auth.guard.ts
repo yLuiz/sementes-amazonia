@@ -1,16 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { map } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
 
-export const notAuthGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+export const notAuthGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const token = authService.getToken();
 
-  if (token && authService.validateToken(token)) {
-    router.navigate(['/admin/news']);
-    return false;
-  }
-
-  return true;
+  return inject(AuthService)
+    .hasSession()
+    .pipe(map((hasSession) => !hasSession || router.createUrlTree(['/admin/news'])));
 };
