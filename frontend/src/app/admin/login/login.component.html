@@ -16,16 +16,9 @@
         </app-form-field>
 
         <app-form-field label="Senha" controlId="login-password">
-          <div class="login__password">
-            <input id="login-password" class="control" [type]="inputType" autocomplete="current-password" formControlName="password" placeholder="Digite sua senha" />
-            <button
-              class="login__eye"
-              type="button"
-              [attr.aria-label]="inputType === 'password' ? 'Mostrar senha' : 'Ocultar senha'"
-              (click)="changePasswordInput()">
-              <i class="pi" [class.pi-eye]="inputType === 'password'" [class.pi-eye-slash]="inputType === 'text'" aria-hidden="true"></i>
-            </button>
-          </div>
+          <app-password-reveal>
+            <input #passwordInput id="login-password" class="control control--with-action" type="password" autocomplete="current-password" formControlName="password" placeholder="Digite sua senha" />
+          </app-password-reveal>
         </app-form-field>
 
         @if (errorMessage) {
