@@ -1,65 +1,49 @@
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { apiConfig } from "../../config/api.config";
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { catchError, map, Observable, of } from 'rxjs';
+import { apiConfig } from '../../config/api.config';
 
 export interface ILoginRequest {
-    username: string,
-    password: string
+  username: string;
+  password: string;
 }
 
 export interface ILoginResponse {
-    access_token: string,
-    user: {
-        id: number,
-        username: string
-    }
+  user: {
+    id: number;
+    username: string;
+  };
 }
 
+export interface IChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+}
+
+/** A sessão vive em um cookie `HttpOnly`: o JavaScript não lê o token, só pergunta à API. */
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-    private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = apiConfig.auth.base;
 
-    private readonly apiUrl = apiConfig.auth.base;
+  login(args: ILoginRequest): Observable<ILoginResponse> {
+    return this.http.post<ILoginResponse>(`${this.apiUrl}/login`, args);
+  }
 
-    login(args: ILoginRequest): Observable<ILoginResponse> {
-        return this.http.post<ILoginResponse>(`${this.apiUrl}/login`, args);
-    }
+  hasSession(): Observable<boolean> {
+    return this.http.get(`${this.apiUrl}/me`).pipe(
+      map(() => true),
+      catchError(() => of(false)),
+    );
+  }
 
-    authInApplication(payload: ILoginResponse) {
-        localStorage.setItem('token', payload.access_token);
+  logout(): Observable<unknown> {
+    return this.http.post(`${this.apiUrl}/logout`, {});
+  }
 
-    }
-
-    getToken() {
-        return localStorage.getItem('token');
-
-    }
-
-    logout() {
-        localStorage.removeItem('token');
-    }
-
-    validateToken(token: string) {
-        if (!token) return false;
-
-        const parts = token.split('.');
-        if (parts.length !== 3) return false;
-
-        try {
-            const payload = JSON.parse(atob(parts[1]));
-            if (payload.exp) {
-                const now = Math.floor(Date.now() / 1000);
-                if (payload.exp < now) {
-                    return false;
-                }
-            }
-
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
+  changePassword(args: IChangePasswordRequest): Observable<unknown> {
+    return this.http.put(`${this.apiUrl}/change-password`, args);
+  }
 }

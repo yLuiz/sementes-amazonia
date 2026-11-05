@@ -59,7 +59,7 @@ DB_PASSWORD=postgres
 DB_DATABASE=nestjs_backend
 
 # JWT
-JWT_SECRET=super-secret-jwt-key-change-in-production
+JWT_SECRET=gere-um-valor-aleatorio-longo
 JWT_EXPIRES_IN=24h
 
 # App
@@ -67,7 +67,7 @@ PORT=3000
 NODE_ENV=development
 
 # Upload
-UPLOAD_DEST=./uploads
+UPLOAD_DIR=./uploads
 MAX_FILE_SIZE=5242880
 ```
 
@@ -91,20 +91,28 @@ npm run start:prod
 ### 🔐 Autenticação
 
 #### POST /auth/login (público)
-Realiza login e retorna JWT token.
+Realiza login e grava a sessão em um cookie `HttpOnly`. Toda requisição de escrita precisa do cabeçalho `X-Requested-With: sementes-web`.
 ```bash
 curl -X POST http://localhost:3000/auth/login \
+  -c cookies.txt \
   -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "admin123"}'
+  -H "X-Requested-With: sementes-web" \
+  -d '{"username": "SEU_USUARIO", "password": "SUA_SENHA"}'
 ```
+
+#### GET /auth/me (protegido)
+Informa o usuário da sessão atual.
+
+#### POST /auth/logout (público)
+Apaga o cookie de sessão.
 
 #### PUT /auth/change-password (protegido)
 Altera a senha do usuário autenticado.
 ```bash
 curl -X PUT http://localhost:3000/auth/change-password \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{"oldPassword": "admin123", "newPassword": "newpassword123"}'
+  -b cookies.txt -H "X-Requested-With: sementes-web" \
+  -d '{"oldPassword": "SENHA_ATUAL", "newPassword": "NOVA_SENHA_COM_12_OU_MAIS"}'
 ```
 
 ### 📁 Projects
@@ -113,7 +121,7 @@ curl -X PUT http://localhost:3000/auth/change-password \
 Cria um novo projeto.
 ```bash
 curl -X POST http://localhost:3000/projects \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -b cookies.txt -H "X-Requested-With: sementes-web" \
   -F "nome=Projeto Exemplo" \
   -F "resumo=Um resumo do projeto" \
   -F "descricaoCompleta=Descrição completa do projeto" \
@@ -136,7 +144,7 @@ curl "http://localhost:3000/projects/1"
 Atualiza um projeto.
 ```bash
 curl -X PUT http://localhost:3000/projects/1 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -b cookies.txt -H "X-Requested-With: sementes-web" \
   -F "nome=Projeto Atualizado"
 ```
 
@@ -144,7 +152,7 @@ curl -X PUT http://localhost:3000/projects/1 \
 Remove um projeto.
 ```bash
 curl -X DELETE http://localhost:3000/projects/1 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt -H "X-Requested-With: sementes-web"
 ```
 
 ### 📰 News
@@ -153,7 +161,7 @@ curl -X DELETE http://localhost:3000/projects/1 \
 Cria uma nova notícia.
 ```bash
 curl -X POST http://localhost:3000/news \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -b cookies.txt -H "X-Requested-With: sementes-web" \
   -F "titulo=Título da Notícia" \
   -F "resumo=Resumo da notícia" \
   -F "dataPublicacao=2024-01-01" \
@@ -178,7 +186,7 @@ curl "http://localhost:3000/news/1"
 Atualiza uma notícia.
 ```bash
 curl -X PUT http://localhost:3000/news/1 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -b cookies.txt -H "X-Requested-With: sementes-web" \
   -F "titulo=Título Atualizado"
 ```
 
@@ -186,7 +194,7 @@ curl -X PUT http://localhost:3000/news/1 \
 Remove uma notícia.
 ```bash
 curl -X DELETE http://localhost:3000/news/1 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt -H "X-Requested-With: sementes-web"
 ```
 
 ### 🖼️ Media
@@ -257,7 +265,7 @@ src/
 
 ## 🛡️ Segurança
 
-- **JWT Authentication**: Todos os endpoints protegidos requerem token JWT válido
+- **Sessão por cookie**: Endpoints protegidos exigem o cookie `HttpOnly` criado no login, e escritas exigem o cabeçalho `X-Requested-With`
 - **Validação de dados**: Todos os inputs são validados usando class-validator
 - **Upload seguro**: Validação de tipo e tamanho de arquivo (máx. 5MB)
 - **Formato de imagens**: Apenas JPEG, JPG, PNG e WEBP são aceitos
@@ -292,9 +300,7 @@ src/
 
 ## 🔑 Usuário Padrão
 
-Após executar o seed, um usuário padrão é criado:
-- **Username**: `admin`
-- **Password**: `admin123`
+O seed cria o primeiro administrador a partir de `ADMIN_USERNAME`, `ADMIN_EMAIL` e `ADMIN_PASSWORD` (pelo menos 12 caracteres). Sem elas, ele falha. Se o usuário já existir, nada muda: para trocar a senha, use o painel.
 
 ## ⚙️ Scripts Disponíveis
 

@@ -98,9 +98,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
   private isSensitiveRoute(url: string): boolean {
     const sensitiveRoutes = [
-      '/auth/login',
-      '/auth/reset-password',
-      '/auth/change-temporary-password',
+      '/auth/',
       '/users',
     ];
     return sensitiveRoutes.some((route) => url.includes(route));

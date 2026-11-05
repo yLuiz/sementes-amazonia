@@ -33,9 +33,8 @@ export class LoginComponent {
 
     const { username, password } = this.form.getRawValue();
     this.authService.login({ username: username!, password: password! }).subscribe({
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
-        this.authService.authInApplication(response);
         this.router.navigate(['/admin/news']);
       },
       error: (error) => {
