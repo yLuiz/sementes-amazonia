@@ -1,16 +1,19 @@
-<!-- projects.component.html -->
 <section id="projects" class="projects">
-    <h2>Projetos</h2>
-    <div class="cards">
-        <ng-container *ngFor="let project of projects">
-            <app-project-card [project]="{
-                id: project.id,
-                title: project.title,
-                description: project.summary,
-                image: project.image_thumb,
-                date: project.published_at
-            }"></app-project-card>
-        </ng-container>
+  <div class="container">
+    <app-section-header
+      eyebrow="Na prática"
+      title="Projetos"
+      description="Iniciativas de conservação, restauração e fortalecimento das comunidades da Amazônia.">
+    </app-section-header>
+    <ul class="projects__grid">
+      @for (project of projects; track project.id; let i = $index) {
+        <li appReveal [revealDelay]="i * 80">
+          <app-content-card type="project" [item]="project"></app-content-card>
+        </li>
+      }
+    </ul>
+    <div class="projects__action">
+      <a appButton="outline" routerLink="/list-all" [queryParams]="{ type: 'projects' }">Ver todos os projetos</a>
     </div>
-    <button (click)="onViewAllProjects()">Ver todos os projetos</button>
+  </div>
 </section>

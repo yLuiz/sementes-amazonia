@@ -1,0 +1,24 @@
+<div class="dialog-overlay" (click)="onEscape()">
+  <div
+    class="dialog"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="dialog-title"
+    (click)="$event.stopPropagation()">
+    <div class="dialog__icon">
+      <i class="pi pi-trash" aria-hidden="true"></i>
+    </div>
+    <h2 id="dialog-title" class="dialog__title">{{ title }}</h2>
+    <p class="dialog__message">{{ message }}</p>
+    @if (detail) {
+      <p class="dialog__detail">{{ detail }}</p>
+    }
+    <p class="dialog__warning">{{ warning }}</p>
+    <div class="dialog__actions btn-group">
+      <button #cancelButton appButton="outline" type="button" [disabled]="loading" (click)="cancelled.emit()">Cancelar</button>
+      <button appButton="danger" type="button" [loading]="loading" [disabled]="loading" (click)="confirmed.emit()">
+        {{ confirmLabel }}
+      </button>
+    </div>
+  </div>
+</div>

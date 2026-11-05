@@ -1,72 +1,36 @@
 .partners {
+  padding-block: var(--section-y);
+  background-color: var(--color-surface-page);
+}
+
+.partners__list {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: var(--space-6);
+}
 
-  background-color: #FFFFFF;
-  padding: 6rem;
-  
-  @media (max-width: 768px) {
-    padding: 2rem 1rem;
+.partners__item {
+  display: grid;
+  place-items: center;
+  width: min(260px, 100%);
+  min-height: 112px;
+  padding: var(--space-6);
+  border: 1px solid var(--color-accent-gold);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-card);
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  color: var(--color-brand-900);
+
+  img {
+    max-height: 64px;
+    filter: grayscale(1);
+    transition: filter var(--duration-base) var(--ease-standard);
   }
 
-  h2 {
-    font-family: 'Cormorant', serif;
-
-    text-align: center;
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    color: var(--primary-text-color);
-    font-weight: 600;
-    
-    @media (max-width: 768px) {
-      font-size: 2.5rem;
-    }
-    
-    @media (max-width: 480px) {
-      font-size: 2rem;
-    }
-  }
-
-  .partners-list {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    
-    @media (max-width: 768px) {
-      gap: 1rem;
-    }
-  }
-
-  .partner-card {
-    font-family: 'Cormorant', serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #FFFFFF;
-    border: 1px solid #F7D790;
-    border-radius: 1.5rem;
-    padding: 3rem 3rem;
-    font-weight: 600;
-    color: #2e4d2d;
-    text-align: center;
-    font-size: 1.2rem;
-    min-width: 150px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
-    @media (max-width: 768px) and (min-width: 481px) {
-      flex: 0 1 calc(50% - 0.5rem);
-      padding: 3rem 3rem;
-      max-width: 40%;
-    }
-    @media (max-width: 480px) {
-      padding: 4rem 8rem;
-    }
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
+  &:hover img {
+    filter: none;
   }
 }

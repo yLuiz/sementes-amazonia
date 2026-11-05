@@ -1,187 +1,133 @@
-.sidebar-container {
-  position: relative;
-  z-index: 1000;
+@use 'mixins' as *;
 
-  .open-sidebar-btn {
-    position: absolute;
-    top: 10px;
-    left: 20px;
-    z-index: 1001;
-    background: var(--fourth-bg-color) !important;
-    border-radius: 10px !important;
-    border: none !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    padding: 0.8rem;
-    cursor: pointer;
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  background-color: var(--color-overlay);
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    visibility var(--duration-base);
+
+  &.is-open {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  @include up(lg) {
+    display: none;
   }
 }
 
-::ng-deep .admin-sidebar {
-  width: 280px !important;
-  height: 100vh !important;
-  background: #F7F1E5 !important;
-  border: none !important;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1) !important;
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 960;
+  display: flex;
+  flex-direction: column;
+  width: var(--admin-sidebar-width);
+  background-color: var(--color-surface-card);
+  box-shadow: var(--shadow-md);
+  visibility: hidden;
+  transform: translateX(-100%);
+  transition:
+    transform var(--duration-base) var(--ease-standard),
+    visibility var(--duration-base);
 
-  .p-sidebar-content {
-    padding: 0 !important;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  &.is-open {
+    visibility: visible;
+    transform: none;
   }
 
-  .p-sidebar-header {
-    display: none !important;
+  @include up(lg) {
+    visibility: visible;
+    transform: none;
   }
 }
 
-.sidebar-header {
-  padding: 1.5rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.sidebar__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--header-height);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
 
-  .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-
-    .sidebar-logo-icon {
-      font-size: 1.5rem;
-      color: #22c55e;
-    }
-
-    h3 {
-      margin: 0;
-      color: var(--primary-text-color);
-      font-family: 'Cormorant', serif;
-      font-size: 1.5rem;
-    }
-  }
-
-  .toggle-btn {
-    color: var(--primary-text-color) !important;
-    padding: 0.5rem;
-    border: none;
-    border-radius: 50%;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-
-    &:hover {
-
-      color: #16a34a !important;
-    }
+  img {
+    width: auto;
+    height: 48px;
   }
 }
 
-.sidebar-nav {
+.sidebar__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--color-text-muted);
+
+  @include up(lg) {
+    display: none;
+  }
+}
+
+.sidebar__nav {
   flex: 1;
-  padding: 1rem 0;
+  padding: var(--space-4) var(--space-3);
   overflow-y: auto;
 
-  .menu-list {
-    list-style: none;
-    padding: 0.5rem;
-    margin: 0;
-
-    .menu-item {
-      margin: 0.8rem 0;
-
-      .menu-button {
-        width: 100%;
-        background: rgba(var(--primary-text-color-rgb, 34,197,94), 0.1);
-        border: none;
-        padding: 1.2rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: var(--third-text-color);
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 0.95rem;
-        text-align: left;
-        border-radius: 6px;
-        margin: 0 10px 0 0;
-
-        i {
-          font-size: 1.1rem;
-          width: 20px;
-          text-align: center;
-        }
-
-        span {
-          font-weight: 500;
-        }
-
-        &:hover {
-            background: rgba(var(--primary-text-color-rgb, 34,197,94), 0.5);
-            color: var(--primary-text-color);
-            transform: translateY(-4px);
-        }
-      }
-    }
+  ul {
+    display: grid;
+    gap: var(--space-1);
   }
-}
 
-.sidebar-footer {
-  padding: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-
-  .footer-button {
-    width: 100%;
-    background: none;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 0.75rem 1rem;
+  a {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--primary-text-color);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-    border-color: rgba(var(--primary-text-color-rgb, 34,197,94), 0.5);
-
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    i {
-      font-size: 1rem;
-    }
+    gap: var(--space-3);
+    min-height: 44px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-default);
+    transition: background-color var(--duration-fast) var(--ease-standard);
 
     &:hover {
-        border-color: rgba(255, 255, 255);
-        background-color: rgba(var(--primary-text-color-rgb, 34,197,94), 0.5);
+      background-color: var(--color-surface-moss);
     }
 
-    &.logout-btn {
-        color: red;
-        border-color: rgba(255, 0, 0, 0.5);
-      &:hover {
-        color: white;
-        background: rgba(255, 0, 0, 1);
+    &.is-active {
+      background-color: var(--color-brand-100);
+      font-weight: 600;
+      color: var(--color-brand-700);
 
+      &::before {
+        content: '';
+        position: absolute;
+        inset: var(--space-2) auto var(--space-2) 0;
+        width: 3px;
+        border-radius: var(--radius-pill);
+        background-color: var(--color-brand-700);
       }
     }
   }
 }
 
-@media (max-width: 768px) {
-  ::ng-deep .admin-sidebar {
-    width: 100% !important;
-    max-width: 320px !important;
-  }
+.sidebar__footer {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+}
 
-  .sidebar-header {
-    padding: 1rem;
-  }
-
-  .sidebar-nav .menu-list .menu-item .menu-button {
-    padding: 1rem 1.25rem;
-    font-size: 0.9rem;
-  }
+.sidebar__logout:hover:not(:disabled) {
+  border-color: var(--color-danger);
+  background-color: var(--color-danger);
+  color: var(--color-text-inverse);
 }

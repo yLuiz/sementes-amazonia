@@ -1,61 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NewsCardComponent } from '../news-card/news-card.component';
-import { NewsService, INews } from '../../../services/news/news.service';
-import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { INews, NewsService } from '../../../services/news/news.service';
+import { ButtonDirective } from '../../../shared/ui/button.directive';
+import { ContentCardComponent } from '../../../shared/ui/content-card.component';
+import { RevealDirective } from '../../../shared/ui/reveal.directive';
+import { SectionHeaderComponent } from '../../../shared/ui/section-header.component';
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [
-    CommonModule,
-    NewsCardComponent
-  ],
+  imports: [RouterLink, ButtonDirective, ContentCardComponent, RevealDirective, SectionHeaderComponent],
   templateUrl: './news.component.html',
-  styleUrl: './news.component.scss'
+  styleUrl: './news.component.scss',
 })
-export class NewsComponent implements OnInit, OnDestroy {
+export class NewsComponent implements OnInit {
   newsList: INews[] = [];
-  private subscription: Subscription = new Subscription();
 
-  constructor(
-    private newsService: NewsService,
-    private router: Router
-  ) { }
+  private readonly newsService = inject(NewsService);
 
   ngOnInit(): void {
-    this.loadNews();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  /**
-   * Carrega as notícias
-   */
-  private loadNews(): void {
-    const newsSub = this.newsService.getNews({
-      limit: 3,
-    }).subscribe({
-      next: (news) => {
-        this.newsList = news.data;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar notícias:', error);
-      }
-    });
-
-    this.subscription.add(newsSub);
-  }
-
-  /**
-   * Navega para a página de todas as notícias
-   */
-  onViewAllNews(): void {
-    this.router.navigate(['/list-all'], {
-      queryParams: { type: 'news' }
+    this.newsService.getNews({ limit: 3 }).subscribe({
+      next: (news) => (this.newsList = news.data),
+      error: (error) => console.error('Erro ao carregar notícias:', error),
     });
   }
 }

@@ -1,0 +1,103 @@
+// Fonte única de valores visuais. Componentes consomem estas variáveis e nunca
+// declaram cores próprias (regra verificada por `npm run lint:styles`).
+:root {
+  // Marca
+  --color-brand-900: #1c4b1f;
+  --color-brand-700: #237225;
+  --color-brand-600: #28912c;
+  --color-brand-500: #37b03b;
+  --color-brand-100: #e0f8e0;
+
+  // Superfícies
+  --color-surface-page: #f6f8ed;
+  --color-surface-sage: #ebf2eb;
+  --color-surface-moss: #e9efd8;
+  --color-surface-cream: #f7f1e5;
+  --color-surface-card: #ffffff;
+
+  // Texto
+  --color-text-default: #333333;
+  --color-text-muted: #555555;
+  --color-text-earth: #8b3515;
+  --color-text-inverse: #ffffff;
+  --color-text-inverse-muted: rgba(255, 255, 255, 0.82);
+
+  // Acentos, bordas e estados
+  --color-accent-gold: #f7d790;
+  --color-border-default: #c3d6b1;
+  --color-border-subtle: #e2e2e2;
+  --color-border-inverse: rgba(255, 255, 255, 0.1);
+  --color-danger: #dc3545;
+  --color-danger-strong: #b02a37;
+  --color-danger-surface: #fbeaec;
+  --color-overlay: rgba(28, 75, 31, 0.55);
+  --color-loading-veil: rgba(246, 248, 237, 0.6);
+  --color-navbar-solid: rgba(28, 75, 31, 0.92);
+
+  // Vidro e gradientes sobre fotos
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: 12px;
+  --gradient-hero: linear-gradient(90deg, rgba(28, 75, 31, 0.88) 0%, rgba(28, 75, 31, 0.45) 55%, transparent 100%);
+  --gradient-hero-mobile: linear-gradient(to top, rgba(28, 75, 31, 0.92) 0%, rgba(28, 75, 31, 0.62) 60%, rgba(28, 75, 31, 0.35) 100%);
+  --gradient-header: linear-gradient(to bottom, rgba(28, 75, 31, 0.7), transparent);
+  --gradient-card: linear-gradient(to top, rgba(28, 75, 31, 0.85), rgba(28, 75, 31, 0.35) 45%, transparent);
+
+  // Tipografia
+  --font-display: 'Cormorant', Georgia, serif;
+  --font-body: 'Montserrat', system-ui, sans-serif;
+  --text-display: clamp(2rem, 1.33rem + 2.86vw, 3rem);
+  --text-h1: clamp(1.875rem, 1.45rem + 1.81vw, 2.5rem);
+  --text-h2: clamp(1.75rem, 1.11rem + 2.67vw, 2.75rem);
+  --text-h3: clamp(1.25rem, 1.08rem + 0.71vw, 1.5rem);
+  --text-lg: 1.125rem;
+  --text-base: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
+
+  // Espaçamento (base 4px)
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --section-y: 48px;
+
+  // Forma
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-card: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  // Sombra tingida de verde
+  --shadow-sm: 0 1px 3px rgba(28, 75, 31, 0.08);
+  --shadow-md: 0 4px 12px rgba(28, 75, 31, 0.1);
+  --shadow-lg: 0 12px 32px rgba(28, 75, 31, 0.14);
+
+  // Movimento
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 500ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Estrutura
+  --container-max: 1200px;
+  --container-narrow: 768px;
+  --container-gutter: 16px;
+  --header-height: 72px;
+  --admin-sidebar-width: 264px;
+
+  @media (min-width: 768px) {
+    --section-y: 64px;
+  }
+
+  @media (min-width: 1024px) {
+    --section-y: 96px;
+    --container-gutter: 32px;
+  }
+}

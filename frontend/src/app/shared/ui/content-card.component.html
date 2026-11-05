@@ -1,0 +1,39 @@
+<a
+  class="card"
+  [routerLink]="['/article', content.id]"
+  [queryParams]="{ type }"
+  [attr.aria-label]="linkLabel + ': ' + content.title">
+  <div class="card__media media">
+    <img
+      [ngSrc]="image"
+      fill
+      [priority]="priority"
+      sizes="(max-width: 767px) 100vw, 33vw"
+      [class.is-fallback]="!hasImage"
+      [alt]="content.title"
+      appImgFallback />
+    <div class="card__gradient"></div>
+    <div class="card__top">
+      <app-badge variant="inverse">{{ categoryLabel }}</app-badge>
+      @if (date) {
+        <span class="card__date">{{ date }}</span>
+      }
+    </div>
+    <h3 class="card__title">{{ content.title }}</h3>
+  </div>
+
+  <div class="card__body">
+    <p class="card__summary">{{ content.summary }}</p>
+    @if (tags.length) {
+      <ul class="card__tags">
+        @for (tag of tags; track tag) {
+          <li><app-badge variant="brand">{{ tag }}</app-badge></li>
+        }
+      </ul>
+    }
+    <span class="card__link">
+      {{ linkLabel }}
+      <i class="pi pi-arrow-right" aria-hidden="true"></i>
+    </span>
+  </div>
+</a>

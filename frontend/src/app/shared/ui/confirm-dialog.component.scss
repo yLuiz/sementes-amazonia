@@ -1,0 +1,55 @@
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background-color: var(--color-overlay);
+}
+
+.dialog {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  width: min(440px, 100%);
+  padding: var(--space-8) var(--space-6);
+  border-radius: var(--radius-card);
+  background-color: var(--color-surface-card);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.dialog__icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-danger-surface);
+  font-size: var(--text-lg);
+  color: var(--color-danger-strong);
+}
+
+.dialog__title {
+  font-size: var(--text-h3);
+}
+
+.dialog__message {
+  color: var(--color-text-default);
+}
+
+.dialog__detail {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.dialog__warning {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.dialog__actions {
+  justify-content: center;
+  margin-top: var(--space-3);
+}

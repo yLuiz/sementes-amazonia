@@ -1,24 +1,18 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { SITE_CONTENT } from '../../../shared/content/site-content';
+import { ButtonDirective } from '../../../shared/ui/button.directive';
+import { RevealDirective } from '../../../shared/ui/reveal.directive';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [],
+  imports: [NgOptimizedImage, RouterLink, ButtonDirective, RevealDirective],
   templateUrl: './about.component.html',
-  styleUrl: './about.component.scss'
+  styleUrl: './about.component.scss',
 })
 export class AboutComponent {
-
-  constructor(
-    private readonly _router: Router
-  ) { }
-
-  goToAboutUs() {
-    this._router.navigate(['/about-us']);
-  }
-
-  goToProjects() {
-    this._router.navigate(['/list-all'], { queryParams: { type: 'projects' } });
-  }
+  readonly intro = SITE_CONTENT.about;
+  readonly detail = SITE_CONTENT.aboutDetail;
 }

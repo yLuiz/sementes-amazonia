@@ -1,17 +1,19 @@
 <section id="news" class="news">
-  <h2>Últimas notícias</h2>
-  <div class="cards">
-    <ng-container *ngFor="let news of newsList">
-      <app-news-card
-        [news]="{
-          id: news.id,
-          title: news.title,
-          description: news.summary,
-          image: news.image_thumb,
-          date: news.published_at
-        }">
-      </app-news-card>
-    </ng-container>
+  <div class="container">
+    <app-section-header
+      eyebrow="Acompanhe"
+      title="Últimas notícias"
+      description="O que está acontecendo nos nossos projetos, parcerias e comunidades.">
+    </app-section-header>
+    <ul class="news__grid">
+      @for (news of newsList; track news.id; let i = $index) {
+        <li appReveal [revealDelay]="i * 80">
+          <app-content-card type="news" [item]="news"></app-content-card>
+        </li>
+      }
+    </ul>
+    <div class="news__action">
+      <a appButton="outline" routerLink="/list-all" [queryParams]="{ type: 'news' }">Ver todas as notícias</a>
+    </div>
   </div>
-  <button (click)="onViewAllNews()">Ver todas as notícias</button>
 </section>

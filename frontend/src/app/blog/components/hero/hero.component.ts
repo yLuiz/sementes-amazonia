@@ -1,124 +1,105 @@
-import { Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { CarouselModule, Carousel } from 'primeng/carousel';
+import { Component, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NewsService } from '../../../services/news/news.service';
-import { capitalize } from '../../../shared/utils/capitalize';
-import { apiConfig, environment } from '../../../config/api.config';
-import { Router } from '@angular/router';
+import { SITE_CONTENT } from '../../../shared/content/site-content';
+import { BadgeComponent } from '../../../shared/ui/badge.component';
+import { ButtonDirective } from '../../../shared/ui/button.directive';
+import { ImgFallbackDirective } from '../../../shared/ui/img-fallback.directive';
+import { mediaUrl } from '../../../shared/utils/media-url';
+import { parseTags } from '../../../shared/utils/parse-tags';
 
-export interface INewsCarouselItem {
+interface HeroItem {
+  key: string;
   id?: number;
   image: string;
-  tag: string[];
+  tags: string[];
   title: string;
   text: string;
-  button1: string;
-  button2: string;
 }
+
+const AUTOPLAY_MS = 10000;
+const FALLBACK_IMAGE = 'assets/photos/hero-forest.webp';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule, CarouselModule],
+  imports: [RouterLink, BadgeComponent, ButtonDirective, ImgFallbackDirective],
   templateUrl: './hero.component.html',
-  styleUrl: './hero.component.scss'
+  styleUrl: './hero.component.scss',
 })
-export class HeroComponent {
-  @ViewChild('carousel') carousel!: Carousel;
+export class HeroComponent implements OnInit, OnDestroy {
+  readonly fallbackImage = FALLBACK_IMAGE;
+  readonly highlights = SITE_CONTENT.heroHighlights;
+
+  /** Mostrado até a API responder, e também se ela falhar ou vier vazia. */
+  items: HeroItem[] = [
+    {
+      key: 'default',
+      image: FALLBACK_IMAGE,
+      tags: ['Sementes da Amazônia'],
+      title: 'Protegendo nosso meio ambiente para gerações futuras',
+      text: SITE_CONTENT.about,
+    },
+  ];
   currentIndex = 0;
 
-  mediaUrl = apiConfig.media.base + '/';
+  private readonly newsService = inject(NewsService);
+  private readonly zone = inject(NgZone);
+  private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  private timer: ReturnType<typeof setInterval> | null = null;
 
-  constructor(
-    private readonly _newsService: NewsService,
-    private readonly _router: Router
-  ) { }
+  get current(): HeroItem | undefined {
+    return this.items[this.currentIndex];
+  }
 
-  redirectToNews() {
-    this._router.navigate(['/list-all'], {
-      queryParams: { type: 'news' }
+  ngOnInit(): void {
+    this.newsService.getNews({ limit: 3, orderBy: 'id', direction: 'DESC' }).subscribe({
+      next: (news) => {
+        if (!news.data.length) return;
+        this.items = news.data.map((item) => {
+          const tags = parseTags(item.tags);
+          return {
+            key: `news-${item.id}`,
+            id: item.id,
+            image: mediaUrl(item.image_thumb) ?? FALLBACK_IMAGE,
+            tags: tags.length ? tags.slice(0, 3) : ['Notícia'],
+            title: item.title,
+            text: item.summary,
+          };
+        });
+        this.currentIndex = 0;
+      },
+      error: (error) => console.error('Erro ao carregar notícias para o carrossel:', error),
+    });
+    this.resume();
+  }
+
+  ngOnDestroy(): void {
+    this.pause();
+  }
+
+  pause(): void {
+    if (this.timer) clearInterval(this.timer);
+    this.timer = null;
+  }
+
+  resume(): void {
+    if (this.reducedMotion || this.timer) return;
+    // O relógio fica fora da zona: a cada volta a aplicação inteira não é verificada.
+    this.zone.runOutsideAngular(() => {
+      this.timer = setInterval(() => this.zone.run(() => this.next()), AUTOPLAY_MS);
     });
   }
 
-  readMore(newsId: number) {
-    this._router.navigate(['/article', newsId]);
+  previous(): void {
+    this.goTo((this.currentIndex - 1 + this.items.length) % this.items.length);
   }
 
-  ngOnInit() {
-    this._newsService.getNews({
-      limit: 3,
-      orderBy: 'id',
-      direction: 'DESC'
-    })
-      .subscribe({
-        next: (news) => {
-          this.items = news.data.map(n => ({
-            id: n.id,
-            image: n.image_thumb || 'assets/amazon_forest.png',
-            tag: n.tags.split(',').map(tag => capitalize(tag)) || ['Notícia'],
-            title: n.title || 'Título da Notícia',
-            text: n.summary || 'Descrição da Notícia',
-            button1: 'Leia mais',
-            button2: 'Veja outras notícias'
-          }));
-        },
-        error: (error) => {
-          console.error('Erro ao carregar notícias para o carrossel:', error);
-        }
-      })
+  next(): void {
+    this.goTo((this.currentIndex + 1) % this.items.length);
   }
 
-  items: INewsCarouselItem[] = [
-    {
-      image: 'assets/amazon_forest.png',
-      tag: ['Novo'],
-      title: 'Protegendo nosso meio ambiente para gerações futuras',
-      text: 'A Associação Sem Fins Lucrativos é uma organização dedicada à conservação ambiental, desenvolvimento sustentável e educação comunitária.',
-      button1: 'Leia mais',
-      button2: 'Veja outras notícias'
-    },
-    {
-      image: 'assets/amazon_forest_2.png',
-      tag: ['Destaque'],
-      title: 'Projetos de reflorestamento em andamento',
-      text: 'Estamos restaurando áreas degradadas e promovendo a biodiversidade na Amazônia com apoio de voluntários.',
-      button1: 'Leia mais',
-      button2: 'Veja outras notícias'
-    },
-    {
-      image: 'assets/Image 1.png',
-      tag: ['Educação'],
-      title: 'Educação ambiental para crianças',
-      text: 'Nossos programas educacionais envolvem escolas locais e promovem a conscientização ecológica desde cedo.',
-      button1: 'Leia mais',
-      button2: 'Veja outras notícias'
-    }
-  ];
-
-  previous() {
-    this.carousel.navBackward(new MouseEvent('click'));
-  }
-
-  next() {
-    this.carousel.navForward(new MouseEvent('click'));
-  }
-
-  goToSlide(index: number) {
-    const currentPage = this.carousel.page || 0;
-    const diff = index - currentPage;
-
-    if (diff > 0) {
-      for (let i = 0; i < diff; i++) {
-        this.carousel.navForward(new MouseEvent('click'));
-      }
-    } else if (diff < 0) {
-      for (let i = 0; i < Math.abs(diff); i++) {
-        this.carousel.navBackward(new MouseEvent('click'));
-      }
-    }
-  }
-
-  onPageChange(event: any) {
-    this.currentIndex = event.page;
+  goTo(index: number): void {
+    this.currentIndex = index;
   }
 }

@@ -1,0 +1,75 @@
+<app-page-header
+  [title]="itemId ? labels.edit : labels.newItem"
+  [breadcrumb]="[{ label: labels.plural, link: basePath }, { label: itemId ? 'Editar' : 'Novo' }]">
+</app-page-header>
+
+@if (status === 'loading') {
+  <div class="skeleton form-placeholder" aria-label="Carregando conteúdo"></div>
+} @else if (status === 'notFound') {
+  <section class="form-panel">
+    <app-empty-state icon="pi-file" [title]="labels.notFound" text="Ele pode ter sido removido.">
+      <a appButton [routerLink]="basePath">Voltar para {{ labels.plural }}</a>
+    </app-empty-state>
+  </section>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <section class="form-panel">
+      <p class="form-legend"><span aria-hidden="true">*</span> Campos obrigatórios</p>
+
+      <div class="form-grid">
+        <div class="form-column">
+          <app-form-field [label]="labels.titleLabel" controlId="field-title" [required]="true" hint="Até {{ titleMaxLength }} caracteres.">
+            <input id="field-title" class="control" type="text" formControlName="title" [maxlength]="titleMaxLength" placeholder="Digite um título claro e direto" />
+          </app-form-field>
+
+          <app-form-field label="Resumo" controlId="field-summary" [required]="true">
+            <textarea id="field-summary" class="control" rows="4" formControlName="summary" [placeholder]="labels.summaryPlaceholder"></textarea>
+          </app-form-field>
+
+          <app-form-field label="Data de publicação" [required]="true">
+            <app-calendar-date formControlName="published_at" label="" [allowEmpty]="true" [yearSpan]="11"></app-calendar-date>
+          </app-form-field>
+
+          <app-form-field label="Autor" controlId="field-author">
+            <input id="field-author" class="control" type="text" formControlName="author" [placeholder]="labels.authorPlaceholder" />
+          </app-form-field>
+
+          @if (type === 'news') {
+            <app-form-field label="Tags" controlId="field-tags" hint="Separe as tags por vírgula.">
+              <input id="field-tags" class="control" type="text" formControlName="tags" placeholder="Ex.: floresta, impacto, comunidade" />
+            </app-form-field>
+          }
+
+          <app-form-field label="Imagem de capa">
+            <app-file-upload
+              #upload
+              [previewUrl]="imagePreviewUrl"
+              [fileName]="imageFileName"
+              hint="JPEG, PNG ou WEBP, até 5 MB."
+              (fileSelected)="onFileSelected($event)"
+              (removed)="removeImage()">
+            </app-file-upload>
+          </app-form-field>
+        </div>
+
+        <div class="form-column form-column--content">
+          <app-form-field [label]="labels.contentLabel" controlId="field-content" [required]="true">
+            <textarea id="field-content" class="control form-content" formControlName="content" rows="16" [placeholder]="labels.contentPlaceholder"></textarea>
+          </app-form-field>
+        </div>
+      </div>
+    </section>
+
+    <div class="form-actions">
+      @if (missingFields.length) {
+        <p class="form-actions__missing">Falta preencher: {{ missingFields.join(', ') }}.</p>
+      }
+      <div class="form-actions__buttons btn-group">
+        <button appButton="outline" type="button" [disabled]="isSubmitting" (click)="clearForm()">Limpar</button>
+        <button appButton type="submit" [loading]="isSubmitting" [disabled]="missingFields.length > 0 || isSubmitting">
+          {{ itemId ? labels.update : labels.publish }}
+        </button>
+      </div>
+    </div>
+  </form>
+}

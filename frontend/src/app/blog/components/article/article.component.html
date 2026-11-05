@@ -1,11 +1,68 @@
 <app-navbar></app-navbar>
 
-<div class="article-container">
-  <ng-container *ngIf="type === 'news' && news">
-    <app-news-article [news]="news" [formattedDate]="formattedDate"></app-news-article>
-  </ng-container>
+<main class="article">
+  <div class="container--narrow">
+    @if (status === 'loading') {
+      <div class="skeleton article__placeholder" aria-label="Carregando conteúdo"></div>
+    } @else if (status === 'notFound') {
+      <app-empty-state
+        icon="pi-file"
+        title="Conteúdo não encontrado"
+        text="Ele pode ter sido removido, ou o endereço pode estar incorreto.">
+        <a appButton routerLink="/list-all" [queryParams]="{ type: listingType }">Ver {{ typeLabel }}</a>
+      </app-empty-state>
+    } @else {
+      @if (content; as item) {
+      <nav class="article__breadcrumb" aria-label="Você está em">
+        <ol>
+          <li><a routerLink="/">Início</a></li>
+          <li><a routerLink="/list-all" [queryParams]="{ type: listingType }">{{ typeLabel }}</a></li>
+          <li aria-current="page">{{ item.title }}</li>
+        </ol>
+      </nav>
 
-  <ng-container *ngIf="type === 'project' && project">
-    <app-project-article [project]="project" [formattedDate]="formattedDate"></app-project-article>
-  </ng-container>
-</div>
+      <header class="article__header">
+        <h1>{{ item.title }}</h1>
+        <p class="article__meta">
+          @if (item.author) {
+            <span>Por {{ item.author }}</span>
+          }
+          @if (formattedDate) {
+            <time>{{ formattedDate }}</time>
+          }
+        </p>
+      </header>
+
+      <figure class="article__cover media">
+        @if (coverImage) {
+          <img [src]="coverImage" [alt]="item.title" appImgFallback />
+        } @else {
+          <img src="assets/logo.svg" class="is-fallback" alt="" />
+        }
+      </figure>
+
+      @if (item.summary) {
+        <p class="article__summary">{{ item.summary }}</p>
+      }
+
+      <div class="article__body">
+        @for (paragraph of paragraphs; track $index) {
+          <p [innerHTML]="paragraph"></p>
+        }
+      </div>
+
+      <footer class="article__footer">
+        @if (formattedDate) {
+          <span>Publicado em {{ formattedDate }}</span>
+        }
+        <button appButton="outline" size="sm" type="button" (click)="share()">
+          <i class="pi pi-share-alt" aria-hidden="true"></i>
+          Compartilhar
+        </button>
+      </footer>
+      }
+    }
+  </div>
+</main>
+
+<app-footer></app-footer>

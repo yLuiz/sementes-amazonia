@@ -1,50 +1,74 @@
-<!-- hero.component.html -->
-<section class="hero">
-    <!-- Botões de navegação flutuantes -->
-    <button class="nav-button nav-button-left" (click)="previous()" aria-label="Slide anterior">
-        <i class="pi pi-chevron-left"></i>
-    </button>
-    
-    <button class="nav-button nav-button-right" (click)="next()" aria-label="Próximo slide">
-        <i class="pi pi-chevron-right"></i>
-    </button>
+<section
+  class="hero"
+  aria-roledescription="carrossel"
+  aria-label="Destaques"
+  (mouseenter)="pause()"
+  (mouseleave)="resume()"
+  (focusin)="pause()"
+  (focusout)="resume()">
+  <div class="hero__media" aria-hidden="true">
+    @for (item of items; track item.key; let i = $index) {
+      <img
+        class="hero__image"
+        [class.is-active]="i === currentIndex"
+        [src]="item.image"
+        [appImgFallback]="fallbackImage"
+        [attr.fetchpriority]="i === 0 ? 'high' : null"
+        [attr.loading]="i === 0 ? 'eager' : 'lazy'"
+        alt="" />
+    }
+  </div>
+  <div class="hero__overlay"></div>
 
-    <!-- Indicadores flutuantes -->
-    <div class="carousel-indicators">
-        <button 
-            *ngFor="let item of items; let i = index" 
-            class="indicator" 
-            [class.active]="i === currentIndex"
-            (click)="goToSlide(i)"
-            [attr.aria-label]="'Ir para slide ' + (i + 1)">
+  <div class="container hero__inner">
+    @if (current; as item) {
+      <div class="hero__content" aria-live="polite">
+        <ul class="hero__tags">
+          @for (tag of item.tags; track tag) {
+            <li><app-badge variant="inverse">{{ tag }}</app-badge></li>
+          }
+        </ul>
+        <h1 class="hero__title">{{ item.title }}</h1>
+        <p class="hero__text">{{ item.text }}</p>
+        <div class="btn-group">
+          @if (item.id) {
+            <a appButton="inverse" [routerLink]="['/article', item.id]" [queryParams]="{ type: 'news' }">Leia mais</a>
+          }
+          <a appButton="glass" routerLink="/list-all" [queryParams]="{ type: 'news' }">Veja outras notícias</a>
+        </div>
+      </div>
+    }
+
+    <ul class="hero__highlights">
+      @for (highlight of highlights; track highlight.label) {
+        <li class="hero__highlight">
+          <strong>{{ highlight.value }}</strong>
+          <span>{{ highlight.label }}</span>
+        </li>
+      }
+    </ul>
+
+    @if (items.length > 1) {
+      <div class="hero__controls">
+        <button class="hero__arrow" type="button" aria-label="Slide anterior" (click)="previous()">
+          <i class="pi pi-chevron-left" aria-hidden="true"></i>
         </button>
-    </div>
-
-    <!-- Carrossel de Blocos PrimeNG -->
-    <p-carousel #carousel
-                [value]="items" 
-                [numVisible]="1" 
-                [numScroll]="1" 
-                [circular]="true" 
-                [showNavigators]="false" 
-                [showIndicators]="false" 
-                autoplayInterval="10000"
-                (onPage)="onPageChange($event)"
-                class="hero-carousel">
-        <ng-template pTemplate="item" let-item>
-            <div class="hero-slide" [ngStyle]="{ 'background-image': 'url(' + mediaUrl + item.image + ')' }">
-                <div class="overlay">
-                    <div class="content">
-                        <span *ngFor="let tag of item.tag" class="tag">{{tag}}</span>
-                        <h1>{{item.title}}</h1>
-                        <p>{{item.text}}</p>
-                        <div class="buttons">
-                            <button *ngIf="item.id" (click)="readMore(item.id)" class="read-more">{{item.button1}}</button>
-                            <button (click)="redirectToNews()" class="see-news">{{item.button2}}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </ng-template>
-    </p-carousel>
+        <div class="hero__dots">
+          @for (item of items; track item.key; let i = $index) {
+            <button
+              class="hero__dot"
+              type="button"
+              [class.is-active]="i === currentIndex"
+              [attr.aria-label]="'Ir para o slide ' + (i + 1)"
+              [attr.aria-current]="i === currentIndex ? 'true' : null"
+              (click)="goTo(i)">
+            </button>
+          }
+        </div>
+        <button class="hero__arrow" type="button" aria-label="Próximo slide" (click)="next()">
+          <i class="pi pi-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    }
+  </div>
 </section>

@@ -1,19 +1,19 @@
-<!-- featured-project.component.html -->
-<section id="featured-project" class="featured-project">
-  <div class="container">
-    <div class="text">
-      <div class="badges">
-        <span class="badge">Alto impacto</span>
-        <span class="badge">Foco atual</span>
+@if (project; as item) {
+  <section id="featured-project" class="featured">
+    <div class="featured__image media" appReveal>
+      <img [ngSrc]="image" fill sizes="(max-width: 1023px) 100vw, 50vw" [alt]="item.title" appImgFallback="assets/photos/community-planting.webp" />
+    </div>
+    <div class="featured__content" appReveal [revealDelay]="80">
+      <p class="eyebrow">Projeto em destaque</p>
+      <h2 class="featured__title">{{ item.title }}</h2>
+      <ul class="featured__badges">
+        <li><app-badge variant="inverse">Alto impacto</app-badge></li>
+        <li><app-badge variant="inverse">Foco atual</app-badge></li>
+      </ul>
+      <p class="featured__text">{{ item.summary }}</p>
+      <div class="btn-group">
+        <a appButton="inverse" [routerLink]="['/article', item.id]" [queryParams]="{ type: 'project' }">Conheça o projeto</a>
       </div>
-      <h3>{{ project?.title ? project?.title :  'Projeto Petrobrás'}}</h3>
-      <p>Temos o orgulho de anunciar nossa colaboração com a Petrobras em uma iniciativa inovadora de restauração
-        ambiental. Este projeto visa restaurar ecossistemas degradados enquanto proporciona meios de subsistência
-        sustentáveis para as comunidades locais.</p>
-      <button (click)="readAboutProject(project?.id)">Conheça o projeto</button>
     </div>
-    <div class="image">
-      <img [src]="imagePath" (load)="onImageLoad($event)" (error)="handleImageError($event)" alt="Projeto" />
-    </div>
-  </div>
-</section>
+  </section>
+}

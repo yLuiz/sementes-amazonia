@@ -1,144 +1,55 @@
-.featured-project {
-  min-height: 70vh;
-  background-color: var(--third-bg-color);
-  padding: 1rem 1.2rem;
+@use 'mixins' as *;
+
+.featured {
+  display: grid;
+  background-color: var(--color-brand-900);
+
+  @include up(lg) {
+    grid-template-columns: 1fr 1fr;
+    min-height: 560px;
+  }
+}
+
+.featured__image {
+  aspect-ratio: 16 / 10;
+  background-color: var(--color-brand-900);
+
+  @include up(lg) {
+    aspect-ratio: auto;
+  }
+}
+
+.featured__content {
+  display: grid;
+  align-content: center;
+  gap: var(--space-4);
+  padding: var(--section-y) var(--container-gutter);
+
+  // Alinha o texto à borda direita do container do restante da página.
+  @include up(lg) {
+    max-width: calc(var(--container-max) / 2 + var(--container-gutter));
+    padding-inline: var(--space-16) var(--container-gutter);
+  }
+
+  .eyebrow {
+    color: var(--color-accent-gold);
+  }
+
+  .btn-group {
+    margin-top: var(--space-2);
+  }
+}
+
+.featured__title {
+  color: var(--color-text-inverse);
+}
+
+.featured__badges {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 2rem;
-  align-items: center;
+  gap: var(--space-2);
+}
 
-  @media (max-width: 768px) and (min-width: 480px) {
-    padding: 3.2rem;
-  }
-
-  .container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--fourth-bg-color);
-    padding: 24px;
-    color: #FFF;
-    border-radius: 12px;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 1.5rem;
-      padding: 1.5rem;
-    }
-    
-    @media (max-width: 480px) {
-      gap: 1rem;
-    }
-  }
-
-  .text {
-    flex: 1;
-    min-width: 300px;
-    max-width: 600px;
-    
-    @media (max-width: 768px) {
-      min-width: 100%;
-      max-width: 100%;
-      text-align: center;
-      order: 0;
-    }
-    
-    .badges {
-      @media (max-width: 768px) {
-        text-align: center;
-        margin-bottom: 1rem;
-      }
-      
-      .badge {
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 0.3rem 0.75rem;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-right: 0.5rem;
-        
-        @media (max-width: 480px) {
-          font-size: 0.7rem;
-          padding: 0.25rem 0.5rem;
-        }
-      }
-    }
-
-
-    h3 {
-      font-family: 'Cormorant', serif;
-
-      margin-top: 1rem;
-      font-size: 2.75rem;
-      margin-bottom: 1rem;
-      
-      @media (max-width: 768px) {
-        font-size: 2rem;
-        margin-top: 0.5rem;
-      }
-      
-      @media (max-width: 480px) {
-        font-size: 1.75rem;
-      }
-    }
-
-    p {
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-      padding-right: 2rem;
-      
-      @media (max-width: 768px) {
-        padding-right: 0;
-        font-size: 1rem;
-      }
-    }
-
-    button {
-      background-color: var(--fifth-bg-color);
-      color: var(--primary-text-color);
-      font-weight: bold;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-
-      transition: all 0.3s;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-  }
-
-  .image {
-    flex: 1;
-    min-width: 300px;
-    
-    @media (max-width: 768px) {
-      min-width: 100%;
-      order: 1;
-    }
-
-    img {
-      max-width: 500px;
-      width: 100%;
-      height: 300px;
-      border-radius: 8px;
-      object-fit: cover;
-      object-position: center;
-      
-      @media (max-width: 768px) {
-        max-width: 80%;
-        height: 25vh;
-        width: auto;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-      }
-    }
-  }
+.featured__text {
+  color: var(--color-text-inverse-muted);
 }

@@ -1,0 +1,50 @@
+@use 'mixins' as *;
+
+.admin {
+  min-height: 100vh;
+  background-color: var(--color-surface-cream);
+
+  @include up(lg) {
+    padding-left: var(--admin-sidebar-width);
+  }
+}
+
+.admin__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--header-height);
+  padding-inline: var(--space-4);
+  background-color: var(--color-surface-card);
+  box-shadow: var(--shadow-sm);
+
+  img {
+    width: auto;
+    height: 40px;
+  }
+
+  @include up(lg) {
+    display: none;
+  }
+}
+
+.admin__menu-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: var(--text-lg);
+  color: var(--color-brand-700);
+}
+
+.admin__content {
+  padding: var(--space-6) var(--space-4);
+
+  @include up(md) {
+    padding: var(--space-8);
+  }
+}

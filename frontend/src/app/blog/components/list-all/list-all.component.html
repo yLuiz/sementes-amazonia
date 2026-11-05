@@ -1,153 +1,75 @@
-<div class="page-wrapper">
+<app-navbar></app-navbar>
 
-  <!-- Header para Admin -->
-  <header class="header" *ngIf="isAdminContext">
-    <h1>Sementes da Amazônia</h1>
-  </header>
+<main class="listing">
+  <div class="container">
+    <app-section-header
+      level="h1"
+      eyebrow="Acervo"
+      [title]="selectedFilter === 'news' ? 'Todas as notícias' : 'Todos os projetos'"
+      [description]="selectedFilter === 'news'
+        ? 'Acompanhe o que está acontecendo nos nossos projetos, parcerias e comunidades.'
+        : 'Conheça as iniciativas de conservação, restauração e fortalecimento das comunidades.'">
+    </app-section-header>
 
-  <!-- Navbar para usuários não admin -->
-  <app-navbar *ngIf="!isAdminContext"></app-navbar>
-
-  <section class="content" [class.with-navbar]="!isAdminContext" [class.with-sidebar]="isAdminContext">
-    <div class="section-header">
-      <h2>{{ getPageTitle() }}</h2>
-      <p>{{ getPageDescription() }}</p>
-    </div>
-
-    <!-- Barra de controles -->
-    <div class="controls-bar">
-      <!-- Barra de pesquisa -->
-      <div class="search-container">
-        <div class="search-input-wrapper">
-          <mat-icon class="search-icon">search</mat-icon>
-          <input type="text" placeholder="Pesquisar por título..." [(ngModel)]="searchTerm"
-            (input)="onSearchChange()" class="search-input">
-          <button *ngIf="searchTerm" class="clear-button" (click)="clearSearch()" type="button">
-            <mat-icon>close</mat-icon>
+    <div class="listing__controls">
+      <div class="listing__search">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <label class="visually-hidden" for="listing-search">Pesquisar por título</label>
+        <input
+          id="listing-search"
+          class="control"
+          type="search"
+          placeholder="Pesquisar por título"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()" />
+        @if (searchTerm) {
+          <button class="listing__clear" type="button" aria-label="Limpar pesquisa" (click)="clearSearch()">
+            <i class="pi pi-times" aria-hidden="true"></i>
           </button>
-        </div>
+        }
       </div>
 
-      <!-- Filtros por tag -->
-      <div class="filter-container">
-        <span class="filter-label">Filtrar por:</span>
-        <div class="filter-buttons">
-          <button class="filter-btn news" [class.active]="selectedFilter === 'news'" (click)="onFilterChange('news')">
-            Notícias
-          </button>
-          <button class="filter-btn project" [class.active]="selectedFilter === 'projects'"
-            (click)="onFilterChange('projects')">
-            Projetos
-          </button>
-        </div>
+      <div class="listing__tabs" role="group" aria-label="Filtrar por tipo de conteúdo">
+        <button type="button" [class.is-active]="selectedFilter === 'news'" [attr.aria-pressed]="selectedFilter === 'news'" (click)="onFilterChange('news')">
+          Notícias
+        </button>
+        <button type="button" [class.is-active]="selectedFilter === 'projects'" [attr.aria-pressed]="selectedFilter === 'projects'" (click)="onFilterChange('projects')">
+          Projetos
+        </button>
       </div>
     </div>
 
-    <ng-container *ngIf="selectedFilter === 'news'">
-      <div class="cards-grid">
-        <div *ngFor="let item of news" class="card-wrapper">
-          <app-news-card [news]="{
-            id: item.id,
-            title: item.title,
-            description: item.summary,
-            image: item.image_thumb || '',
-            date: item.published_at
-          }">
-          </app-news-card>
+    @if (isLoading) {
+      <ul class="listing__grid" aria-hidden="true">
+        @for (placeholder of placeholders; track placeholder) {
+          <li class="skeleton listing__placeholder"></li>
+        }
+      </ul>
+    } @else if (items.length) {
+      <ul class="listing__grid">
+        @for (item of items; track item.id; let i = $index) {
+          <li appReveal [revealDelay]="(i % 3) * 80">
+            <app-content-card [type]="selectedFilter === 'news' ? 'news' : 'project'" [item]="item" [priority]="i < 3"></app-content-card>
+          </li>
+        }
+      </ul>
+    } @else {
+      <app-empty-state title="Nenhum resultado encontrado" text="Tente ajustar a pesquisa ou trocar o tipo de conteúdo."></app-empty-state>
+    }
 
-          <!-- Tag de tipo -->
-          <div class="type-tag" [ngClass]="'news'">
-            Notícia
-          </div>
-
-          <!-- Botões de ação (só para admin) -->
-          <div class="action-buttons" *ngIf="isAdminContext">
-            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (click)="editNews(item)"
-              class="edit-btn">
-            </p-button>
-
-            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
-              (click)="deleteItem(item)" class="delete-btn">
-            </p-button>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-
-    <!-- Projetos -->
-    <ng-container *ngIf="selectedFilter === 'projects'">
-      <div class="cards-grid">
-        <div *ngFor="let item of projects" class="card-wrapper">
-          <app-project-card [project]="{
-            id: item.id,
-            title: item.title,
-            description: item.summary,
-            image: item.image_thumb || '',
-            date: item.created_at
-          }">
-          </app-project-card>
-
-          <!-- Tag de tipo -->
-          <div class="type-tag" [ngClass]="'project'">
-            Projeto
-          </div>
-
-          <!-- Botões de ação (só para admin) -->
-          <div class="action-buttons" *ngIf="isAdminContext">
-            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-              (click)="editProject(item)" class="edit-btn">
-            </p-button>
-
-            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
-              (click)="deleteItem(item)" class="delete-btn">
-            </p-button>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-
-    <!-- Mensagem quando não há resultados -->
-    <div class="no-results" *ngIf="totalItems === 0">
-      <mat-icon>search_off</mat-icon>
-      <h3>Nenhum resultado encontrado</h3>
-      <p>Tente ajustar os filtros ou termos de busca.</p>
-    </div>
-
-    <!-- Paginação -->
-    <div class="pagination-container">
-      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-        [pageIndex]="currentPage" (page)="onPageChange($event)" showFirstLastButtons="true"
-        aria-label="Navegação de páginas" class="custom-paginator">
+    @if (totalItems > 0) {
+      <mat-paginator
+        class="listing__paginator"
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage"
+        [showFirstLastButtons]="true"
+        aria-label="Navegação de páginas"
+        (page)="onPageChange($event)">
       </mat-paginator>
-    </div>
-  </section>
-</div>
-
-<!-- Modal de confirmação de delete -->
-<div class="delete-modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
-  <div class="delete-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <mat-icon class="delete-icon">delete</mat-icon>
-    </div>
-
-    <div class="modal-content">
-      <h3>Confirmar exclusão</h3>
-      <p>
-        Tem certeza que deseja deletar esta notícia?
-        <!-- <span class="item-type">{{ itemToDelete?.type === 'news' ? 'esta notícia' : 'este projeto' }}</span>? -->
-      </p>
-      <p class="item-title">"{{ itemToDelete?.title }}"</p>
-      <p class="warning-text">Esta ação não pode ser desfeita.</p>
-    </div>
-
-    <div class="modal-actions">
-      <button class="cancel-btn" (click)="cancelDelete()">
-        Cancelar
-      </button>
-      <button class="confirm-btn" (click)="confirmDelete()">
-        <mat-icon>delete</mat-icon>
-        Deletar
-      </button>
-    </div>
+    }
   </div>
-</div>
+</main>
+
+<app-footer></app-footer>

@@ -1,0 +1,46 @@
+// O projeto carrega só a estrutura do PrimeNG; as cores vêm daqui.
+:root {
+  --primary-color: var(--color-brand-700);
+  --primary-color-text: var(--color-text-inverse);
+  --surface-a: var(--color-surface-card);
+  --surface-b: var(--color-surface-page);
+  --text-color: var(--color-text-default);
+  --text-color-secondary: var(--color-text-muted);
+  --font-family: var(--font-body);
+}
+
+.p-datatable .p-datatable-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-default);
+  background-color: var(--color-surface-sage);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: var(--text-sm);
+  vertical-align: middle;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background-color: var(--color-surface-page);
+  }
+
+  &:last-child > td {
+    border-bottom: 0;
+  }
+}

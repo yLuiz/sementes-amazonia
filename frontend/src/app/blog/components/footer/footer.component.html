@@ -1,64 +1,58 @@
-<!-- footer.component.html -->
-<footer id="footer">
-  <div class="footer-header">
-    <h3>Sementes da Amazônia</h3>
-    <p>Trabalhando juntos por um futuro sustentável e proteção dos nossos recursos naturais.</p>
+<footer id="footer" class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="assets/logo_white.svg" alt="Sementes da Amazônia" width="180" height="48" />
+        <p>{{ content.tagline }}</p>
+      </div>
+
+      <div>
+        <h2 class="footer__heading">Contato</h2>
+        <ul class="footer__contact">
+          <li>
+            <i class="pi pi-phone" aria-hidden="true"></i>
+            <a [href]="'tel:' + phoneHref">{{ content.contact.phone }}</a>
+          </li>
+          <li>
+            <i class="pi pi-envelope" aria-hidden="true"></i>
+            <a [href]="'mailto:' + content.contact.email">{{ content.contact.email }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="footer__heading">Endereço</h2>
+        <ul class="footer__contact">
+          <li>
+            <i class="pi pi-map-marker" aria-hidden="true"></i>
+            <span>{{ content.contact.address }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <nav aria-label="Rodapé">
+        <h2 class="footer__heading">Navegação</h2>
+        <ul class="footer__nav">
+          <li><a routerLink="/">Início</a></li>
+          <li><a routerLink="/about-us">Sobre nós</a></li>
+          <li><a routerLink="/about-us" fragment="areas">Áreas de atuação</a></li>
+          <li><a routerLink="/list-all" [queryParams]="{ type: 'news' }">Notícias</a></li>
+          <li><a routerLink="/list-all" [queryParams]="{ type: 'projects' }">Projetos</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <p class="footer__copyright">© {{ year }} Sementes da Amazônia. Todos os direitos reservados.</p>
   </div>
-  <div class="footer-sections">
-    <div class="links">
-      <strong>Links rápidos</strong>
-      <ul>
-        <li>
-          <a href="#">Início</a>
-        </li>
-        <li>
-          <a href="#">Sobre nós</a>
-        </li>
-        <li>
-          <a href="#">Projetos</a>
-        </li>
-        <li>
-          <a href="#">Contato</a>
-        </li>
-      </ul>
-    </div>
-    <div class="links">
-      <strong>Recursos</strong>
-      <ul>
-        <li>
-          <a href="#">
-            Áreas de atuação
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            Parcerias
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            Politicas de privacidade
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div class="links">
-      <strong>Entre em contato</strong>
-      <p>
-        <span class="material-icons-outlined">place</span>
-        Av. da Conservação 123, Distrito da Floresta
-      </p>
-      <p>
-        <span class="material-icons-outlined">phone</span>
-        +55 11 1234-5678
-      </p>
-      <p>
-        <span class="material-icons-outlined">email</span>
-        contato&#64;associacaosemfinslucrativos.org
-      </p>
-    </div>
-  </div>
-  <p class="copyright">
-    © 2025 Sementes da Amazônia. Todos os direitos reservados.
-  </p>
 </footer>
+
+<button
+  class="back-to-top"
+  type="button"
+  aria-label="Voltar ao topo"
+  title="Voltar ao topo"
+  [class.is-visible]="showBackToTop"
+  [attr.tabindex]="showBackToTop ? null : -1"
+  (click)="backToTop()">
+  <i class="pi pi-arrow-up" aria-hidden="true"></i>
+</button>
