@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AppService } from './app.service';
 
 @Controller()
@@ -11,11 +12,12 @@ export class AppController {
   }
 
   @Get('health')
-  getHealth(): object {
-    return {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-    };
+  async getHealth(@Res({ passthrough: true }) response: Response) {
+    if (await this.appService.isDatabaseUp()) {
+      return { status: 'ok', database: 'up' };
+    }
+
+    response.status(HttpStatus.SERVICE_UNAVAILABLE);
+    return { status: 'error', database: 'down' };
   }
 }

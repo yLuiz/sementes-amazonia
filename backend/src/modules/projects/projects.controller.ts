@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -20,6 +20,7 @@ import { multerConfig } from 'src/config/multer.config';
 import { CreateProjectDto, UpdateProjectDto } from 'src/dto/project.dto';
 import { ProjectsService } from './projects.service';
 import { ProjectsFilter } from 'src/dto/filters/projects.filter';
+import { ParseIdPipe } from 'src/pipes/parse-id.pipe';
 
 @ApiTags('Projects')
 @Controller('api/v1/projects')
@@ -52,15 +53,15 @@ export class ProjectsController {
     const featuredProject = await this.projectsService.findFeatured();
 
     if (!featuredProject) {
-      throw new BadRequestException('Nenhum projeto em destaque encontrado');
+      throw new NotFoundException('Nenhum projeto em destaque encontrado');
     }
 
     return featuredProject;
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.projectsService.findOne(+id);
+  async findOne(@Param('id', ParseIdPipe) id: number) {
+    return this.projectsService.findOne(id);
   }
 
   @ApiConsumes('multipart/form-data')
@@ -69,21 +70,21 @@ export class ProjectsController {
   @Put(':id')
   @UseInterceptors(FileInterceptor('image_thumb', multerConfig))
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseIdPipe) id: number,
     @Body() updateProjectDto: UpdateProjectDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     if (file) {
       updateProjectDto['image_thumb'] = file.filename;
     }
-    return this.projectsService.update(+id, updateProjectDto);
+    return this.projectsService.update(id, updateProjectDto);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.projectsService.remove(+id);
+  async remove(@Param('id', ParseIdPipe) id: number) {
+    await this.projectsService.remove(id);
     return { message: 'Projeto deletado com sucesso' };
   }
 }

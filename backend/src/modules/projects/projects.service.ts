@@ -6,7 +6,7 @@ import { ProjectsFilter, ProjectsOrderBy } from 'src/dto/filters/projects.filter
 import { CreateProjectDto, UpdateProjectDto } from 'src/dto/project.dto';
 import { Project } from 'src/entities/project.entity';
 import { parseDateToString } from 'src/utils/parseDateToString';
-import { Between, ILike, Repository } from 'typeorm';
+import { Between, ILike, Not, Repository } from 'typeorm';
 
 import * as fs from 'fs/promises';
 import envConfig from 'src/config/config';
@@ -14,6 +14,9 @@ import { resolve } from 'path';
 
 // Use a mesma pasta dos uploads (volume ou local)
 const BASE_DIR = envConfig().UPLOAD_DIR;
+
+// Chave arbitrária do advisory lock que serializa a troca do destaque.
+const FEATURED_LOCK_KEY = 72010501;
 
 @Injectable()
 export class ProjectsService {
@@ -24,8 +27,11 @@ export class ProjectsService {
   private readonly _logger = new Logger();
 
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
-    const project = this.projectsRepository.create(createProjectDto);
-    return this.projectsRepository.save(project);
+    const project = this.projectsRepository.create({
+      ...createProjectDto,
+      is_featured: createProjectDto.is_featured ?? false,
+    });
+    return this._save(project, project.is_featured);
   }
 
   async findAll(projectsFilters: ProjectsFilter) {
@@ -73,6 +79,8 @@ export class ProjectsService {
   async findFeatured() {
     return await this.projectsRepository.findOne({
       where: { is_featured: true },
+      // Bases antigas podem ter mais de um marcado até a próxima troca.
+      order: { updated_at: 'DESC', id: 'DESC' },
     });
   }
 
@@ -108,13 +116,17 @@ export class ProjectsService {
     const project = await this.findOne(id);
     const oldImage = project.image_thumb;
 
-    const updateData: any = { ...updateProjectDto };
+    // A classe do DTO declara todos os campos: os ausentes chegam como `undefined` e apagariam
+    // os valores da entidade na resposta, embora o banco não mude. Sem o campo, nada muda.
+    const updateData: any = Object.fromEntries(
+      Object.entries(updateProjectDto).filter(([, value]) => value !== undefined),
+    );
     if (updateProjectDto.published_at) {
       updateData.published_at = parseDateToString(updateProjectDto.published_at);
     }
 
     Object.assign(project, updateData);
-    const saved = await this.projectsRepository.save(project);
+    const saved = await this._save(project, updateProjectDto.is_featured === true);
 
     // Se veio uma nova imagem no DTO, remove a antiga (se diferente)
     if (
@@ -128,6 +140,22 @@ export class ProjectsService {
     return saved;
   }
 
+  private async _save(project: Project, markAsFeatured: boolean): Promise<Project> {
+    if (!markAsFeatured) {
+      return this.projectsRepository.save(project);
+    }
+
+    return this.projectsRepository.manager.transaction(async (manager) => {
+      // Sem índice único (a rodada não cria migrations), duas marcações simultâneas
+      // deixariam dois destaques: cada uma não enxerga a outra antes do commit.
+      await manager.query('SELECT pg_advisory_xact_lock($1)', [FEATURED_LOCK_KEY]);
+
+      const saved = await manager.save(project);
+      await manager.update(Project, { is_featured: true, id: Not(saved.id) }, { is_featured: false });
+      return saved;
+    });
+  }
+
   async remove(id: number): Promise<void> {
     const news = await this.findOne(id);
     const oldImage = news.image_thumb;
@@ -139,6 +167,9 @@ export class ProjectsService {
 
   private _buildDateRange(date?: Date | string) {
     if (!date) return undefined;
+    if (!moment(date).isValid()) {
+      throw new BadRequestException('Data de filtro inválida');
+    }
 
     const start = moment(date).startOf('day').toDate();
     const end = moment(date).endOf('day').toDate();

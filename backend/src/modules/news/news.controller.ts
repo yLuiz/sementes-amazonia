@@ -21,6 +21,7 @@ import { multerConfig } from 'src/config/multer.config';
 import { CreateNewsDto, UpdateNewsDto } from 'src/dto/news.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { NewsFilter } from 'src/dto/filters/news.filter';
+import { ParseIdPipe } from 'src/pipes/parse-id.pipe';
 
 @ApiTags('News')
 @Controller('api/v1/news')
@@ -50,8 +51,8 @@ export class NewsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this._newsService.findOne(+id);
+  async findOne(@Param('id', ParseIdPipe) id: number) {
+    return this._newsService.findOne(id);
   }
 
   @ApiConsumes('multipart/form-data')
@@ -60,28 +61,22 @@ export class NewsController {
   @Put(':id')
   @UseInterceptors(FileInterceptor('image_thumb', multerConfig))
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseIdPipe) id: number,
     @Body() updateNewsDto: UpdateNewsDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    try {
-      if (file) {
-        updateNewsDto['image_thumb'] = file.filename;
-      }
-      return await this._newsService.update(+id, updateNewsDto);
+    if (file) {
+      updateNewsDto['image_thumb'] = file.filename;
     }
-    catch (error) {
-      console.error('Error updating news:', error);
-      throw error;
-    }
+    return this._newsService.update(id, updateNewsDto);
   }
 
   @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this._newsService.remove(+id);
+  async remove(@Param('id', ParseIdPipe) id: number) {
+    await this._newsService.remove(id);
     return { message: 'Notícia deletada com sucesso' };
   }
 }

@@ -6,6 +6,7 @@ import envConfig from 'src/config/config';
 import { NewsFilter, NewsOrderBy } from 'src/dto/filters/news.filter';
 import { CreateNewsDto, UpdateNewsDto } from 'src/dto/news.dto';
 import { News } from 'src/entities/news.entity';
+import { getCurrentTimeString } from 'src/utils/getCurrentTimeString';
 import { parseDateToString } from 'src/utils/parseDateToString';
 import { Between, ILike, Repository } from 'typeorm';
 
@@ -25,7 +26,10 @@ export class NewsService {
   async create(createNewsDto: CreateNewsDto): Promise<News> {
     const news = this._newsRepository.create({
       ...createNewsDto,
-      published_at: parseDateToString(createNewsDto.published_at!),
+      // O campo é opcional e texto vazio não é um timestamp válido: sem data, publica agora.
+      published_at: createNewsDto.published_at
+        ? parseDateToString(createNewsDto.published_at)
+        : getCurrentTimeString(),
     });
     return this._newsRepository.save(news);
   }
@@ -106,7 +110,11 @@ export class NewsService {
     const news = await this.findOne(id);
     const oldImage = news.image_thumb;
 
-    const updateData: any = { ...updateNewsDto };
+    // A classe do DTO declara todos os campos: os ausentes chegam como `undefined` e apagariam
+    // os valores da entidade na resposta, embora o banco não mude. Sem o campo, nada muda.
+    const updateData: any = Object.fromEntries(
+      Object.entries(updateNewsDto).filter(([, value]) => value !== undefined),
+    );
     if (updateNewsDto.published_at) {
       updateData.published_at = parseDateToString(updateNewsDto.published_at);
     }
@@ -136,6 +144,9 @@ export class NewsService {
 
   private _buildDateRange(date?: Date | string) {
     if (!date) return undefined;
+    if (!moment(date).isValid()) {
+      throw new BadRequestException('Data de filtro inválida');
+    }
 
     const start = moment(date).startOf('day').toDate();
     const end = moment(date).endOf('day').toDate();
