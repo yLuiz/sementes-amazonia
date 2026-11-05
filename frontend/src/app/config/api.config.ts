@@ -1,28 +1,19 @@
-export const environment = {
-  production: false,
-  useMockData: false,
-  apiUrl: 'https://sementes-amazonia-production.up.railway.app',
-  // apiUrl: 'http://localhost:3333',
-  apiVersion: 'v1'
-};
+// A API é servida na mesma origem do site: pelo proxy do `ng serve` em
+// desenvolvimento (proxy.conf.json) e pelo rewrite da Vercel em produção
+// (vercel.json). Assim nenhum ambiente precisa de uma URL própria aqui.
+const apiBase = '/api/v1';
 
 export const apiConfig = {
   auth: {
-    base: `${environment.apiUrl}/api/${environment.apiVersion}/auth`
+    base: `${apiBase}/auth`,
   },
   media: {
-    base: `${environment.apiUrl}/api/${environment.apiVersion}/media`,
+    base: `${apiBase}/media`,
   },
   news: {
-    base: `${environment.apiUrl}/api/${environment.apiVersion}/news`,
-    featured: `${environment.apiUrl}/api/${environment.apiVersion}/news/featured`,
-    paginated: (page: number, limit: number) =>
-      `${environment.apiUrl}/api/${environment.apiVersion}/news?page=${page}&limit=${limit}`
+    base: `${apiBase}/news`,
   },
   projects: {
-    base: `${environment.apiUrl}/api/${environment.apiVersion}/projects`,
-    featured: `${environment.apiUrl}/api/${environment.apiVersion}/projects/featured`,
-    paginated: (page: number, limit: number) =>
-      `${environment.apiUrl}/api/${environment.apiVersion}/projects?page=${page}&limit=${limit}`
-  }
+    base: `${apiBase}/projects`,
+  },
 };
