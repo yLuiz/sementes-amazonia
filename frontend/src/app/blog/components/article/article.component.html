@@ -11,6 +11,13 @@
         text="Ele pode ter sido removido, ou o endereço pode estar incorreto.">
         <a appButton routerLink="/list-all" [queryParams]="{ type: listingType }">Ver {{ typeLabel }}</a>
       </app-empty-state>
+    } @else if (status === 'error') {
+      <app-empty-state
+        icon="pi-exclamation-circle"
+        title="Não foi possível carregar o conteúdo"
+        text="Tente novamente em instantes.">
+        <button appButton="outline" type="button" (click)="load()">Tentar novamente</button>
+      </app-empty-state>
     } @else {
       @if (content; as item) {
       <nav class="article__breadcrumb" aria-label="Você está em">

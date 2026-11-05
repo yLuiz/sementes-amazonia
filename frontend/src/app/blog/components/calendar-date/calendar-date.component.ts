@@ -1,10 +1,11 @@
 
-import { Component, forwardRef, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-calendar-date',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
   providers: [
     {
@@ -43,7 +44,10 @@ export class CalendarDateComponent implements OnInit, OnChanges {
   private onChange: (_: string | null) => void = () => {};
   private onTouched: () => void = () => {};
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.buildYears();
@@ -65,6 +69,8 @@ export class CalendarDateComponent implements OnInit, OnChanges {
 
   // ControlValueAccessor
   writeValue(value: string | null): void {
+    // O valor vem do formulário pai, sem evento nesta tela, e pode mudar a lista de dias.
+    this.cdr.markForCheck();
     if (!value) {
       if (this.allowEmpty) {
         this.fg.reset({ year: null, month: null, day: null }, { emitEvent: false });

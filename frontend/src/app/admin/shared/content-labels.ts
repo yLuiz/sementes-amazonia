@@ -19,6 +19,7 @@ export const CONTENT_LABELS: Record<
     publish: string;
     update: string;
     notFound: string;
+    loadError: string;
   }
 > = {
   news: {
@@ -38,6 +39,7 @@ export const CONTENT_LABELS: Record<
     publish: 'Publicar notícia',
     update: 'Atualizar notícia',
     notFound: 'Notícia não encontrada',
+    loadError: 'Não foi possível carregar as notícias',
   },
   project: {
     plural: 'Projetos',
@@ -56,5 +58,6 @@ export const CONTENT_LABELS: Record<
     publish: 'Publicar projeto',
     update: 'Atualizar projeto',
     notFound: 'Projeto não encontrado',
+    loadError: 'Não foi possível carregar os projetos',
   },
 };

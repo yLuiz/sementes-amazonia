@@ -1,11 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LoadingService } from '../../services/loading.service';
 
 /** Indica a troca de rota com a barra no topo e a logo pulsando no centro. */
 @Component({
   selector: 'app-loading',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AsyncPipe],
   template: `
     @if (loading$ | async) {

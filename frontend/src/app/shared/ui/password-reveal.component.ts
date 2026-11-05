@@ -1,9 +1,10 @@
-import { Component, ContentChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, ElementRef } from '@angular/core';
 
 /** Envolve um campo de senha (`<input #passwordInput>`) com o botão de mostrar e ocultar. */
 @Component({
   selector: 'app-password-reveal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-content></ng-content>
     <button

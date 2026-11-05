@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 /** Rótulo, ajuda e erro em volta de um campo com a classe `.control`. */
 @Component({
   selector: 'app-form-field',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="field">
       <label class="field__label" [attr.for]="controlId || null">

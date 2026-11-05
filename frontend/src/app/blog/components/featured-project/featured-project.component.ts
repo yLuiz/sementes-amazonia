@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IProject, ProjectsService } from '../../../services/projects/projects.service';
 import { BadgeComponent } from '../../../shared/ui/badge.component';
@@ -11,6 +11,7 @@ import { mediaUrl } from '../../../shared/utils/media-url';
 @Component({
   selector: 'app-featured-project',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgOptimizedImage, RouterLink, BadgeComponent, ButtonDirective, ImgFallbackDirective, RevealDirective],
   templateUrl: './featured-project.component.html',
   styleUrl: './featured-project.component.scss',
@@ -19,6 +20,7 @@ export class FeaturedProjectComponent implements OnInit {
   project: IProject | null = null;
   image = 'assets/photos/community-planting.webp';
 
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly projectsService = inject(ProjectsService);
 
   ngOnInit(): void {
@@ -26,8 +28,10 @@ export class FeaturedProjectComponent implements OnInit {
       next: (project) => {
         this.project = project;
         this.image = mediaUrl(project?.image_thumb) ?? this.image;
+        this.cdr.markForCheck();
       },
-      error: (error) => console.error('Erro ao buscar projeto em destaque:', error),
+      // Sem destaque (404) ou com falha, a seção é opcional e apenas não aparece.
+      error: () => undefined,
     });
   }
 }

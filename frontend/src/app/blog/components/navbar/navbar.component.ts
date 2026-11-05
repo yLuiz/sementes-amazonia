@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, HostListener, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ScrollStateService } from '../../../services/scroll-state.service';
@@ -8,6 +8,7 @@ import { ButtonDirective } from '../../../shared/ui/button.directive';
 @Component({
   selector: 'app-navbar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, RouterLinkActive, ButtonDirective],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
@@ -27,12 +28,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
     matrixParams: 'ignored',
   } as const;
 
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly document = inject(DOCUMENT);
   private readonly scrollState = inject(ScrollStateService);
   private scrollSubscription?: Subscription;
 
   ngOnInit(): void {
-    this.scrollSubscription = this.scrollState.pastOffset(80).subscribe((past) => (this.scrolled = past));
+    this.scrollSubscription = this.scrollState.pastOffset(80).subscribe((past) => {
+      this.scrolled = past;
+      this.cdr.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {

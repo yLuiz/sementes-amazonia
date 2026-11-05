@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AboutComponent } from './components/about/about.component';
 import { FeaturedProjectComponent } from './components/featured-project/featured-project.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -13,6 +13,7 @@ import { ProjectsComponent } from './components/projects/projects.component';
 @Component({
   selector: 'app-blog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NavbarComponent,
     HeroComponent,

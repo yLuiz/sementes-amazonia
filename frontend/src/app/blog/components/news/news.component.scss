@@ -8,6 +8,10 @@
   @include card-grid;
 }
 
+.news__placeholder {
+  height: 420px;
+}
+
 .news__action {
   display: flex;
   justify-content: center;

@@ -5,8 +5,8 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideToastr } from 'ngx-toastr';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor } from './services/auth/auth.interceptor';
+import { httpCacheInterceptor } from './services/cache/http-cache.interceptor';
 import { provideMediaImages } from './shared/utils/media-image-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -15,10 +15,10 @@ export const appConfig: ApplicationConfig = {
       routes,
       withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
     ),
+    // Carrega as animações sob demanda, fora do bundle inicial.
     provideAnimationsAsync(),
-    provideAnimations(),
     provideToastr(), // Toastr providers
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([httpCacheInterceptor, authInterceptor])),
     provideMediaImages(),
   ]
 };
