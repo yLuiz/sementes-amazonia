@@ -1,5 +1,5 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { TitleStrategy, provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
@@ -7,6 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideToastr } from 'ngx-toastr';
 import { authInterceptor } from './services/auth/auth.interceptor';
 import { httpCacheInterceptor } from './services/cache/http-cache.interceptor';
+import { SeoTitleStrategy } from './shared/seo/seo-title.strategy';
 import { provideMediaImages } from './shared/utils/media-image-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -20,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     provideToastr(), // Toastr providers
     provideHttpClient(withFetch(), withInterceptors([httpCacheInterceptor, authInterceptor])),
     provideMediaImages(),
+    { provide: TitleStrategy, useClass: SeoTitleStrategy },
   ]
 };

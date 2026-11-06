@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { NewsModule } from './modules/news/news.module';
+import { SitemapModule } from './modules/sitemap/sitemap.module';
 import dataSource from './db/data-source';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CsrfGuard } from './auth/csrf.guard';
@@ -36,6 +37,7 @@ import { LoggingInterceptor } from './interceptors/logging.interceptor';
     ProjectsModule,
     NewsModule,
     MediaModule,
+    SitemapModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,8 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { notAuthGuard } from './guards/not-auth.guard';
-
-const SITE_NAME = 'Sementes da Amazônia';
+import { SITE_NAME } from './shared/seo/seo.service';
 
 const contentRoutes = (path: string, type: 'news' | 'project', plural: string, singular: string): Routes => [
   {
@@ -30,21 +29,23 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     title: SITE_NAME,
+    data: { seo: { path: '/', description: 'O Sementes da Amazônia atua na conservação ambiental, na valorização da biodiversidade amazônica e na promoção de práticas sustentáveis.' } },
     loadComponent: () => import('./blog/blog.component').then((m) => m.BlogComponent),
   },
   {
     path: 'list-all',
-    title: `Notícias e projetos | ${SITE_NAME}`,
+    data: { seoManaged: true },
     loadComponent: () => import('./blog/components/list-all/list-all.component').then((m) => m.ListAllComponent),
   },
   {
     path: 'article/:id',
-    title: SITE_NAME,
+    data: { seoManaged: true },
     loadComponent: () => import('./blog/components/article/article.component').then((m) => m.ArticleComponent),
   },
   {
     path: 'about-us',
     title: `Nossa história | ${SITE_NAME}`,
+    data: { seo: { path: '/about-us', description: 'Conheça a história do Sementes da Amazônia e o trabalho que une conhecimento técnico, saberes tradicionais e sustentabilidade.' } },
     loadComponent: () => import('./blog/components/about-us/about-us.component').then((m) => m.AboutUsComponent),
   },
   {

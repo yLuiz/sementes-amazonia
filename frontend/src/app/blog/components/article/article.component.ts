@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription } from 'rxjs';
 import { INews, NewsService } from '../../../services/news/news.service';
 import { IProject, ProjectsService } from '../../../services/projects/projects.service';
+import { SITE_NAME, SeoService } from '../../../shared/seo/seo.service';
 import { ButtonDirective } from '../../../shared/ui/button.directive';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state.component';
 import { ImgFallbackDirective } from '../../../shared/ui/img-fallback.directive';
@@ -36,6 +37,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly newsService = inject(NewsService);
   private readonly projectsService = inject(ProjectsService);
+  private readonly seo = inject(SeoService);
   private readonly toastr = inject(ToastrService);
   private routeSubscription?: Subscription;
   private request?: Subscription;
@@ -59,6 +61,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   load(): void {
     if (!this.id) {
       this.status = 'notFound';
+      this.seo.update({ title: `Conteúdo não encontrado | ${SITE_NAME}` });
       this.cdr.markForCheck();
       return;
     }
@@ -66,6 +69,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
     const source: Observable<ArticleContent> =
       this.type === 'news' ? this.newsService.getNewsById(this.id) : this.projectsService.getProjectById(this.id);
 
+    const path = `/article/${this.id}?type=${this.type}`;
+    this.seo.update({ path });
     this.status = 'loading';
     this.cdr.markForCheck();
     this.request?.unsubscribe();
@@ -76,10 +81,19 @@ export class ArticleComponent implements OnInit, OnDestroy {
         this.formattedDate = formatLongDate(content.published_at || content.created_at);
         this.paragraphs = contentToParagraphs(content.content);
         this.status = 'ready';
+        this.seo.update({
+          title: `${content.title} | ${SITE_NAME}`,
+          description: content.summary,
+          path,
+          image: content.image_thumb,
+          type: 'article',
+        });
         this.cdr.markForCheck();
       },
       error: (error) => {
         this.status = isNotFoundError(error) ? 'notFound' : 'error';
+        // Falha temporária mantém as tags da página: só o que não existe sai da busca.
+        if (this.status === 'notFound') this.seo.update({ title: `Conteúdo não encontrado | ${SITE_NAME}` });
         this.cdr.markForCheck();
       },
     });

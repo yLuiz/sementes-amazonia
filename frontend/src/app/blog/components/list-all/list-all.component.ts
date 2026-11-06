@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { NewsService } from '../../../services/news/news.service';
 import { ProjectsService } from '../../../services/projects/projects.service';
+import { SITE_NAME, SeoService } from '../../../shared/seo/seo.service';
 import { IPageResponse } from '../../../shared/interfaces/IPageResponse';
 import { ButtonDirective } from '../../../shared/ui/button.directive';
 import { ContentCardComponent, ContentCardItem } from '../../../shared/ui/content-card.component';
@@ -57,6 +58,7 @@ export class ListAllComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly newsService = inject(NewsService);
   private readonly projectsService = inject(ProjectsService);
+  private readonly seo = inject(SeoService);
   private routeSubscription?: Subscription;
   private request?: Subscription;
   private searchDebounce: ReturnType<typeof setTimeout> | null = null;
@@ -66,6 +68,7 @@ export class ListAllComponent implements OnInit, OnDestroy {
       // `project` é aceito porque links antigos usam o singular.
       this.selectedFilter = params['type'] === 'projects' || params['type'] === 'project' ? 'projects' : 'news';
       this.currentPage = 0;
+      this.updateSeo();
       this.load();
     });
   }
@@ -100,6 +103,17 @@ export class ListAllComponent implements OnInit, OnDestroy {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
     this.load();
+  }
+
+  private updateSeo(): void {
+    const isNews = this.selectedFilter === 'news';
+    this.seo.update({
+      title: `${isNews ? 'Notícias' : 'Projetos'} | ${SITE_NAME}`,
+      description: isNews
+        ? 'Acompanhe as notícias do Sementes da Amazônia sobre conservação ambiental, biodiversidade e sustentabilidade.'
+        : 'Conheça os projetos do Sementes da Amazônia em conservação ambiental, biodiversidade e práticas sustentáveis.',
+      path: `/list-all?type=${this.selectedFilter}`,
+    });
   }
 
   load(): void {
