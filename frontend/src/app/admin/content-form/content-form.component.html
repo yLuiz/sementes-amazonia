@@ -11,6 +11,18 @@
       <a appButton [routerLink]="basePath">Voltar para {{ labels.plural }}</a>
     </app-empty-state>
   </section>
+} @else if (status === 'error') {
+  <section class="form-panel">
+    <app-empty-state
+      icon="pi-exclamation-circle"
+      title="Não foi possível carregar o conteúdo"
+      text="Tente novamente em instantes.">
+      <div class="btn-group">
+        <button appButton type="button" (click)="load()">Tentar novamente</button>
+        <a appButton="outline" [routerLink]="basePath">Voltar para {{ labels.plural }}</a>
+      </div>
+    </app-empty-state>
+  </section>
 } @else {
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <section class="form-panel">
@@ -38,6 +50,16 @@
             <app-form-field label="Tags" controlId="field-tags" hint="Separe as tags por vírgula.">
               <input id="field-tags" class="control" type="text" formControlName="tags" placeholder="Ex.: floresta, impacto, comunidade" />
             </app-form-field>
+          }
+
+          @if (type === 'project') {
+            <label class="feature-option" for="field-featured">
+              <input id="field-featured" class="feature-option__input" type="checkbox" formControlName="is_featured" />
+              <span class="feature-option__text">
+                <strong>Projeto em destaque</strong>
+                <small>{{ featuredHint }}</small>
+              </span>
+            </label>
           }
 
           <app-form-field label="Imagem de capa">

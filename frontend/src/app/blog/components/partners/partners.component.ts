@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SITE_CONTENT } from '../../../shared/content/site-content';
 import { RevealDirective } from '../../../shared/ui/reveal.directive';
 import { SectionHeaderComponent } from '../../../shared/ui/section-header.component';
@@ -6,6 +6,7 @@ import { SectionHeaderComponent } from '../../../shared/ui/section-header.compon
 @Component({
   selector: 'app-partners',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RevealDirective, SectionHeaderComponent],
   templateUrl: './partners.component.html',
   styleUrl: './partners.component.scss',

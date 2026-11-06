@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NewsService } from '../../../services/news/news.service';
 import { SITE_CONTENT } from '../../../shared/content/site-content';
@@ -23,6 +23,7 @@ const FALLBACK_IMAGE = 'assets/photos/hero-forest.webp';
 @Component({
   selector: 'app-hero',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, BadgeComponent, ButtonDirective, ImgFallbackDirective],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.scss',
@@ -43,6 +44,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   ];
   currentIndex = 0;
 
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly newsService = inject(NewsService);
   private readonly zone = inject(NgZone);
   private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -68,6 +70,7 @@ export class HeroComponent implements OnInit, OnDestroy {
           };
         });
         this.currentIndex = 0;
+        this.cdr.markForCheck();
       },
       error: (error) => console.error('Erro ao carregar notícias para o carrossel:', error),
     });
@@ -101,5 +104,7 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   goTo(index: number): void {
     this.currentIndex = index;
+    // O relógio do carrossel chega aqui sem nenhum evento da tela.
+    this.cdr.markForCheck();
   }
 }

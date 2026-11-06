@@ -153,17 +153,8 @@ export class NewsService {
    * @returns Observable<never>
    */
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Erro desconhecido';
-
-    if (typeof ErrorEvent !== 'undefined' && error.error instanceof ErrorEvent) {
-      // Erro do lado do cliente
-      errorMessage = `Erro: ${error.error.message}`;
-    } else {
-      // Erro do lado do servidor
-      errorMessage = `Código: ${error.status}\nMensagem: ${error.message}`;
-    }
-
-    console.error('Erro na API:', errorMessage);
-    return throwError(() => new Error(errorMessage));
+    console.error('Erro na API:', error.status, error.message);
+    // Repassa o erro original: as telas precisam do status e do corpo do contrato.
+    return throwError(() => error);
   }
 }

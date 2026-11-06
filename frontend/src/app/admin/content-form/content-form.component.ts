@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -11,6 +11,7 @@ import { ContentType } from '../../shared/ui/content-card.component';
 import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
 import { FileUploadComponent } from '../../shared/ui/file-upload.component';
 import { FormFieldComponent } from '../../shared/ui/form-field.component';
+import { apiErrorMessage, isNotFoundError } from '../../shared/utils/api-error';
 import { mediaUrl } from '../../shared/utils/media-url';
 import { CONTENT_LABELS } from '../shared/content-labels';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
@@ -23,6 +24,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 @Component({
   selector: 'app-content-form',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -37,6 +39,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
   styleUrl: './content-form.component.scss',
 })
 export class ContentFormComponent implements OnInit, OnDestroy {
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
@@ -57,23 +60,33 @@ export class ContentFormComponent implements OnInit, OnDestroy {
     published_at: ['', Validators.required],
     author: [''],
     tags: [''],
+    is_featured: [false],
     image_thumb: [null as File | null],
   });
 
-  status: 'loading' | 'ready' | 'notFound' = this.itemId ? 'loading' : 'ready';
+  status: 'loading' | 'ready' | 'notFound' | 'error' = this.itemId ? 'loading' : 'ready';
   isSubmitting = false;
   imagePreviewUrl: string | null = null;
   imageFileName = '';
+  /** Este projeto já era o destaque quando a edição começou. */
+  wasFeatured = false;
 
   @ViewChild('upload') private upload?: FileUploadComponent;
   private request?: Subscription;
 
   ngOnInit(): void {
+    if (this.itemId) this.load();
+  }
+
+  load(): void {
     if (!this.itemId) return;
 
     const source: Observable<INews | IProject> =
       this.type === 'news' ? this.newsService.getNewsById(this.itemId) : this.projectsService.getProjectById(this.itemId);
 
+    this.status = 'loading';
+    this.cdr.markForCheck();
+    this.request?.unsubscribe();
     this.request = source.subscribe({
       next: (item) => {
         this.form.patchValue({
@@ -83,14 +96,17 @@ export class ContentFormComponent implements OnInit, OnDestroy {
           published_at: item.published_at,
           author: item.author ?? '',
           tags: 'tags' in item ? item.tags : '',
+          is_featured: 'is_featured' in item && !!item.is_featured,
         });
+        this.wasFeatured = 'is_featured' in item && !!item.is_featured;
         this.imagePreviewUrl = mediaUrl(item.image_thumb);
         this.imageFileName = item.image_thumb ?? '';
         this.status = 'ready';
+        this.cdr.markForCheck();
       },
       error: (error) => {
-        console.error(error);
-        this.status = 'notFound';
+        this.status = isNotFoundError(error) ? 'notFound' : 'error';
+        this.cdr.markForCheck();
       },
     });
   }
@@ -109,6 +125,14 @@ export class ContentFormComponent implements OnInit, OnDestroy {
     ].filter((label): label is string => !!label);
   }
 
+  get featuredHint(): string {
+    const checked = !!this.form.controls.is_featured.value;
+    if (this.wasFeatured) {
+      return checked ? 'Este é o projeto em destaque no site hoje.' : 'Ao salvar, o site fica sem projeto em destaque.';
+    }
+    return 'Ganha uma seção própria na página inicial. Só um projeto fica em destaque por vez: marcar este substitui o atual.';
+  }
+
   onFileSelected(file: File): void {
     const isValidType = ALLOWED_MIMES.includes(file.type) || ALLOWED_EXTENSIONS.test(file.name);
     if (!isValidType) {
@@ -125,7 +149,10 @@ export class ContentFormComponent implements OnInit, OnDestroy {
     this.form.patchValue({ image_thumb: file });
     this.imageFileName = file.name;
     const reader = new FileReader();
-    reader.onload = () => (this.imagePreviewUrl = reader.result as string);
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result as string;
+      this.cdr.markForCheck();
+    };
     reader.readAsDataURL(file);
   }
 
@@ -136,7 +163,7 @@ export class ContentFormComponent implements OnInit, OnDestroy {
   }
 
   clearForm(): void {
-    this.form.reset();
+    this.form.reset({ is_featured: false });
     this.upload?.reset();
     this.removeImage();
   }
@@ -151,9 +178,9 @@ export class ContentFormComponent implements OnInit, OnDestroy {
         this.router.navigate([this.basePath]);
       },
       error: (error) => {
-        console.error(error);
         this.isSubmitting = false;
-        this.toastr.error(`Não foi possível ${this.itemId ? 'atualizar' : 'publicar'}. Tente novamente.`, 'Falha.');
+        this.toastr.error(apiErrorMessage(error, `Não foi possível ${this.itemId ? 'atualizar' : 'publicar'}. Tente novamente.`), 'Falha.');
+        this.cdr.markForCheck();
       },
     });
   }
@@ -168,7 +195,7 @@ export class ContentFormComponent implements OnInit, OnDestroy {
   }
 
   private buildFormData(): FormData {
-    const { title, summary, content, author, tags, published_at, image_thumb } = this.form.getRawValue();
+    const { title, summary, content, author, tags, is_featured, published_at, image_thumb } = this.form.getRawValue();
     const formData = new FormData();
 
     formData.append('title', title!);
@@ -177,6 +204,8 @@ export class ContentFormComponent implements OnInit, OnDestroy {
     if (author) formData.append('author', author);
     // A API de projetos rejeita campos que não conhece, como `tags`.
     if (this.type === 'news' && tags) formData.append('tags', tags);
+    // Vai sempre, inclusive `false`, para que desmarcar também chegue à API.
+    if (this.type === 'project') formData.append('is_featured', is_featured ? 'true' : 'false');
     if (image_thumb) formData.append('image_thumb', image_thumb);
 
     const date = new Date(published_at!).toISOString();

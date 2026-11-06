@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { IProject, ProjectsService } from '../../../services/projects/projects.s
 import { ButtonDirective } from '../../../shared/ui/button.directive';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state.component';
 import { ImgFallbackDirective } from '../../../shared/ui/img-fallback.directive';
+import { isNotFoundError } from '../../../shared/utils/api-error';
 import { formatLongDate } from '../../../shared/utils/format-date';
 import { mediaUrl } from '../../../shared/utils/media-url';
 import { FooterComponent } from '../footer/footer.component';
@@ -18,24 +19,27 @@ type ArticleContent = INews | IProject;
 @Component({
   selector: 'app-article',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, ButtonDirective, EmptyStateComponent, FooterComponent, ImgFallbackDirective, NavbarComponent],
   templateUrl: './article.component.html',
   styleUrl: './article.component.scss',
 })
 export class ArticleComponent implements OnInit, OnDestroy {
-  status: 'loading' | 'ready' | 'notFound' = 'loading';
+  status: 'loading' | 'ready' | 'notFound' | 'error' = 'loading';
   type: 'news' | 'project' = 'news';
   content: ArticleContent | null = null;
   coverImage: string | null = null;
   formattedDate = '';
   paragraphs: string[] = [];
 
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
   private readonly newsService = inject(NewsService);
   private readonly projectsService = inject(ProjectsService);
   private readonly toastr = inject(ToastrService);
   private routeSubscription?: Subscription;
   private request?: Subscription;
+  private readonly id = Number(this.route.snapshot.paramMap.get('id'));
 
   get typeLabel(): string {
     return this.type === 'news' ? 'Notícias' : 'Projetos';
@@ -46,34 +50,38 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-
     this.routeSubscription = this.route.queryParamMap.subscribe((params) => {
       this.type = params.get('type') === 'project' ? 'project' : 'news';
+      this.load();
+    });
+  }
 
-      if (!id) {
-        this.status = 'notFound';
-        return;
-      }
+  load(): void {
+    if (!this.id) {
+      this.status = 'notFound';
+      this.cdr.markForCheck();
+      return;
+    }
 
-      const source: Observable<ArticleContent> =
-        this.type === 'news' ? this.newsService.getNewsById(id) : this.projectsService.getProjectById(id);
+    const source: Observable<ArticleContent> =
+      this.type === 'news' ? this.newsService.getNewsById(this.id) : this.projectsService.getProjectById(this.id);
 
-      this.status = 'loading';
-      this.request?.unsubscribe();
-      this.request = source.subscribe({
-        next: (content) => {
-          this.content = content;
-          this.coverImage = mediaUrl(content.image_thumb);
-          this.formattedDate = formatLongDate(content.published_at || content.created_at);
-          this.paragraphs = contentToParagraphs(content.content);
-          this.status = 'ready';
-        },
-        error: (error) => {
-          console.error('Erro ao carregar o conteúdo:', error);
-          this.status = 'notFound';
-        },
-      });
+    this.status = 'loading';
+    this.cdr.markForCheck();
+    this.request?.unsubscribe();
+    this.request = source.subscribe({
+      next: (content) => {
+        this.content = content;
+        this.coverImage = mediaUrl(content.image_thumb);
+        this.formattedDate = formatLongDate(content.published_at || content.created_at);
+        this.paragraphs = contentToParagraphs(content.content);
+        this.status = 'ready';
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        this.status = isNotFoundError(error) ? 'notFound' : 'error';
+        this.cdr.markForCheck();
+      },
     });
   }
 

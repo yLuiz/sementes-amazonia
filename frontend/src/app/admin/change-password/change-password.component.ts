@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth/auth.service';
+import { apiErrorMessage } from '../../shared/utils/api-error';
 import { ButtonDirective } from '../../shared/ui/button.directive';
 import { FormFieldComponent } from '../../shared/ui/form-field.component';
 import { PasswordRevealComponent } from '../../shared/ui/password-reveal.component';
@@ -16,12 +17,14 @@ const passwordsMatch = (group: AbstractControl): ValidationErrors | null =>
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-change-password',
   imports: [ReactiveFormsModule, ButtonDirective, FormFieldComponent, PageHeaderComponent, PasswordRevealComponent],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss',
 })
 export class ChangePasswordComponent {
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly authService = inject(AuthService);
   private readonly toastr = inject(ToastrService);
 
@@ -66,12 +69,12 @@ export class ChangePasswordComponent {
         this.isSaving = false;
         this.form.reset();
         this.toastr.success('Senha alterada com sucesso.');
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.isSaving = false;
-        const message = error.error?.message;
-        this.errorMessage =
-          error.status === 400 && typeof message === 'string' ? `${message}.` : 'Não foi possível alterar a senha. Tente novamente.';
+        this.errorMessage = apiErrorMessage(error, 'Não foi possível alterar a senha. Tente novamente.');
+        this.cdr.markForCheck();
       },
     });
   }

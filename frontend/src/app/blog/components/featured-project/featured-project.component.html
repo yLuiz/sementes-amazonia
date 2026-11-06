@@ -1,7 +1,7 @@
 @if (project; as item) {
   <section id="featured-project" class="featured">
     <div class="featured__image media" appReveal>
-      <img [ngSrc]="image" fill sizes="(max-width: 1023px) 100vw, 50vw" [alt]="item.title" appImgFallback="assets/photos/community-planting.webp" />
+      <img [ngSrc]="image" fill ngSrcset="320w, 640w, 960w, 1280w, 1920w" sizes="(max-width: 1023px) 100vw, 50vw" [alt]="item.title" appImgFallback="assets/photos/community-planting.webp" />
     </div>
     <div class="featured__content" appReveal [revealDelay]="80">
       <p class="eyebrow">Projeto em destaque</p>

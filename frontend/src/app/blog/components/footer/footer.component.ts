@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ScrollStateService } from '../../../services/scroll-state.service';
@@ -7,6 +7,7 @@ import { SITE_CONTENT } from '../../../shared/content/site-content';
 @Component({
   selector: 'app-footer',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
@@ -18,13 +19,17 @@ export class FooterComponent implements OnInit, OnDestroy {
 
   showBackToTop = false;
 
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly scrollState = inject(ScrollStateService);
   private subscription?: Subscription;
 
   ngOnInit(): void {
     this.subscription = this.scrollState
       .pastOffset(window.innerHeight)
-      .subscribe((past) => (this.showBackToTop = past));
+      .subscribe((past) => {
+        this.showBackToTop = past;
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {

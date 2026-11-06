@@ -1,7 +1,19 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
-import { getCurrentTimeString } from 'src/utils/getCurrentTimeString';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsDateString, IsNotEmpty, IsOptional, IsString, MaxLength, ValidateIf } from 'class-validator';
+import { getCurrentTimeString } from '../utils/getCurrentTimeString';
+
+// Em multipart tudo chega como texto, e o `Boolean('false')` daria verdadeiro.
+// Outro valor segue sem conversão para o @IsBoolean recusar com 400.
+export const toBooleanField = ({ value }: { value: unknown }): unknown => {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return value;
+};
+
+// Campo opcional na edição: pode faltar, mas `null` não passa (coluna NOT NULL).
+const IfPresent = () => ValidateIf((_dto, value) => value !== undefined);
 
 export class CreateProjectDto {
   @ApiProperty({
@@ -35,6 +47,7 @@ export class CreateProjectDto {
   @ApiProperty({ description: 'Author of the news article', example: 'Jane Smith', required: false })
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   author?: string;
 
   @ApiProperty({
@@ -46,11 +59,23 @@ export class CreateProjectDto {
   })
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   image_thumb?: string;
+
+  @ApiProperty({
+    description: 'Marca o projeto como destaque e desmarca os demais. Em multipart, "true" ou "false".',
+    example: 'true',
+    required: false,
+    type: 'boolean',
+  })
+  @IfPresent()
+  @Transform(toBooleanField)
+  @IsBoolean({ message: 'is_featured deve ser "true" ou "false"' })
+  is_featured?: boolean;
 
   @ApiProperty({ description: 'Publication date of the project', example: '2023-10-01T12:00:00Z' })
   @IsOptional()
-  @IsDateString()
+  @IsDateString({ strict: true })
   published_at?: string;
 
   @IsOptional()
@@ -67,7 +92,7 @@ export class UpdateProjectDto {
     example: 'Project Alpha',
     required: false,
   })
-  @IsOptional()
+  @IfPresent()
   @IsString()
   @MaxLength(100)
   title?: string;
@@ -77,7 +102,7 @@ export class UpdateProjectDto {
     example: 'This is a brief summary of the project.',
     required: false,
   })
-  @IsOptional()
+  @IfPresent()
   @IsString()
   summary?: string;
 
@@ -86,13 +111,14 @@ export class UpdateProjectDto {
     example: 'This is the full description of the project.',
     required: false,
   })
-  @IsOptional()
+  @IfPresent()
   @IsString()
   content?: string;
 
   @ApiProperty({ description: 'Author of the news article', example: 'Jane Smith', required: false })
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   author?: string;
 
   @ApiProperty({
@@ -104,11 +130,23 @@ export class UpdateProjectDto {
   })
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   image_thumb?: string;
+
+  @ApiProperty({
+    description: 'Marca o projeto como destaque e desmarca os demais. Em multipart, "true" ou "false".',
+    example: 'true',
+    required: false,
+    type: 'boolean',
+  })
+  @IfPresent()
+  @Transform(toBooleanField)
+  @IsBoolean({ message: 'is_featured deve ser "true" ou "false"' })
+  is_featured?: boolean;
 
   @ApiProperty({ description: 'Publication date of the project', example: '2023-10-01T12:00:00Z' })
   @IsOptional()
-  @IsDateString()
+  @IsDateString({ strict: true })
   published_at?: string;
 
   @IsOptional()

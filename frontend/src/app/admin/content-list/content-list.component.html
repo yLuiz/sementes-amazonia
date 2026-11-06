@@ -18,10 +18,19 @@
         [(ngModel)]="searchTerm"
         (input)="onSearchChange()" />
     </div>
-    <span class="panel__count">{{ totalItems }} {{ totalItems === 1 ? 'registro' : 'registros' }}</span>
+    @if (!hasError && (!isLoading || totalItems > 0)) {
+      <span class="panel__count">{{ totalItems }} {{ totalItems === 1 ? 'registro' : 'registros' }}</span>
+    }
   </div>
 
-  @if (!isLoading && !items.length) {
+  @if (hasError) {
+    <app-empty-state
+      icon="pi-exclamation-circle"
+      [title]="labels.loadError"
+      text="Tente novamente em instantes.">
+      <button appButton="outline" type="button" (click)="load()">Tentar novamente</button>
+    </app-empty-state>
+  } @else if (!isLoading && !items.length) {
     <app-empty-state
       icon="pi-inbox"
       [title]="searchTerm ? 'Nenhum resultado encontrado' : labels.emptyTitle"
@@ -50,6 +59,12 @@
           </td>
           <td>
             <strong class="item-title">{{ item.title }}</strong>
+            @if (type === 'project' && item.is_featured) {
+              <app-badge class="item-badge" variant="gold">
+                <i class="pi pi-star-fill" aria-hidden="true"></i>
+                Em destaque
+              </app-badge>
+            }
           </td>
           <td class="col-date">{{ dateOf(item) || '-' }}</td>
           <td class="col-actions">

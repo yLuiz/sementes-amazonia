@@ -1,18 +1,21 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { TableModule } from 'primeng/table';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { NewsService } from '../../services/news/news.service';
 import { ProjectsService } from '../../services/projects/projects.service';
+import { IPageResponse } from '../../shared/interfaces/IPageResponse';
+import { BadgeComponent } from '../../shared/ui/badge.component';
 import { ButtonDirective } from '../../shared/ui/button.directive';
 import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog.component';
 import { ContentCardItem, ContentType } from '../../shared/ui/content-card.component';
 import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
 import { ImgFallbackDirective } from '../../shared/ui/img-fallback.directive';
 import { PtBrPaginatorIntl } from '../../shared/ui/paginator-intl';
+import { apiErrorMessage } from '../../shared/utils/api-error';
 import { formatShortDate } from '../../shared/utils/format-date';
 import { mediaUrl } from '../../shared/utils/media-url';
 import { PageHeaderComponent } from '../shared/page-header/page-header.component';
@@ -25,11 +28,13 @@ const MIN_SEARCH_LENGTH = 3;
 @Component({
   selector: 'app-content-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     MatPaginatorModule,
     RouterLink,
     TableModule,
+    BadgeComponent,
     ButtonDirective,
     ConfirmDialogComponent,
     EmptyStateComponent,
@@ -53,9 +58,11 @@ export class ContentListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   searchTerm = '';
   isLoading = true;
+  hasError = false;
   isDeleting = false;
   itemToDelete: ContentCardItem | null = null;
 
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly newsService = inject(NewsService);
   private readonly projectsService = inject(ProjectsService);
   private readonly toastr = inject(ToastrService);
@@ -112,33 +119,36 @@ export class ContentListComponent implements OnInit, OnDestroy {
         this.load();
       },
       error: (error) => {
-        console.error(error);
-        this.toastr.error('Não foi possível concluir a exclusão.', 'Falha.');
+        this.toastr.error(apiErrorMessage(error, 'Não foi possível concluir a exclusão.'), 'Falha.');
         this.itemToDelete = null;
         this.isDeleting = false;
+        this.cdr.markForCheck();
       },
     });
   }
 
-  private load(): void {
+  load(): void {
     const filters = { page: this.currentPage + 1, limit: this.pageSize, title: this.searchTerm };
-    const source =
+    const source: Observable<IPageResponse<ContentCardItem[]>> =
       this.type === 'news' ? this.newsService.getNews(filters) : this.projectsService.getProjects(filters);
 
     this.isLoading = true;
+    this.hasError = false;
+    this.cdr.markForCheck();
     this.request?.unsubscribe();
     this.request = source.subscribe({
       next: (response) => {
         this.items = response.data;
         this.totalItems = response.meta.total;
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
-      error: (error) => {
-        console.error(error);
-        this.toastr.error('Não foi possível carregar a lista.', 'Falha.');
+      error: () => {
         this.items = [];
         this.totalItems = 0;
         this.isLoading = false;
+        this.hasError = true;
+        this.cdr.markForCheck();
       },
     });
   }

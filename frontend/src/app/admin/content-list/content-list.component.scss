@@ -76,6 +76,16 @@
   color: var(--color-text-default);
 }
 
+.item-badge {
+  display: inline-block;
+  margin-top: var(--space-1);
+
+  i {
+    margin-right: var(--space-1);
+    font-size: var(--text-xs);
+  }
+}
+
 .actions {
   display: flex;
   gap: var(--space-1);

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 export interface BreadcrumbItem {
@@ -10,6 +10,7 @@ export interface BreadcrumbItem {
 @Component({
   selector: 'app-page-header',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   template: `
     <header class="page-header">

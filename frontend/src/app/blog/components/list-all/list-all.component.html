@@ -45,6 +45,13 @@
           <li class="skeleton listing__placeholder"></li>
         }
       </ul>
+    } @else if (hasError) {
+      <app-empty-state
+        icon="pi-exclamation-circle"
+        [title]="selectedFilter === 'news' ? 'Não foi possível carregar as notícias' : 'Não foi possível carregar os projetos'"
+        text="Tente novamente em instantes.">
+        <button appButton="outline" type="button" (click)="load()">Tentar novamente</button>
+      </app-empty-state>
     } @else if (items.length) {
       <ul class="listing__grid">
         @for (item of items; track item.id; let i = $index) {

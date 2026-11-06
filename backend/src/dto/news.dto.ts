@@ -1,7 +1,10 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, MaxLength, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, MaxLength, IsOptional, IsDateString, ValidateIf } from 'class-validator';
 import { getCurrentTimeString } from 'src/utils/getCurrentTimeString';
+
+// Campo opcional na edição: pode faltar, mas `null` não passa (coluna NOT NULL).
+const IfPresent = () => ValidateIf((_dto, value) => value !== undefined);
 
 export class CreateNewsDto {
 
@@ -24,11 +27,13 @@ export class CreateNewsDto {
   @ApiProperty({ description: 'Author of the news article', example: 'John Doe', required: false })
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   author?: string;
 
   @ApiProperty({ description: 'Tags associated with the news article', example: 'news, breaking, event', required: false })
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   tags?: string;
 
   @ApiProperty({
@@ -37,11 +42,12 @@ export class CreateNewsDto {
   })
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   image_thumb?: string;
 
   @ApiProperty({ description: 'Publication date of the news article', example: '2023-10-01T12:00:00Z' })
   @IsOptional()
-  @IsDateString()
+  @IsDateString({ strict: true })
   published_at?: string;
 
   @IsOptional()
@@ -55,34 +61,36 @@ export class CreateNewsDto {
 export class UpdateNewsDto {
 
   @ApiProperty({ description: 'Title of the news article', example: 'Updated News Title', required: false })
-  @IsOptional()
+  @IfPresent()
   @IsString()
   @MaxLength(150)
   title?: string;
 
   @ApiProperty({ description: 'Summary of the news article', example: 'Updated summary of the news article.', required: false })
-  @IsOptional()
+  @IfPresent()
   @IsString()
   summary?: string;
 
   @ApiProperty({ description: 'Publication date of the news article', example: '2023-10-01T12:00:00Z', required: false })
   @IsOptional()
-  @IsDateString()
+  @IsDateString({ strict: true })
   published_at?: string;
 
   @ApiProperty({ description: 'Tags associated with the news article', example: 'news, updated', required: false })
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   tags?: string;
 
   @ApiProperty({ description: 'Full content of the news article', example: 'Updated full content of the news article.', required: false })
-  @IsOptional()
+  @IfPresent()
   @IsString()
   content?: string;
 
   @ApiProperty({ description: 'Author of the news article', example: 'Jane Smith', required: false })
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   author?: string;
 
   @ApiProperty({
@@ -91,6 +99,7 @@ export class UpdateNewsDto {
   })
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   image_thumb?: string;
 
   @IsOptional()

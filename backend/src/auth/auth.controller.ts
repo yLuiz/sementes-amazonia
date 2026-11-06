@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { ChangePasswordDto, LoginDto } from '../dto/auth.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { LoginThrottledException } from './login-throttled.exception';
 import { SESSION_COOKIE, sessionCookieOptions } from './session-cookie';
 
 @ApiTags('Auth')
@@ -15,9 +16,16 @@ export class AuthController {
   @HttpCode(200)
   @Header('Cache-Control', 'no-store')
   async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {
-    const { token, expires, user } = await this.authService.login(loginDto);
-    res.cookie(SESSION_COOKIE, token, { ...sessionCookieOptions(), expires });
-    return { user };
+    try {
+      const { token, expires, user } = await this.authService.login(loginDto);
+      res.cookie(SESSION_COOKIE, token, { ...sessionCookieOptions(), expires });
+      return { user };
+    } catch (error) {
+      if (error instanceof LoginThrottledException) {
+        res.setHeader('Retry-After', error.retryAfterSeconds);
+      }
+      throw error;
+    }
   }
 
   // Sem guard: precisa funcionar também com a sessão já expirada.
@@ -40,7 +48,10 @@ export class AuthController {
   async changePassword(
     @Request() req,
     @Body() changePasswordDto: ChangePasswordDto,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    return this.authService.changePassword(req.user.id, changePasswordDto);
+    const { token, expires, message } = await this.authService.changePassword(req.user.id, changePasswordDto);
+    res.cookie(SESSION_COOKIE, token, { ...sessionCookieOptions(), expires });
+    return { message };
   }
 }
